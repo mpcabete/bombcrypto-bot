@@ -60,6 +60,8 @@ def positions(target):
 
 def scroll():
     commoms = positions(commom)
+    if (len(commoms) == 0):
+        return
     x,y,w,h = commoms[len(commoms)-1]
 
     pyautogui.moveTo(x,y)
@@ -95,7 +97,6 @@ def login():
 
     clickBtn(signBtn)
     time.sleep(15)
-    clickBtn(teasureHunt)
 
 
 
@@ -111,11 +112,12 @@ def refreshHeroes():
 
 def main(i):
     login()
+    clickBtn(teasureHunt)
     clickBtn(newMapBtn)
 
     print(i)
-    #every 10 iterations
-    if( i%10 == 0):
+    #every n iterations
+    if( i%12 == 0):
         refreshHeroes()
 
     time.sleep(10)
