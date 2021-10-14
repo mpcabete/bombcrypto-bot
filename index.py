@@ -117,7 +117,7 @@ def main(i):
 
     print(i)
     #every n iterations
-    if( i%12 == 0):
+    if( i%(15*6) == 0):
         refreshHeroes()
 
     time.sleep(10)
