@@ -47,7 +47,7 @@ def positions(target):
     w = target.shape[1]
     h = target.shape[0]
 
-    yloc, xloc = np.where(result >= .60)
+    yloc, xloc = np.where(result >= .70)
 
 
     rectangles = []
@@ -86,12 +86,13 @@ def goToGame():
 
 def login():
     if(not clickBtn(connectWalletBtn)):
-        print('not on login screen')
+        print('')
 
     time.sleep(5)
 
     if(not clickBtn(selectMetamaskBtn)):
         clickBtn(selectMetamaskHoverBtn)
+        print('hover')
 
     time.sleep(5)
 
