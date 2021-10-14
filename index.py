@@ -15,6 +15,11 @@ hero = cv2.imread('hero.png')
 xbtn = cv2.imread('x.png')
 teasureHunt = cv2.imread('hunt.png')
 
+connectWalletBtn = cv2.imread('wallet.png')
+selectMetamaskHoverBtn = cv2.imread('wallet1.png')
+selectMetamaskBtn = cv2.imread('wallet1-1.png')
+signBtn = cv2.imread('wallet2.png')
+
 
 
 def printSreen():
@@ -72,6 +77,27 @@ def goToGame():
     x,y,w,h = positions(teasureHunt)[0]
     pyautogui.click(x+w/2,y+h/2)
 
+def login():
+    x,y,w,h = positions(connectWalletBtn)[0]
+    pyautogui.click(x+w/2,y+h/2)
+    time.sleep(5)
+
+    try:
+        x,y,w,h = positions(selectMetamaskBtn)[0]
+        pyautogui.click(x+w/2,y+h/2)
+        time.sleep(5)
+    except:
+        print('metamask hover detected')
+        x,y,w,h = positions(selectMetamaskHoverBtn)[0]
+        pyautogui.click(x+w/2,y+h/2)
+        time.sleep(5)
+
+
+    x,y,w,h = positions(signBtn)[0]
+    pyautogui.click(x+w/2,y+h/2)
+
+login()
+
 def main():
     goToHeroes()
     buttonsClicked = 1
@@ -82,9 +108,9 @@ def main():
         print(buttonsClicked)
     goToGame()
 
-while(True):
-    main()
-    time.sleep(60*5)
+#while(True):
+    #main()
+    #time.sleep(60*5)
 
 
 
