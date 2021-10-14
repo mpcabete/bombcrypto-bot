@@ -19,8 +19,17 @@ connectWalletBtn = cv2.imread('wallet.png')
 selectMetamaskHoverBtn = cv2.imread('wallet1.png')
 selectMetamaskBtn = cv2.imread('wallet1-1.png')
 signBtn = cv2.imread('wallet2.png')
+newMapBtn = cv2.imread('new-map.png')
 
 
+def clickBtn(img):
+    matches = positions(img)
+    if(len(matches)==0):
+        return False
+    x,y,w,h = matches[0]
+    pyautogui.moveTo(x+w/2,y+h/2,1)
+    pyautogui.click()
+    return True
 
 def printSreen():
     with mss.mss() as sct:
@@ -64,53 +73,58 @@ def clickButtons():
     return len(buttons)
 
 def goToHeroes():
-    x,y,w,h = positions(arrow)[0]
-    pyautogui.click(x+w/2,y+h/2)
+    clickBtn(arrow)
 
-    x,y,w,h = positions(hero)[0]
-    pyautogui.click(x+w/2,y+h/2)
+    clickBtn(hero)
 
 def goToGame():
-    x,y,w,h = positions(xbtn)[0]
-    pyautogui.click(x+w/2,y+h/2)
+    clickBtn(xbtn)
 
-    x,y,w,h = positions(teasureHunt)[0]
-    pyautogui.click(x+w/2,y+h/2)
+    clickBtn(teasureHunt)
 
 def login():
-    x,y,w,h = positions(connectWalletBtn)[0]
-    pyautogui.click(x+w/2,y+h/2)
+    if(not clickBtn(connectWalletBtn)):
+        print('not on login screen')
+
     time.sleep(5)
 
-    try:
-        x,y,w,h = positions(selectMetamaskBtn)[0]
-        pyautogui.click(x+w/2,y+h/2)
-        time.sleep(5)
-    except:
-        print('metamask hover detected')
-        x,y,w,h = positions(selectMetamaskHoverBtn)[0]
-        pyautogui.click(x+w/2,y+h/2)
-        time.sleep(5)
+    if(not clickBtn(selectMetamaskBtn)):
+        clickBtn(selectMetamaskHoverBtn)
+
+    time.sleep(5)
+
+    clickBtn(signBtn)
+    time.sleep(15)
+    clickBtn(teasureHunt)
 
 
-    x,y,w,h = positions(signBtn)[0]
-    pyautogui.click(x+w/2,y+h/2)
 
-login()
 
-def main():
+def refreshHeroes():
     goToHeroes()
     buttonsClicked = 1
     while(buttonsClicked >0):
         scroll()
         time.sleep(2)
         buttonsClicked = clickButtons()
-        print(buttonsClicked)
     goToGame()
 
-#while(True):
-    #main()
-    #time.sleep(60*5)
+def main(i):
+    login()
+    clickBtn(newMapBtn)
+
+    print(i)
+    #every 10 iterations
+    if( i%10 == 0):
+        refreshHeroes()
+
+    time.sleep(10)
+    i = i+1
+    print(i)
+    main(i)
+main(0)
+
+
 
 
 
