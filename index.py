@@ -113,7 +113,7 @@ def main(i):
     clickBtn(teasureHunt)
     clickBtn(newMapBtn)
 
-    print(i%(15*6) == 0)
+    print(i%(15*6))
     #every n iterations
     if( i%(15*6) == 0):
         refreshHeroes()
