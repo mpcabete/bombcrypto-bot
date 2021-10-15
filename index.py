@@ -85,16 +85,18 @@ def goToGame():
     clickBtn(teasureHunt)
 
 def login():
-    clickBtn(connectWalletBtn)
-    time.sleep(5)
+    if clickBtn(connectWalletBtn):
+        time.sleep(5)
 
-    if(not clickBtn(selectMetamaskBtn)):
-        clickBtn(selectMetamaskHoverBtn)
+    if not clickBtn(selectMetamaskBtn):
+        if clickBtn(selectMetamaskHoverBtn):
+            time.sleep(5)
+    else:
+        time.sleep(5)
 
-    time.sleep(5)
-
-    clickBtn(signBtn)
-    time.sleep(15)
+    if clickBtn(signBtn):
+        time.sleep(15)
+        print('sl')
 
 
 
@@ -109,16 +111,19 @@ def refreshHeroes():
     goToGame()
 
 def main(i):
+    smallInterval = 10 #seconds
+    heroesInterval = 12 * 6 #cycles
+
     login()
     clickBtn(teasureHunt)
     clickBtn(newMapBtn)
 
-    print(i%(15*6))
+    print('{}/{}'.format(i%heroesInterval,heroesInterval))
     #every n iterations
-    if( i%(15*6) == 0):
+    if( i%heroesInterval == 0):
         refreshHeroes()
 
-    time.sleep(10)
+    time.sleep(smallInterval)
     i = i+1
     main(i)
 main(0)
