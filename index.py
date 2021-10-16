@@ -47,7 +47,7 @@ def positions(target):
     w = target.shape[1]
     h = target.shape[0]
 
-    yloc, xloc = np.where(result >= .60)
+    yloc, xloc = np.where(result >= .70)
 
 
     rectangles = []
@@ -110,25 +110,36 @@ def refreshHeroes():
         buttonsClicked = clickButtons()
     goToGame()
 
-def main(i):
-    start = time.time()
-    smallInterval = 10 #seconds
-    heroesInterval = 12 * 6 #cycles
+def main(
+    last = {
+    "login" : 0,
+    "heroes" : 0,
+    "new_map" : 0,
+    }
+         ):
 
-    login()
-    clickBtn(teasureHunt)
-    clickBtn(newMapBtn)
+    now = time.time()
 
-    print('{}/{}'.format(i%heroesInterval,heroesInterval))
-    #every n iterations
-    if( i%heroesInterval == 0):
+    if now - last["login"] > 100:
+        last["login"] = now
+        print('checking for login')
+        login()
+
+    if now - last["heroes"] > 300:
+        last["heroes"] = now
+        print('sending heroes to work')
         refreshHeroes()
 
-    time.sleep(smallInterval)
-    i = i+1
-    end = time.time()
-    main(i)
-main(0)
+    if now - last["new_map"] > 30:
+        last["new_map"] = now
+        print('checking for New Map Button')
+        clickBtn(newMapBtn)
+
+    #clickBtn(teasureHunt)
+
+    time.sleep(1)
+    main(last)
+main()
 
 
 
