@@ -76,7 +76,7 @@ def clickButtons():
 
 def goToHeroes():
     clickBtn(arrow)
-
+    time.sleep(5)
     clickBtn(hero)
 
 def goToGame():
@@ -122,17 +122,17 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["login"] > 100:
+        if now - last["login"] > 120:
             last["login"] = now
             print('checking for login')
             login()
 
-        if now - last["heroes"] > 300:
+        if now - last["heroes"] > 900:
             last["heroes"] = now
             print('sending heroes to work')
             refreshHeroes()
 
-        if now - last["new_map"] > 30:
+        if now - last["new_map"] > 60:
             last["new_map"] = now
             print('checking for New Map Button')
             clickBtn(newMapBtn)
