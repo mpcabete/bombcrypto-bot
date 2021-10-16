@@ -47,7 +47,7 @@ def positions(target):
     w = target.shape[1]
     h = target.shape[0]
 
-    yloc, xloc = np.where(result >= .70)
+    yloc, xloc = np.where(result >= .60)
 
 
     rectangles = []
@@ -111,6 +111,7 @@ def refreshHeroes():
     goToGame()
 
 def main(i):
+    start = time.time()
     smallInterval = 10 #seconds
     heroesInterval = 12 * 6 #cycles
 
@@ -125,6 +126,7 @@ def main(i):
 
     time.sleep(smallInterval)
     i = i+1
+    end = time.time()
     main(i)
 main(0)
 
@@ -134,4 +136,6 @@ main(0)
 
 #cv2.imshow('img',sct_img)
 #cv2.waitKey()
-
+# aumentar tempo antes do sign
+# chacar se tem o sign antes de aperta o connect wallet
+# melhorar o log
