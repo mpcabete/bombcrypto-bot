@@ -110,35 +110,34 @@ def refreshHeroes():
         buttonsClicked = clickButtons()
     goToGame()
 
-def main(
+def main():
     last = {
     "login" : 0,
     "heroes" : 0,
     "new_map" : 0,
     }
-         ):
 
-    now = time.time()
+    while True:
+        now = time.time()
 
-    if now - last["login"] > 100:
-        last["login"] = now
-        print('checking for login')
-        login()
+        if now - last["login"] > 100:
+            last["login"] = now
+            print('checking for login')
+            login()
 
-    if now - last["heroes"] > 300:
-        last["heroes"] = now
-        print('sending heroes to work')
-        refreshHeroes()
+        if now - last["heroes"] > 300:
+            last["heroes"] = now
+            print('sending heroes to work')
+            refreshHeroes()
 
-    if now - last["new_map"] > 30:
-        last["new_map"] = now
-        print('checking for New Map Button')
-        clickBtn(newMapBtn)
+        if now - last["new_map"] > 30:
+            last["new_map"] = now
+            print('checking for New Map Button')
+            clickBtn(newMapBtn)
 
-    #clickBtn(teasureHunt)
+        #clickBtn(teasureHunt)
+        time.sleep(1)
 
-    time.sleep(1)
-    main(last)
 main()
 
 
