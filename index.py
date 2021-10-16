@@ -79,6 +79,7 @@ def goToHeroes():
     clickBtn(arrow)
     time.sleep(5)
     if clickBtn(hero):
+        global hero_clicks
         hero_clicks = hero_clicks + 1
         print('{} heroes sent to work already'.format(heroes_clicks))
 
