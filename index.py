@@ -90,13 +90,15 @@ def login():
 
     if not clickBtn(selectMetamaskBtn):
         if clickBtn(selectMetamaskHoverBtn):
-            time.sleep(5)
+            time.sleep(20)
     else:
-        time.sleep(5)
+        time.sleep(20)
 
     if clickBtn(signBtn):
+        time.sleep(25)
+        clickBtn(teasureHunt)
         time.sleep(15)
-        print('sl')
+        # click ok button
 
 
 
