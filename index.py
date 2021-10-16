@@ -4,8 +4,9 @@ import mss
 import pyautogui
 import time
 
-pyautogui.PAUSE = 0.5
+pyautogui.PAUSE = 1
 pyautogui.FAILSAFE = True
+hero_clicks = 0
 
 
 btn = cv2.imread('go-work-btn.png')
@@ -77,7 +78,9 @@ def clickButtons():
 def goToHeroes():
     clickBtn(arrow)
     time.sleep(5)
-    clickBtn(hero)
+    if clickBtn(hero):
+        hero_clicks = hero_clicks + 1
+        print('{} heroes sent to work already'.format(heroes_clicks))
 
 def goToGame():
     clickBtn(xbtn)
