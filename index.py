@@ -72,16 +72,16 @@ def clickButtons():
     buttons = positions(btn)
     for (x, y, w, h) in buttons:
         pyautogui.click(x+(w/2),y+(h/2))
+        global hero_clicks
+        hero_clicks = hero_clicks + 1
+        print('{} heroes sent to work so far'.format(hero_clicks))
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(buttons)
 
 def goToHeroes():
     clickBtn(arrow)
     time.sleep(5)
-    if clickBtn(hero):
-        global hero_clicks
-        hero_clicks = hero_clicks + 1
-        print('{} heroes sent to work already'.format(heroes_clicks))
+    clickBtn(hero)
 
 def goToGame():
     clickBtn(xbtn)
