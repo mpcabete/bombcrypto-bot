@@ -16,6 +16,7 @@ hero = cv2.imread('hero.png')
 xbtn = cv2.imread('x.png')
 teasureHunt = cv2.imread('hunt.png')
 
+okBtn = cv2.imread('ok.png')
 connectWalletBtn = cv2.imread('wallet.png')
 selectMetamaskHoverBtn = cv2.imread('wallet1.png')
 selectMetamaskBtn = cv2.imread('wallet1-1.png')
@@ -89,6 +90,9 @@ def goToGame():
     clickBtn(teasureHunt)
 
 def login():
+    if clickBtn(okBtn):
+        time.sleep(15)
+
     if clickBtn(connectWalletBtn):
         time.sleep(5)
 
