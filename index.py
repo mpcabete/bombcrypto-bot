@@ -92,6 +92,7 @@ def goToGame():
 def login():
     if clickBtn(okBtn):
         time.sleep(15)
+        print('ok button clicked')
 
     if clickBtn(connectWalletBtn):
         time.sleep(5)
@@ -103,6 +104,7 @@ def login():
         time.sleep(20)
 
     if clickBtn(signBtn):
+        print('sign button clicked')
         time.sleep(25)
         clickBtn(teasureHunt)
         time.sleep(15)
@@ -132,7 +134,7 @@ def main():
 
         if now - last["login"] > 120:
             last["login"] = now
-            print('checking for login')
+            #print('checking for login')
             login()
 
         if now - last["heroes"] > 900:
@@ -142,8 +144,9 @@ def main():
 
         if now - last["new_map"] > 60:
             last["new_map"] = now
-            print('checking for New Map Button')
-            clickBtn(newMapBtn)
+            #print('checking for New Map Button')
+            if clickBtn(newMapBtn):
+                print('new map button clicked')
 
         #clickBtn(teasureHunt)
         time.sleep(1)
