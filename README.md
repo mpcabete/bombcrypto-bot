@@ -66,6 +66,3 @@ O bot não interage diretamente com o jogo, ele somente tira print da tela do ga
 
 ### Wallet:
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
-
-### Pix:
-![pix](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/pix.jpeg)
