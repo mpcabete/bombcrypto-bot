@@ -38,3 +38,22 @@ python index.py
 ```
 
 ![run](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/run.png)
+
+
+# Como usar?
+
+Abra o terminal, se ainda não tiver navegado para a pasta do bot dê novamente o comando
+
+```
+"cd" + caminho que você copiou
+```
+
+Para iniciar use o comando 
+
+```
+python index.py
+```
+
+Assim que ele iniciar ele vai começar mandando os bonecos trabalhar. Para que ele funcione é preciso que a janela do game esteja aparecendo na sua tela.
+Ele vai constantemente checar se você foi desconectado para realizar o login novamente, e se o botão “new map” tá na tela para clicar nele.
+A cada 15 minutos ele manda todos os heróis taralharem.
