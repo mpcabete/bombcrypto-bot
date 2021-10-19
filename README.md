@@ -23,11 +23,18 @@ Digite o comando "cd" + caminho que você copiou:
 ![cd](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/cd.png)
 
 ### Instale as dependências:
-  pip install -r requirements.txt
+
+```
+pip install -r requirements.txt
+```
+
   
 ![pip](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/pip.png)
 
 ### Pronto! Agora é só iniciar o bot com o comando
-  python index.py
+
+```
+python index.py
+```
 
 ![run](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/run.png)
