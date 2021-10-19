@@ -60,7 +60,9 @@ A cada 15 minutos ele manda todos os heróis taralharem.
 
 ## Como funciona?
 
-O bot não interage diretamente com o jogo, ele somente tira print da tela do game para encontrar os botões e simula movimentos do mouse, isso faz com que diferenciar o bot de um humano seja praticamente impossível.
+O bot não interage diretamente com o jogo, ele somente tira print da tela do
+game para encontrar os botões e simula movimentos do mouse, isso faz com que
+diferenciar o bot de um humano seja muito difícil.
 
 ## Curtiu? Dê aquela fortalecida :)
 
