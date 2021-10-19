@@ -1,6 +1,5 @@
 # Instalação:
-### Baixe e instale o Python pelo [site](https://www.python.org/downloads/) ou
-pela [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
+### Baixe e instale o Python pelo [site](https://www.python.org/downloads/) ou pela [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
 
 Se você baixar pelo site é importante marcar a opção para adicionar o
 python ao PATH:
