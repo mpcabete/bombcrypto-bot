@@ -137,7 +137,7 @@ def main():
             #print('checking for login')
             login()
 
-        if now - last["heroes"] > 900:
+        if now - last["heroes"] > 60 * 30:
             last["heroes"] = now
             print('sending heroes to work')
             refreshHeroes()

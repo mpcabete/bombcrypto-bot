@@ -1,4 +1,3 @@
-[![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)]()
 
 # Installation:
 ### Download and install Phython from the [site](https://www.python.org/downloads/) or from the [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab). 
