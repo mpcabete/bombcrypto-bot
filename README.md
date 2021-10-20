@@ -1,4 +1,4 @@
-[![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)](https://github.com/mpcabete/bombcrypto-bot/blob/main/README.md)
+[![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)](https://github.com/mpcabete/bombcrypto-bot/blob/main/README.en.md)
 # Instalação:
 ### Baixe e instale o Python pelo [site](https://www.python.org/downloads/) ou pela [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
 
