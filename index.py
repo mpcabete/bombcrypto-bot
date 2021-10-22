@@ -7,6 +7,7 @@ import time
 pyautogui.PAUSE = 1
 pyautogui.FAILSAFE = True
 hero_clicks = 0
+login_attempts = 0
 
 
 btn = cv2.imread('go-work-btn.png')
@@ -80,7 +81,10 @@ def clickButtons():
     return len(buttons)
 
 def goToHeroes():
-    clickBtn(arrow)
+    if clickBtn(arrow):
+        global login_attempts
+        login_attempts = 0
+
     time.sleep(5)
     clickBtn(hero)
 
@@ -90,6 +94,14 @@ def goToGame():
     clickBtn(teasureHunt)
 
 def login():
+    global login_attempts
+
+    if login_attempts > 3:
+        print('too many login attempts, refreshing')
+        login_attempts = 0
+        pyautogui.press('f5')
+        return
+
     if clickBtn(okBtn):
         time.sleep(15)
         print('ok button clicked')
@@ -104,9 +116,13 @@ def login():
         time.sleep(20)
 
     if clickBtn(signBtn):
+        login_attempts = login_attempts + 1
         print('sign button clicked')
+        print('{} login attempt'.format(login_attempts))
         time.sleep(25)
-        clickBtn(teasureHunt)
+        if clickBtn(teasureHunt):
+            print('sucessfully login, treasure hunt btn clicked')
+            login_attempts = 0
         time.sleep(15)
         # click ok button
 
