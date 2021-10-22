@@ -107,7 +107,7 @@ def login():
         print('ok button clicked')
 
     if clickBtn(connectWalletBtn):
-        time.sleep(13)
+        time.sleep(8)
 
     if clickBtn(signBtn):
         # sometimes the sign popup appears imediately
