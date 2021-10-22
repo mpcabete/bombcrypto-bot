@@ -114,7 +114,7 @@ def login():
         login_attempts = login_attempts + 1
         print('sign button clicked')
         print('{} login attempt'.format(login_attempts))
-        time.sleep(25)
+        time.sleep(5)
         if clickBtn(teasureHunt):
             print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
@@ -124,9 +124,9 @@ def login():
 
     if not clickBtn(selectMetamaskBtn):
         if clickBtn(selectMetamaskHoverBtn):
-            time.sleep(20)
+            time.sleep(15)
     else:
-        time.sleep(20)
+        time.sleep(15)
 
     if clickBtn(signBtn):
         login_attempts = login_attempts + 1
@@ -190,4 +190,8 @@ main()
 #cv2.waitKey()
 # aumentar tempo antes do sign
 # chacar se tem o sign antes de aperta o connect wallet
+# arrumar aquela parte do codigo copiado onde tem q checar o sign 2 vezes
+# colocar o botao em pt
+# dar uma olhada no bug de quando uma janela do metamask pra assinar fica aberto, e ver como o programa reage
+# se esperar mto pra assinar ele n vai
 # melhorar o log
