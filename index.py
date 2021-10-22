@@ -107,7 +107,8 @@ def login():
         print('ok button clicked')
 
     if clickBtn(connectWalletBtn):
-        time.sleep(8)
+        #TODO mto ele da erro e poco o botao n abre
+        time.sleep(10)
 
     if clickBtn(signBtn):
         # sometimes the sign popup appears imediately
