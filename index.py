@@ -107,7 +107,7 @@ def login():
         print('ok button clicked')
 
     if clickBtn(connectWalletBtn):
-        time.sleep(25)
+        time.sleep(13)
 
     if clickBtn(signBtn):
         # sometimes the sign popup appears imediately
@@ -124,9 +124,9 @@ def login():
 
     if not clickBtn(selectMetamaskBtn):
         if clickBtn(selectMetamaskHoverBtn):
-            time.sleep(15)
+            time.sleep(20)
     else:
-        time.sleep(15)
+        time.sleep(20)
 
     if clickBtn(signBtn):
         login_attempts = login_attempts + 1
