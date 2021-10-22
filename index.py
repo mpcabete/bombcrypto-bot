@@ -109,6 +109,19 @@ def login():
     if clickBtn(connectWalletBtn):
         time.sleep(5)
 
+    if clickBtn(signBtn):
+        # sometimes the sign popup appears imediately
+        login_attempts = login_attempts + 1
+        print('sign button clicked')
+        print('{} login attempt'.format(login_attempts))
+        time.sleep(25)
+        if clickBtn(teasureHunt):
+            print('sucessfully login, treasure hunt btn clicked')
+            login_attempts = 0
+        time.sleep(15)
+        return
+        # click ok button
+
     if not clickBtn(selectMetamaskBtn):
         if clickBtn(selectMetamaskHoverBtn):
             time.sleep(20)
