@@ -72,7 +72,7 @@ def scroll():
 
 def clickButtons(trashhold=.95):
     buttons = positions(btn, trashhold)
-    print('buttons: '.format(len(buttons)))
+    print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.click(x+(w/2),y+(h/2))
         global hero_clicks
