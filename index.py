@@ -90,6 +90,7 @@ def goToHeroes():
 
     time.sleep(5)
     clickBtn(hero)
+    time.sleep(5)
 
 def goToGame():
     clickBtn(xbtn)
