@@ -62,7 +62,7 @@ def positions(target, trashhold=.70):
     return rectangles
 
 def scroll():
-    commoms = positions(commom)
+    commoms = positions(commom, trashhold = .60)
     if (len(commoms) == 0):
         print('no commom text found')
         return
