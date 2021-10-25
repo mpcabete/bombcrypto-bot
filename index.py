@@ -44,13 +44,13 @@ def printSreen():
         sct_img = np.array(sct.grab(sct.monitors[0]))
         return sct_img[:,:,:3]
 
-def positions(target):
+def positions(target, trashhold=.70):
     img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
     w = target.shape[1]
     h = target.shape[0]
 
-    yloc, xloc = np.where(result >= .70)
+    yloc, xloc = np.where(result >= trashhold)
 
 
     rectangles = []
@@ -70,8 +70,8 @@ def scroll():
     pyautogui.moveTo(x,y)
     pyautogui.dragRel(0,-500,duration=1)
 
-def clickButtons():
-    buttons = positions(btn)
+def clickButtons(trashhold=.90):
+    buttons = positions(btn, trashhold)
     for (x, y, w, h) in buttons:
         pyautogui.click(x+(w/2),y+(h/2))
         global hero_clicks
