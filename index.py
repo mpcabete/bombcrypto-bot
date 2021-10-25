@@ -64,8 +64,10 @@ def positions(target, trashhold=.70):
 def scroll():
     commoms = positions(commom)
     if (len(commoms) == 0):
+        print('no commom text found')
         return
     x,y,w,h = commoms[len(commoms)-1]
+    print('moving to {},{}'.format(x,y))
 
     pyautogui.moveTo(x,y)
     pyautogui.dragRel(0,-500,duration=1)
