@@ -70,7 +70,7 @@ def scroll():
     pyautogui.moveTo(x,y)
     pyautogui.dragRel(0,-500,duration=1)
 
-def clickButtons(trashhold=.90):
+def clickButtons(trashhold=.95):
     buttons = positions(btn, trashhold)
     for (x, y, w, h) in buttons:
         pyautogui.click(x+(w/2),y+(h/2))
