@@ -103,6 +103,8 @@ def goToGame():
 def refreshHeroesPositions():
     clickBtn(arrow)
     clickBtn(teasureHunt)
+    time.sleep(3)
+    clickBtn(teasureHunt)
 
 def login():
     global login_attempts
