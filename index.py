@@ -100,6 +100,10 @@ def goToGame():
 
     clickBtn(teasureHunt)
 
+def refreshHeroesPositions():
+    clickBtn(arrow)
+    clickBtn(teasureHunt)
+
 def login():
     global login_attempts
 
@@ -164,6 +168,7 @@ def main():
     "login" : 0,
     "heroes" : 0,
     "new_map" : 0,
+    "refresh_heroes" : 0
     }
 
     while True:
@@ -184,6 +189,11 @@ def main():
             #print('checking for New Map Button')
             if clickBtn(newMapBtn):
                 print('new map button clicked')
+
+        if now - last["refresh_heroes"] > 60:
+            last["refresh_heroes"] = now
+            refreshHeroesPositions()
+            print('Refreshing Heroes Positions')
 
         #clickBtn(teasureHunt)
         time.sleep(1)
