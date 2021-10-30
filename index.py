@@ -190,7 +190,7 @@ def main():
             if clickBtn(newMapBtn):
                 print('new map button clicked')
 
-        if now - last["refresh_heroes"] > 60:
+        if now - last["refresh_heroes"] > 60 * 3:
             last["refresh_heroes"] = now
             refreshHeroesPositions()
             print('Refreshing Heroes Positions')
