@@ -93,6 +93,9 @@ def goToHeroes():
     time.sleep(5)
 
 def goToGame():
+    # in case of server overload popup
+    clickBtn(xbtn)
+    time.sleep(3)
     clickBtn(xbtn)
 
     clickBtn(teasureHunt)
