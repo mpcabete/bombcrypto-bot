@@ -25,14 +25,26 @@ signBtn = cv2.imread('wallet2.png')
 newMapBtn = cv2.imread('new-map.png')
 
 
-def clickBtn(img):
-    matches = positions(img)
-    if(len(matches)==0):
-        return False
-    x,y,w,h = matches[0]
-    pyautogui.moveTo(x+w/2,y+h/2,1)
-    pyautogui.click()
-    return True
+def clickBtn(img,name=None, timeout=3):
+    if not name is None:
+        print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
+    start = time.time()
+    clicked = False
+    while(not clicked):
+        matches = positions(img)
+        if(len(matches)==0):
+            hast_timed_out = time.time()-start > timeout
+            if(hast_timed_out):
+                if not name is None:
+                    print('timed out')
+                return False
+            # print('button not found yet')
+            continue
+
+        x,y,w,h = matches[0]
+        pyautogui.moveTo(x+w/2,y+h/2,1)
+        pyautogui.click()
+        return True
 
 def printSreen():
     with mss.mss() as sct:
@@ -92,14 +104,14 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    time.sleep(5)
+    # time.sleep(5)
     clickBtn(hero)
-    time.sleep(5)
+    # time.sleep(5)
 
 def goToGame():
     # in case of server overload popup
     clickBtn(xbtn)
-    time.sleep(3)
+    # time.sleep(3)
     clickBtn(xbtn)
 
     clickBtn(teasureHunt)
@@ -107,7 +119,7 @@ def goToGame():
 def refreshHeroesPositions():
     clickBtn(arrow)
     clickBtn(teasureHunt)
-    time.sleep(3)
+    # time.sleep(3)
     clickBtn(teasureHunt)
 
 def login():
@@ -119,43 +131,46 @@ def login():
         pyautogui.press('f5')
         return
 
-    if clickBtn(okBtn):
-        time.sleep(15)
-        print('ok button clicked')
-
-    if clickBtn(connectWalletBtn):
+    if clickBtn(connectWalletBtn, name='connectWalletBtn', timeout = 10):
+        print('connect wallet button clicked')
         #TODO mto ele da erro e poco o botao n abre
-        time.sleep(10)
+        # time.sleep(10)
 
-    if clickBtn(signBtn):
+    if clickBtn(signBtn, name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
         print('sign button clicked')
         print('{} login attempt'.format(login_attempts))
-        time.sleep(5)
-        if clickBtn(teasureHunt):
+        # time.sleep(5)
+        if clickBtn(teasureHunt, name='teasureHunt', timeout = 15):
             print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-        time.sleep(15)
+        # time.sleep(15)
         return
         # click ok button
 
-    if not clickBtn(selectMetamaskBtn):
-        if clickBtn(selectMetamaskHoverBtn):
-            time.sleep(20)
+    if not clickBtn(selectMetamaskBtn, name='selectMetamaskBtn '):
+        if clickBtn(selectMetamaskHoverBtn, name='selectMetamaskHoverBtn' ):
+            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
+            print('sleep in case there is no metamask text removed')
+            # time.sleep(20)
     else:
-        time.sleep(20)
+        print('sleep in case there is no metamask text removed')
+        # time.sleep(20)
 
-    if clickBtn(signBtn):
+    if clickBtn(signBtn, name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
         print('sign button clicked')
         print('{} login attempt'.format(login_attempts))
-        time.sleep(25)
-        if clickBtn(teasureHunt):
+        # time.sleep(25)
+        if clickBtn(teasureHunt, name='teasureHunt', timeout=25):
             print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-        time.sleep(15)
-        # click ok button
+        # time.sleep(15)
+
+    if clickBtn(okBtn, name='okBtn', timeout=5):
+        # time.sleep(15)
+        print('ok button clicked')
 
 
 
