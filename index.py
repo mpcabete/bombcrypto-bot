@@ -185,6 +185,10 @@ def refreshHeroes():
     goToGame()
 
 def main():
+    print('\nPlease, consider buying me a coffe 😊:')
+    print('0xbd06182D8360FB7AC1B05e871e56c76372510dDf\n')
+    time.sleep(5)
+
     last = {
     "login" : 0,
     "heroes" : 0,
