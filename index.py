@@ -62,21 +62,25 @@ def positions(target, trashhold=.70):
     return rectangles
 
 def scroll():
-    commoms = positions(commom, trashhold = .60)
+
+    commoms = positions(commom, trashhold = .80)
     if (len(commoms) == 0):
         print('no commom text found')
         return
     x,y,w,h = commoms[len(commoms)-1]
-    print('moving to {},{}'.format(x,y))
+    print('moving to {},{} and scrolling'.format(x,y))
+#
+    pyautogui.moveTo(x,y,1)
+    pyautogui.scroll(-50)
 
-    pyautogui.moveTo(x,y)
-    pyautogui.dragRel(0,-500,duration=1)
+#    pyautogui.dragRel(0,-500,duration=1)
 
 def clickButtons(trashhold=.95):
     buttons = positions(btn, trashhold)
     print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
-        pyautogui.click(x+(w/2),y+(h/2))
+        pyautogui.moveTo(x+(w/2),y+(h/2),1)
+        pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
         print('{} heroes sent to work so far'.format(hero_clicks))
@@ -215,3 +219,5 @@ main()
 # dar uma olhada no bug de quando uma janela do metamask pra assinar fica aberto, e ver como o programa reage
 # se esperar mto pra assinar ele n vai
 # melhorar o log
+# arrumar scroll
+# polling no button click
