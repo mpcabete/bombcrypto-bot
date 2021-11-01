@@ -100,7 +100,7 @@ def scroll():
 #    pyautogui.dragRel(0,-500,duration=1)
 
 def clickButtons():
-    buttons = positions(go_work_img, trashhold=ct['send_heroes_for_work'])
+    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
     print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
