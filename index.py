@@ -4,7 +4,15 @@ import mss
 import pyautogui
 import time
 
-pyautogui.PAUSE = 1
+import yaml
+if __name__ == '__main__':
+
+    stream = open("config.yaml", 'r')
+    c = yaml.safe_load(stream)
+ct = c['trashhold']
+
+pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
+
 pyautogui.FAILSAFE = True
 hero_clicks = 0
 login_attempts = 0
@@ -29,13 +37,13 @@ sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
 
 
-def clickBtn(img,name=None, timeout=3):
+def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
     if not name is None:
         print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
     clicked = False
     while(not clicked):
-        matches = positions(img)
+        matches = positions(img, trashhold=trashhold)
         if(len(matches)==0):
             hast_timed_out = time.time()-start > timeout
             if(hast_timed_out):
@@ -60,7 +68,7 @@ def printSreen():
         sct_img = np.array(sct.grab(sct.monitors[0]))
         return sct_img[:,:,:3]
 
-def positions(target, trashhold=.70):
+def positions(target, trashhold=ct['default']):
     img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
     w = target.shape[1]
@@ -79,7 +87,7 @@ def positions(target, trashhold=.70):
 
 def scroll():
 
-    commoms = positions(commom_img, trashhold = .80)
+    commoms = positions(commom_img, trashhold = ct['commom'])
     if (len(commoms) == 0):
         print('no commom text found')
         return
@@ -91,8 +99,8 @@ def scroll():
 
 #    pyautogui.dragRel(0,-500,duration=1)
 
-def clickButtons(trashhold=.95):
-    buttons = positions(go_work_img, trashhold)
+def clickButtons():
+    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
     print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
@@ -153,8 +161,8 @@ def login():
         return
         # click ok button
 
-    if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn '):
-        if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn' ):
+    if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn'):
+        if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', trashhold = ct['select_wallet_buttons'] ):
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             print('sleep in case there is no metamask text removed')
             # time.sleep(20)
@@ -189,9 +197,11 @@ def refreshHeroes():
     goToGame()
 
 def main():
+    print()
     print('\nPlease, consider buying me a coffe 😊:')
     print('0xbd06182D8360FB7AC1B05e871e56c76372510dDf\n')
     time.sleep(5)
+    t = c['time_intervals']
 
     last = {
     "login" : 0,
@@ -203,23 +213,23 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["login"] > 120:
+        if now - last["login"] > t['check_for_login'] * 60:
             last["login"] = now
             #print('checking for login')
             login()
 
-        if now - last["heroes"] > 60 * 30:
+        if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
             print('sending heroes to work')
             refreshHeroes()
 
-        if now - last["new_map"] > 60:
+        if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
             #print('checking for New Map Button')
             if clickBtn(new_map_btn_img):
                 print('new map button clicked')
 
-        if now - last["refresh_heroes"] > 60 * 3:
+        if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
             last["refresh_heroes"] = now
             refreshHeroesPositions()
             print('Refreshing Heroes Positions')
