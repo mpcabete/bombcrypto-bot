@@ -10,19 +10,23 @@ hero_clicks = 0
 login_attempts = 0
 
 
-btn = cv2.imread('go-work-btn.png')
-commom = cv2.imread('text.png')
-arrow = cv2.imread('arrow.png')
-hero = cv2.imread('hero.png')
-xbtn = cv2.imread('x.png')
-teasureHunt = cv2.imread('hunt.png')
 
-okBtn = cv2.imread('ok.png')
-connectWalletBtn = cv2.imread('wallet.png')
-selectMetamaskHoverBtn = cv2.imread('wallet1.png')
-selectMetamaskBtn = cv2.imread('wallet1-1.png')
-signBtn = cv2.imread('wallet2.png')
-newMapBtn = cv2.imread('new-map.png')
+
+
+
+
+go_work_img = cv2.imread('targets/go-work.png')
+commom_img = cv2.imread('targets/commom-text.png')
+arrow_img = cv2.imread('targets/go-back-arrow.png')
+hero_img = cv2.imread('targets/hero-icon.png')
+x_button_img = cv2.imread('targets/x.png')
+teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
+ok_btn_img = cv2.imread('targets/ok.png')
+connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
+select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
+select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
+sign_btn_img = cv2.imread('targets/select-wallet-2.png')
+new_map_btn_img = cv2.imread('targets/new-map.png')
 
 
 def clickBtn(img,name=None, timeout=3):
@@ -75,7 +79,7 @@ def positions(target, trashhold=.70):
 
 def scroll():
 
-    commoms = positions(commom, trashhold = .80)
+    commoms = positions(commom_img, trashhold = .80)
     if (len(commoms) == 0):
         print('no commom text found')
         return
@@ -88,7 +92,7 @@ def scroll():
 #    pyautogui.dragRel(0,-500,duration=1)
 
 def clickButtons(trashhold=.95):
-    buttons = positions(btn, trashhold)
+    buttons = positions(go_work_img, trashhold)
     print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
@@ -100,27 +104,27 @@ def clickButtons(trashhold=.95):
     return len(buttons)
 
 def goToHeroes():
-    if clickBtn(arrow):
+    if clickBtn(arrow_img):
         global login_attempts
         login_attempts = 0
 
     # time.sleep(5)
-    clickBtn(hero)
+    clickBtn(hero_img)
     # time.sleep(5)
 
 def goToGame():
     # in case of server overload popup
-    clickBtn(xbtn)
+    clickBtn(x_button_img)
     # time.sleep(3)
-    clickBtn(xbtn)
+    clickBtn(x_button_img)
 
-    clickBtn(teasureHunt)
+    clickBtn(teasureHunt_icon_img)
 
 def refreshHeroesPositions():
-    clickBtn(arrow)
-    clickBtn(teasureHunt)
+    clickBtn(arrow_img)
+    clickBtn(teasureHunt_icon_img)
     # time.sleep(3)
-    clickBtn(teasureHunt)
+    clickBtn(teasureHunt_icon_img)
 
 def login():
     global login_attempts
@@ -131,26 +135,26 @@ def login():
         pyautogui.press('f5')
         return
 
-    if clickBtn(connectWalletBtn, name='connectWalletBtn', timeout = 10):
+    if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
         print('connect wallet button clicked')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
-    if clickBtn(signBtn, name='sign button', timeout=8):
+    if clickBtn(sign_btn_img, name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
         print('sign button clicked')
         print('{} login attempt'.format(login_attempts))
         # time.sleep(5)
-        if clickBtn(teasureHunt, name='teasureHunt', timeout = 15):
+        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
             print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
         return
         # click ok button
 
-    if not clickBtn(selectMetamaskBtn, name='selectMetamaskBtn '):
-        if clickBtn(selectMetamaskHoverBtn, name='selectMetamaskHoverBtn' ):
+    if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn '):
+        if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn' ):
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             print('sleep in case there is no metamask text removed')
             # time.sleep(20)
@@ -158,17 +162,17 @@ def login():
         print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
-    if clickBtn(signBtn, name='signBtn', timeout = 20):
+    if clickBtn(sign_btn_img, name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
         print('sign button clicked')
         print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
-        if clickBtn(teasureHunt, name='teasureHunt', timeout=25):
+        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
             print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
 
-    if clickBtn(okBtn, name='okBtn', timeout=5):
+    if clickBtn(ok_btn_img, name='okBtn', timeout=5):
         # time.sleep(15)
         print('ok button clicked')
 
@@ -212,7 +216,7 @@ def main():
         if now - last["new_map"] > 60:
             last["new_map"] = now
             #print('checking for New Map Button')
-            if clickBtn(newMapBtn):
+            if clickBtn(new_map_btn_img):
                 print('new map button clicked')
 
         if now - last["refresh_heroes"] > 60 * 3:
@@ -238,5 +242,6 @@ main()
 # dar uma olhada no bug de quando uma janela do metamask pra assinar fica aberto, e ver como o programa reage
 # se esperar mto pra assinar ele n vai
 # melhorar o log
-# arrumar scroll
-# polling no button click
+# add argumets
+# salvar timestamp dos clickes em newmap em um arquivo
+# soh resetar posiçoes se n tiver clickado em newmap em x segundos
