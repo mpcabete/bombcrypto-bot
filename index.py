@@ -95,9 +95,13 @@ def scroll():
     print('moving to {},{} and scrolling'.format(x,y))
 #
     pyautogui.moveTo(x,y,1)
-    pyautogui.scroll(-50)
 
-#    pyautogui.dragRel(0,-500,duration=1)
+    if not c['use_click_and_drag_instead_of_scroll']:
+        pyautogui.scroll(-c['scroll_size'])
+    else:
+        pyautogui.dragRel(0,-500,duration=1)
+        print(c['use_click_and_drag_instead_of_scroll'])
+
 
 def clickButtons():
     buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
