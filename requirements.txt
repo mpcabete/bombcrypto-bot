@@ -1,3 +1,4 @@
 opencv-python
 mss
 pyautogui
+pyyaml
