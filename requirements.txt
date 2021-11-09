@@ -2,3 +2,4 @@ opencv-python
 mss
 pyautogui
 pyyaml
+requests
