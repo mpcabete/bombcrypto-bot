@@ -14,5 +14,5 @@
     go_to_work_btn: 0.9
 
   scroll_size: 60
-  use_click_and_drag_instead_of_scroll: false
+  use_click_and_drag_instead_of_scroll: true
   
