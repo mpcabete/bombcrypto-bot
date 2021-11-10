@@ -252,6 +252,8 @@ def main():
             last["new_map"] = now
             #print('checking for New Map Button')
             if clickBtn(new_map_btn_img):
+                with open('new-map.log','a') as new_map_log:
+                    new_map_log.write(str(time())+'\n')
                 print('new map button clicked')
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
