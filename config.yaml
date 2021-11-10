@@ -1,6 +1,6 @@
 ---
   time_intervals:
-    send_heroes_for_work: 30 #min
+    send_heroes_for_work: 10 #min
     refresh_heroes_positions: 3 #min
     check_for_new_map_button: 3 #min
     check_for_login: 5 #min
@@ -14,5 +14,8 @@
     go_to_work_btn: 0.9
 
   scroll_size: 60
-  use_click_and_drag_instead_of_scroll: false
+  use_click_and_drag_instead_of_scroll: true
+  click_and_drag_amount: 200
+  only_click_heroes_with_green_bar: true
+  
   

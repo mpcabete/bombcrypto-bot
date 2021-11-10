@@ -56,6 +56,7 @@ select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
 select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
 sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
+green_bar = cv2.imread('targets/green-bar.png')
 
 
 def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
@@ -120,7 +121,7 @@ def scroll():
     if not c['use_click_and_drag_instead_of_scroll']:
         pyautogui.scroll(-c['scroll_size'])
     else:
-        pyautogui.dragRel(0,-500,duration=1)
+        pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1)
         print(c['use_click_and_drag_instead_of_scroll'])
 
 
@@ -129,6 +130,20 @@ def clickButtons():
     print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
+        pyautogui.click()
+        global hero_clicks
+        hero_clicks = hero_clicks + 1
+        print('{} heroes sent to work so far'.format(hero_clicks))
+        #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
+    return len(buttons)
+
+def clickGreenBarButtons():
+    # ele clicka nos q tao trabaiano mas axo q n importa
+    offset = 130
+    buttons = positions(green_bar, trashhold=ct['go_to_work_btn'])
+    print('buttons: {}'.format(len(buttons)))
+    for (x, y, w, h) in buttons:
+        pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -215,10 +230,19 @@ def login():
 def refreshHeroes():
     goToHeroes()
     buttonsClicked = 1
-    while(buttonsClicked >0):
+    empty_scrolls_attempts = 3
+    while(empty_scrolls_attempts >0):
+        if c['only_click_heroes_with_green_bar']:
+            buttonsClicked = clickGreenBarButtons()
+        else:
+            buttonsClicked = clickButtons()
+        if buttonsClicked == 0:
+            empty_scrolls_attempts = empty_scrolls_attempts - 1
+            print('no buttons found after scrolling, trying {} more times'.format(empty_scrolls_attempts))
+
+        # !mudei scroll pra baixo
         scroll()
         time.sleep(2)
-        buttonsClicked = clickButtons()
     goToGame()
 
 def main():
@@ -241,7 +265,7 @@ def main():
         if now - last["login"] > t['check_for_login'] * 60:
             last["login"] = now
             #print('checking for login')
-            login()
+            # login()
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
@@ -282,3 +306,7 @@ main()
 # add argumets
 # salvar timestamp dos clickes em newmap em um arquivo
 # soh resetar posiçoes se n tiver clickado em newmap em x segundos
+
+#TIRAR COMMENT DO LOGIN
+# clickar antes de dar scroll nos verdes
+# pegar o offset dinamicamente
