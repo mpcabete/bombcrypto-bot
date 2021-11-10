@@ -264,8 +264,8 @@ def main():
 
         if now - last["login"] > t['check_for_login'] * 60:
             last["login"] = now
-            #print('checking for login')
-            # login()
+            print('checking for login')
+            login()
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
