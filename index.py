@@ -298,13 +298,14 @@ def main():
             last["heroes"] = now
             sys.stdout.write('\nSending heroes to work.')
             refreshHeroes()
+            sys.stdout.write("\n")
 
         if now - last["login"] > t['check_for_login'] * 60:
             sys.stdout.write("\nChecking if game has disconnected.")
             sys.stdout.flush()
-
             last["login"] = now
             login()
+            sys.stdout.write("\n")
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
