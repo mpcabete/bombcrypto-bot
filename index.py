@@ -315,7 +315,7 @@ def main():
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
             last["refresh_heroes"] = now
-            sys.stdout.write('\nRefreshing Heroes Positions.')
+            sys.stdout.write('\nRefreshing Heroes Positions.\n')
             refreshHeroesPositions()
 
         #clickBtn(teasureHunt)
