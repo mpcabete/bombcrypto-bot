@@ -3,6 +3,7 @@ import numpy as np
 import mss
 import pyautogui
 import time
+import sys
 
 import yaml
 
@@ -58,10 +59,15 @@ sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
 green_bar = cv2.imread('targets/green-bar.png')
 
+def dot():
+    sys.stdout.write(".")
+    sys.stdout.flush()
 
 def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
+    dot()
     if not name is None:
-        print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
+        pass
+        # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
     clicked = False
     while(not clicked):
@@ -70,7 +76,8 @@ def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
             hast_timed_out = time.time()-start > timeout
             if(hast_timed_out):
                 if not name is None:
-                    print('timed out')
+                    pass
+                    # print('timed out')
                 return False
             # print('button not found yet')
             continue
@@ -111,10 +118,10 @@ def scroll():
 
     commoms = positions(commom_img, trashhold = ct['commom'])
     if (len(commoms) == 0):
-        print('no commom text found')
+        # print('no commom text found')
         return
     x,y,w,h = commoms[len(commoms)-1]
-    print('moving to {},{} and scrolling'.format(x,y))
+    # print('moving to {},{} and scrolling'.format(x,y))
 #
     pyautogui.moveTo(x,y,1)
 
@@ -122,18 +129,16 @@ def scroll():
         pyautogui.scroll(-c['scroll_size'])
     else:
         pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1)
-        print(c['use_click_and_drag_instead_of_scroll'])
 
 
 def clickButtons():
     buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
-    print('buttons: {}'.format(len(buttons)))
+    # print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        print('{} heroes sent to work so far'.format(hero_clicks))
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(buttons)
 
@@ -141,13 +146,10 @@ def isWorking(bar, buttons):
     y = bar[1]
 
     for (_,button_y,_,button_h) in buttons:
-        print(button_y)
         isBelow = y < (button_y + button_h)
         isAbove = y > (button_y - button_h)
         if isBelow and isAbove:
-            print('NOT WORKING')
             return False
-    print('WORKING')
     return True
 
 def clickGreenBarButtons():
@@ -160,18 +162,16 @@ def clickGreenBarButtons():
     for bar in green_bars:
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
-    print('gb')
-    print(len(not_working_green_bars))
+    if len(not_working_green_bars) > 0:
+        sys.stdout.write('\nclicking in %d heroes.' % len(not_working_green_bars))
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
-    print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in not_working_green_bars:
         # isWorking(y, buttons)
         pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        print('{} heroes sent to work so far'.format(hero_clicks))
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
 
@@ -203,24 +203,24 @@ def login():
     global login_attempts
 
     if login_attempts > 3:
-        print('too many login attempts, refreshing')
+        sys.stdout.write('\ntoo many login attempts, refreshing.')
         login_attempts = 0
         pyautogui.press('f5')
         return
 
     if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
-        print('connect wallet button clicked')
+        sys.stdout.write('\nConnect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
     if clickBtn(sign_btn_img, name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
-        print('sign button clicked')
-        print('{} login attempt'.format(login_attempts))
+        # print('sign button clicked')
+        # print('{} login attempt'.format(login_attempts))
         # time.sleep(5)
         if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
-            print('sucessfully login, treasure hunt btn clicked')
+            # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
         return
@@ -228,32 +228,39 @@ def login():
 
     if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn'):
         if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', trashhold = ct['select_wallet_buttons'] ):
+            pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
-            print('sleep in case there is no metamask text removed')
+            # print('sleep in case there is no metamask text removed')
             # time.sleep(20)
     else:
-        print('sleep in case there is no metamask text removed')
+        pass
+        # print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
     if clickBtn(sign_btn_img, name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
-        print('sign button clicked')
-        print('{} login attempt'.format(login_attempts))
+        # print('sign button clicked')
+        # print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
         if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
-            print('sucessfully login, treasure hunt btn clicked')
+            # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
 
     if clickBtn(ok_btn_img, name='okBtn', timeout=5):
+        pass
         # time.sleep(15)
-        print('ok button clicked')
+        # print('ok button clicked')
 
 
 
 
 def refreshHeroes():
     goToHeroes()
+    if c['only_click_heroes_with_green_bar']:
+        print('\nSending heroes with a green stamina bar to work!')
+    else:
+        sys.stdout.write('\nSending all heroes to work!')
     buttonsClicked = 1
     empty_scrolls_attempts = 3
     while(empty_scrolls_attempts >0):
@@ -263,11 +270,11 @@ def refreshHeroes():
             buttonsClicked = clickButtons()
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
-            print('no buttons found after scrolling, trying {} more times'.format(empty_scrolls_attempts))
-
+            # print('no buttons found after scrolling, trying {} more times'.format(empty_scrolls_attempts))
         # !mudei scroll pra baixo
         scroll()
         time.sleep(2)
+    sys.stdout.write('\n{} heroes sent to work so far'.format(hero_clicks))
     goToGame()
 
 def main():
@@ -287,31 +294,36 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["login"] > t['check_for_login'] * 60:
-            last["login"] = now
-            print('checking for login')
-            login()
-
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
-            print('sending heroes to work')
+            sys.stdout.write('\nSending heroes to work.')
             refreshHeroes()
+
+        if now - last["login"] > t['check_for_login'] * 60:
+            sys.stdout.write("\nChecking if game has disconnected.")
+            sys.stdout.flush()
+
+            last["login"] = now
+            login()
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
-            #print('checking for New Map Button')
             if clickBtn(new_map_btn_img):
                 with open('new-map.log','a') as new_map_log:
                     new_map_log.write(str(time.time())+'\n')
-                print('new map button clicked')
+                sys.stdout.write('\nNew Map button clicked!\n')
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
             last["refresh_heroes"] = now
+            sys.stdout.write('\nRefreshing Heroes Positions.')
             refreshHeroesPositions()
-            print('Refreshing Heroes Positions')
 
         #clickBtn(teasureHunt)
+        sys.stdout.write(".")
+        sys.stdout.flush()
+
         time.sleep(1)
+
 
 main()
 
