@@ -137,12 +137,36 @@ def clickButtons():
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(buttons)
 
+def isWorking(bar, buttons):
+    y = bar[1]
+
+    for (_,button_y,_,button_h) in buttons:
+        print(button_y)
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            print('NOT WORKING')
+            return False
+    print('WORKING')
+    return True
+
 def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 130
-    buttons = positions(green_bar, trashhold=ct['go_to_work_btn'])
+    green_bars = positions(green_bar, trashhold=ct['green_bar'])
+    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+
+    not_working_green_bars = []
+    for bar in green_bars:
+        if not isWorking(bar, buttons):
+            not_working_green_bars.append(bar)
+    print('gb')
+    print(len(not_working_green_bars))
+
+    # se tiver botao com y maior que bar y-10 e menor que y+10
     print('buttons: {}'.format(len(buttons)))
-    for (x, y, w, h) in buttons:
+    for (x, y, w, h) in not_working_green_bars:
+        # isWorking(y, buttons)
         pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
@@ -150,6 +174,7 @@ def clickGreenBarButtons():
         print('{} heroes sent to work so far'.format(hero_clicks))
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(buttons)
+
 
 def goToHeroes():
     if clickBtn(arrow_img):
@@ -265,7 +290,7 @@ def main():
         if now - last["login"] > t['check_for_login'] * 60:
             last["login"] = now
             print('checking for login')
-            login()
+            # login()
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now

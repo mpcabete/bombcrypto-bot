@@ -12,6 +12,7 @@
     commom: 0.8
     select_wallet_buttons: 0.8
     go_to_work_btn: 0.9
+    green_bar: 0.9
 
   scroll_size: 60
   use_click_and_drag_instead_of_scroll: true
