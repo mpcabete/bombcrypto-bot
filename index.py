@@ -296,17 +296,13 @@ main()
 
 #cv2.imshow('img',sct_img)
 #cv2.waitKey()
-# aumentar tempo antes do sign
-# chacar se tem o sign antes de aperta o connect wallet
-# arrumar aquela parte do codigo copiado onde tem q checar o sign 2 vezes
+
+# chacar se tem o sign antes de aperta o connect wallet ?
+# arrumar aquela parte do codigo copiado onde tem q checar o sign 2 vezes ?
 # colocar o botao em pt
-# dar uma olhada no bug de quando uma janela do metamask pra assinar fica aberto, e ver como o programa reage
-# se esperar mto pra assinar ele n vai
 # melhorar o log
-# add argumets
 # salvar timestamp dos clickes em newmap em um arquivo
 # soh resetar posiçoes se n tiver clickado em newmap em x segundos
 
-#TIRAR COMMENT DO LOGIN
-# clickar antes de dar scroll nos verdes
 # pegar o offset dinamicamente
+# clickar so no q nao tao trabalhando pra evitar um loop infinito no final do scroll se ainda tiver um verdinho
