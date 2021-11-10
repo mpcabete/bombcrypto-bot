@@ -258,7 +258,7 @@ def login():
 def refreshHeroes():
     goToHeroes()
     if c['only_click_heroes_with_green_bar']:
-        print('\nSending heroes with a green stamina bar to work!')
+        print('\nSending heroes with an green stamina bar to work!')
     else:
         sys.stdout.write('\nSending all heroes to work!')
     buttonsClicked = 1
