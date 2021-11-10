@@ -173,7 +173,7 @@ def clickGreenBarButtons():
         hero_clicks = hero_clicks + 1
         print('{} heroes sent to work so far'.format(hero_clicks))
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
-    return len(buttons)
+    return len(not_working_green_bars)
 
 
 def goToHeroes():
