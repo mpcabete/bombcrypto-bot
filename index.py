@@ -9,6 +9,33 @@ import yaml
 
 import requests
 
+cat = """
+                                                _
+                                                \`*-.
+                                                 )  _`-.
+                                                .  : `. .
+                                                : _   '  \\
+                                                ; *` _.   `*-._
+                                                `-.-'          `-.
+                                                  ;       `       `.
+                                                  :.       .        \\
+                                                  . \  .   :   .-'   .
+                                                  '  `+.;  ;  '      :
+                                                  :  '  |    ;       ;-.
+                                                  ; '   : :`-:     _.`* ;
+                                               .*' /  .*' ; .*`- +'  `*'
+                                               `*-*   `*-*  `*-*'
+====== Please, consider buying me an coffe :) =========================
+==== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf =======================
+==== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ =====
+=======================================================================
+
+>>---> Press ctrl + c to kill the bot.
+>>---> Some configs can be fount in the config.yaml file.
+"""
+
+print(cat)
+
 headers = {
     'authority': 'plausible.io',
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36',
@@ -278,9 +305,6 @@ def refreshHeroes():
     goToGame()
 
 def main():
-    print()
-    print('\nPlease, consider buying me a coffe 😊:')
-    print('0xbd06182D8360FB7AC1B05e871e56c76372510dDf\n')
     time.sleep(5)
     t = c['time_intervals']
 
