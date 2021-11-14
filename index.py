@@ -7,52 +7,7 @@ import sys
 
 import yaml
 
-import requests
 
-cat = """
-                                                _
-                                                \`*-.
-                                                 )  _`-.
-                                                .  : `. .
-                                                : _   '  \\
-                                                ; *` _.   `*-._
-                                                `-.-'          `-.
-                                                  ;       `       `.
-                                                  :.       .        \\
-                                                  . \  .   :   .-'   .
-                                                  '  `+.;  ;  '      :
-                                                  :  '  |    ;       ;-.
-                                                  ; '   : :`-:     _.`* ;
-                                               .*' /  .*' ; .*`- +'  `*'
-                                               `*-*   `*-*  `*-*'
-====== Please, consider buying me an coffe :) =========================
-==== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf =======================
-==== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ =====
-=======================================================================
-
->>---> Press ctrl + c to kill the bot.
->>---> Some configs can be fount in the config.yaml file.
-"""
-
-print(cat)
-
-headers = {
-    'authority': 'plausible.io',
-    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36',
-    'content-type': 'text/plain',
-    'accept': '*/*',
-    'sec-gpc': '1',
-    'origin': 'https://mpcabete.xyz',
-    'sec-fetch-site': 'cross-site',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-dest': 'empty',
-    'referer': 'https://mpcabete.xyz/',
-    'accept-language': 'en-US,en;q=0.9',
-}
-
-data = '{"n":"pageview","u":"https://mpcabete.xyz/bombcrypto/","d":"mpcabete.xyz","r":"https://mpcabete.xyz/","w":1182}'
-
-response = requests.post('https://plausible.io/api/event', headers=headers, data=data)
 
 if __name__ == '__main__':
 
@@ -65,12 +20,6 @@ pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
 pyautogui.FAILSAFE = True
 hero_clicks = 0
 login_attempts = 0
-
-
-
-
-
-
 
 go_work_img = cv2.imread('targets/go-work.png')
 commom_img = cv2.imread('targets/commom-text.png')
@@ -324,13 +273,17 @@ def main():
             refreshHeroes()
             sys.stdout.write("\n")
 
+
+        '''
+        Login functionality removed for now
+
         if now - last["login"] > t['check_for_login'] * 60:
             sys.stdout.write("\nChecking if game has disconnected.")
             sys.stdout.flush()
             last["login"] = now
             login()
             sys.stdout.write("\n")
-
+        '''
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
             if clickBtn(new_map_btn_img):
@@ -350,7 +303,7 @@ def main():
         time.sleep(1)
 
 
-main()
+#main()
 
 
 
