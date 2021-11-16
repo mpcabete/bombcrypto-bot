@@ -274,16 +274,13 @@ def main():
             sys.stdout.write("\n")
 
 
-        '''
-        Login functionality removed for now
-
         if now - last["login"] > t['check_for_login'] * 60:
             sys.stdout.write("\nChecking if game has disconnected.")
             sys.stdout.flush()
             last["login"] = now
             login()
             sys.stdout.write("\n")
-        '''
+        
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
             if clickBtn(new_map_btn_img):
@@ -303,7 +300,7 @@ def main():
         time.sleep(1)
 
 
-#main()
+main()
 
 
 
