@@ -1,4 +1,5 @@
 from cv2 import cv2
+from os import listdir
 import numpy as np
 import mss
 import pyautogui
@@ -70,21 +71,31 @@ login_attempts = 0
 
 
 
+def load_images():
+    file_names = listdir('./targets/')
+    targets = {}
+    for file in file_names:
+        path = 'targets/' + file
+        targets[file.removesuffix('.png')] = cv2.imread(path)
 
+    return targets
 
-go_work_img = cv2.imread('targets/go-work.png')
-commom_img = cv2.imread('targets/commom-text.png')
-arrow_img = cv2.imread('targets/go-back-arrow.png')
-hero_img = cv2.imread('targets/hero-icon.png')
-x_button_img = cv2.imread('targets/x.png')
-teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
-ok_btn_img = cv2.imread('targets/ok.png')
-connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
-select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
-select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
-sign_btn_img = cv2.imread('targets/select-wallet-2.png')
-new_map_btn_img = cv2.imread('targets/new-map.png')
-green_bar = cv2.imread('targets/green-bar.png')
+images = load_images()
+print(images.keys())
+
+# go_work_img = cv2.imread('targets/go-work.png')
+# commom_img = cv2.imread('targets/commom-text.png')
+# arrow_img = cv2.imread('targets/go-back-arrow.png')
+# hero_img = cv2.imread('targets/hero-icon.png')
+# x_button_img = cv2.imread('targets/x.png')
+# teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
+# ok_btn_img = cv2.imread('targets/ok.png')
+# connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
+# select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
+# select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
+# sign_btn_img = cv2.imread('targets/select-wallet-2.png')
+# new_map_btn_img = cv2.imread('targets/new-map.png')
+# green_bar = cv2.imread('targets/green-bar.png')
 
 def dot():
     sys.stdout.write(".")
@@ -143,7 +154,7 @@ def positions(target, trashhold=ct['default']):
 
 def scroll():
 
-    commoms = positions(commom_img, trashhold = ct['commom'])
+    commoms = positions(images['commom-text'], trashhold = ct['commom'])
     if (len(commoms) == 0):
         # print('no commom text found')
         return
@@ -159,7 +170,7 @@ def scroll():
 
 
 def clickButtons():
-    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+    buttons = positions(images['go-work'], trashhold=ct['go_to_work_btn'])
     # print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
@@ -182,8 +193,8 @@ def isWorking(bar, buttons):
 def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 130
-    green_bars = positions(green_bar, trashhold=ct['green_bar'])
-    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+    green_bars = positions(images['green-bar'], trashhold=ct['green_bar'])
+    buttons = positions(images['go-work'], trashhold=ct['go_to_work_btn'])
 
     not_working_green_bars = []
     for bar in green_bars:
@@ -204,27 +215,27 @@ def clickGreenBarButtons():
 
 
 def goToHeroes():
-    if clickBtn(arrow_img):
+    if clickBtn(images['go-back-arrow']):
         global login_attempts
         login_attempts = 0
 
     # time.sleep(5)
-    clickBtn(hero_img)
+    clickBtn(images['hero-icon'])
     # time.sleep(5)
 
 def goToGame():
     # in case of server overload popup
-    clickBtn(x_button_img)
+    clickBtn(images['x'])
     # time.sleep(3)
-    clickBtn(x_button_img)
+    clickBtn(images['x'])
 
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(images['treasure-hunt-icon'])
 
 def refreshHeroesPositions():
-    clickBtn(arrow_img)
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(images['go-back-arrow'])
+    clickBtn(images['treasure-hunt-icon'])
     # time.sleep(3)
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(images['treasure-hunt-icon'])
 
 def login():
     global login_attempts
@@ -235,26 +246,26 @@ def login():
         pyautogui.press('f5')
         return
 
-    if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
+    if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         sys.stdout.write('\nConnect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
-    if clickBtn(sign_btn_img, name='sign button', timeout=8):
+    if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         # time.sleep(5)
-        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
+        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
         return
         # click ok button
 
-    if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn'):
-        if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', trashhold = ct['select_wallet_buttons'] ):
+    if not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
+        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', trashhold = ct['select_wallet_buttons'] ):
             pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
@@ -264,17 +275,17 @@ def login():
         # print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
-    if clickBtn(sign_btn_img, name='signBtn', timeout = 20):
+    if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
-        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
+        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
 
-    if clickBtn(ok_btn_img, name='okBtn', timeout=5):
+    if clickBtn(images['ok'], name='okBtn', timeout=5):
         pass
         # time.sleep(15)
         # print('ok button clicked')
@@ -333,7 +344,7 @@ def main():
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
-            if clickBtn(new_map_btn_img):
+            if clickBtn(images['new-map']):
                 with open('new-map.log','a') as new_map_log:
                     new_map_log.write(str(time.time())+'\n')
                 sys.stdout.write('\nNew Map button clicked!\n')
