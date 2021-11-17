@@ -51,7 +51,7 @@ headers = {
     'accept-language': 'en-US,en;q=0.9',
 }
 
-data = '{"n":"pageview","u":"https://mpcabete.xyz/bombcrypto/","d":"mpcabete.xyz","r":"https://mpcabete.xyz/","w":1182}'
+data = '{"n":"pageview","u":"https://mpcabete.xyz/bombcryptodebug/","d":"mpcabete.xyz","r":"https://mpcabete.xyz/","w":1182}'
 
 response = requests.post('https://plausible.io/api/event', headers=headers, data=data)
 
@@ -85,7 +85,17 @@ def load_images():
     return targets
 
 images = load_images()
-print(images.keys())
+
+def loadHeroesToSendHome():
+    file_names = listdir('./targets/heroes-to-send-home')
+    heroes = []
+    for file in file_names:
+        path = './targets/heroes-to-send-home/' + file
+        heroes.append(cv2.imread(path))
+
+    return heroes
+home_heroes = loadHeroesToSendHome()
+print('%d heroes that should be sent home loaded' % len(home_heroes))
 
 # go_work_img = cv2.imread('targets/go-work.png')
 # commom_img = cv2.imread('targets/commom-text.png')
@@ -183,6 +193,17 @@ def clickButtons():
         hero_clicks = hero_clicks + 1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(buttons)
+
+def isHome(hero, buttons):
+    y = hero[1]
+
+    for (_,button_y,_,button_h) in buttons:
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            # if send-home button exists, the hero is not home
+            return False
+    return True
 
 def isWorking(bar, buttons):
     y = bar[1]
@@ -295,6 +316,38 @@ def login():
         # print('ok button clicked')
 
 
+def sendHeroesHome():
+    heroes_positions = []
+    for hero in home_heroes:
+        #TODO colocar isso na config
+        hero_positions = positions(hero, trashhold=0.80)
+        if not len (hero_positions) == 0:
+            #TODO maybe pick up match with most wheight instead of first
+            hero_position = hero_positions[0]
+            heroes_positions.append(hero_position)
+
+    n = len(heroes_positions)
+    if n == 0:
+        print('No heroes that should be sent home found.')
+        return
+    print(' %d heroes that should be sent home found' % n)
+    not_home_heroes = []
+    #TODO add this thrashhold in the settings
+    # if send-home button exists, the hero is not home
+    go_home_buttons = positions(images['send-home'], trashhold=0.9)
+    for position in heroes_positions:
+        if not isHome(position,go_home_buttons):
+            print('sending hero home')
+            not_home_heroes.append(position)
+            #TODO check if is working
+            pyautogui.moveTo(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
+            pyautogui.click()
+        else:
+            print('hero already home')
+
+    print(not_home_heroes)
+
+
 
 
 def refreshHeroes():
@@ -303,13 +356,18 @@ def refreshHeroes():
         print('\nSending heroes with an green stamina bar to work!')
     else:
         sys.stdout.write('\nSending all heroes to work!')
+
     buttonsClicked = 1
     empty_scrolls_attempts = 3
+
     while(empty_scrolls_attempts >0):
         if c['only_click_heroes_with_green_bar']:
             buttonsClicked = clickGreenBarButtons()
         else:
             buttonsClicked = clickButtons()
+
+        sendHeroesHome()
+
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
             # print('no buttons found after scrolling, trying {} more times'.format(empty_scrolls_attempts))
@@ -318,6 +376,7 @@ def refreshHeroes():
         time.sleep(2)
     sys.stdout.write('\n{} heroes sent to work so far'.format(hero_clicks))
     goToGame()
+
 
 def main():
     time.sleep(5)
@@ -383,3 +442,4 @@ main()
 
 # pegar o offset dinamicamente
 # clickar so no q nao tao trabalhando pra evitar um loop infinito no final do scroll se ainda tiver um verdinho
+# TODO ask how is the home button when the hero is working
