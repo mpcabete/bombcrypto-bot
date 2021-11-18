@@ -60,6 +60,7 @@ if __name__ == '__main__':
     stream = open("config.yaml", 'r')
     c = yaml.safe_load(stream)
 ct = c['trashhold']
+ch = c['home']
 
 pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
 
@@ -273,19 +274,15 @@ def login():
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         sys.stdout.write('\nConnect wallet button detected, logging in!')
-        #TODO mto ele da erro e poco o botao n abre
-        # time.sleep(10)
 
     if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
-        # time.sleep(5)
         if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-        # time.sleep(15)
         return
         # click ok button
 
@@ -319,8 +316,7 @@ def login():
 def sendHeroesHome():
     heroes_positions = []
     for hero in home_heroes:
-        #TODO colocar isso na config
-        hero_positions = positions(hero, trashhold=0.80)
+        hero_positions = positions(hero, trashhold=ch['hero_trashold'])
         if not len (hero_positions) == 0:
             #TODO maybe pick up match with most wheight instead of first
             hero_position = hero_positions[0]
@@ -331,21 +327,23 @@ def sendHeroesHome():
         print('No heroes that should be sent home found.')
         return
     print(' %d heroes that should be sent home found' % n)
-    not_home_heroes = []
-    #TODO add this thrashhold in the settings
     # if send-home button exists, the hero is not home
-    go_home_buttons = positions(images['send-home'], trashhold=0.9)
+    go_home_buttons = positions(images['send-home'], trashhold=ch['home_button_trashhold'])
+    # TODO pass it as an argument for both this and the other function that uses it
+    go_work_buttons = positions(images['go-work'], trashhold=ct['go_to_work_btn'])
+
     for position in heroes_positions:
         if not isHome(position,go_home_buttons):
-            print('sending hero home')
-            not_home_heroes.append(position)
-            #TODO check if is working
-            pyautogui.moveTo(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
-            pyautogui.click()
+            print(isWorking(position, go_work_buttons))
+            if(not isWorking(position, go_work_buttons)):
+                print ('hero not working, sending him home')
+                pyautogui.moveTo(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
+                pyautogui.click()
+            else:
+                print ('hero working, not sending him home(no dark work button)')
         else:
-            print('hero already home')
+            print('hero already home, or home full(no dark home button)')
 
-    print(not_home_heroes)
 
 
 
@@ -424,7 +422,8 @@ def main():
         time.sleep(1)
 
 
-main()
+# main()
+sendHeroesHome()
 
 
 
@@ -442,4 +441,3 @@ main()
 
 # pegar o offset dinamicamente
 # clickar so no q nao tao trabalhando pra evitar um loop infinito no final do scroll se ainda tiver um verdinho
-# TODO ask how is the home button when the hero is working
