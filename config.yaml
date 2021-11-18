@@ -1,6 +1,6 @@
 ---
   time_intervals:
-    send_heroes_for_work: 20 #min
+    send_heroes_for_work: 5 #min
     refresh_heroes_positions: 3 #min
     check_for_new_map_button: 1 #min
     check_for_login: 1 #min

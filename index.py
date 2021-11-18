@@ -172,7 +172,7 @@ def goToHeroes():
     if clickBtn(arrow_img):
         global login_attempts
         login_attempts = 0
-        sys.stdout.write('\Login attempts = 0.')
+        sys.stdout.write('\nLogin attempts = 0.')
 
     # time.sleep(5)
     clickBtn(hero_img)
@@ -198,7 +198,7 @@ def login():
     if login_attempts > 3:
         sys.stdout.write('\ntoo many login attempts, refreshing.')
         login_attempts = 0
-        sys.stdout.write('\Login attempts = 0.')
+        sys.stdout.write('\nLogin attempts = 0.')
         pyautogui.press('f5')
         return
 
@@ -217,7 +217,7 @@ def login():
         if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-            sys.stdout.write('\Login attempts = 0.')
+            sys.stdout.write('\nLogin attempts = 0.')
         # time.sleep(15)
         return
         # click ok button
@@ -241,7 +241,7 @@ def login():
         if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-            sys.stdout.write('\Login attempts = 0.')
+            sys.stdout.write('\nLogin attempts = 0.')
         # time.sleep(15)
 
     if clickBtn(ok_btn_img, name='okBtn', timeout=5):
@@ -256,7 +256,7 @@ def refreshHeroes():
     else:
         sys.stdout.write('\nSending all heroes to work!')
     buttonsClicked = 1
-    empty_scrolls_attempts = 3
+    empty_scrolls_attempts = 2
     while(empty_scrolls_attempts >0):
         if c['only_click_heroes_with_green_bar']:
             buttonsClicked = clickGreenBarButtons()
