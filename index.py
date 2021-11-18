@@ -422,8 +422,8 @@ def main():
         time.sleep(1)
 
 
-# main()
-sendHeroesHome()
+main()
+# sendHeroesHome()
 
 
 
