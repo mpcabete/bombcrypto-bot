@@ -2,9 +2,9 @@
   time_intervals:
     send_heroes_for_work: 10 #min
     refresh_heroes_positions: 3 #min
-    check_for_new_map_button: 1 #min
-    check_for_login: 3 #min
-    interval_between_moviments: 5 #s
+    check_for_new_map_button: 3 #min
+    check_for_login: 5 #min
+    interval_between_moviments: 1 #s
 
   # how confident the bot needs to be to click the button 0-1
   trashhold:
