@@ -39,6 +39,7 @@ sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
 green_bar = cv2.imread('targets/green-bar.png')
 
+
 global off_x
 off_x = 0
 with mss.mss() as sct:
@@ -171,6 +172,7 @@ def goToHeroes():
     if clickBtn(arrow_img):
         global login_attempts
         login_attempts = 0
+        sys.stdout.write('\Login attempts = 0.')
 
     # time.sleep(5)
     clickBtn(hero_img)
@@ -196,10 +198,12 @@ def login():
     if login_attempts > 3:
         sys.stdout.write('\ntoo many login attempts, refreshing.')
         login_attempts = 0
+        sys.stdout.write('\Login attempts = 0.')
         pyautogui.press('f5')
         return
 
     if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
+        login_attempts = login_attempts + 1
         sys.stdout.write('\nConnect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
@@ -213,6 +217,7 @@ def login():
         if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
+            sys.stdout.write('\Login attempts = 0.')
         # time.sleep(15)
         return
         # click ok button
@@ -236,13 +241,11 @@ def login():
         if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
+            sys.stdout.write('\Login attempts = 0.')
         # time.sleep(15)
 
     if clickBtn(ok_btn_img, name='okBtn', timeout=5):
-        pass
-        # time.sleep(15)
-        # print('ok button clicked')
-
+        print('\nBotão OK')
 
 
 
@@ -273,10 +276,11 @@ def main():
     t = c['time_intervals']
 
     last = {
-    "login" : 0,
-    "heroes" : 0,
-    "new_map" : 0,
-    "refresh_heroes" : 0
+        "login" : 0,
+        "heroes" : 0,
+        "new_map" : 0,
+        "refresh_heroes" : 0,
+        "f5" : 0
     }
 
     while True:
@@ -289,7 +293,8 @@ def main():
             sys.stdout.write("\n")
 
         if now - last["login"] > t['check_for_login'] * 60:
-            sys.stdout.write("\nChecking if game has disconnected.")
+            global login_attempts
+            sys.stdout.write("\nChecking if game has disconnected." + str(login_attempts))
             sys.stdout.flush()
             last["login"] = now
             login()
@@ -312,6 +317,4 @@ def main():
         sys.stdout.flush()
 
         time.sleep(1)
-
-
 main()

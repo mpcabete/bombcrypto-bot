@@ -1,10 +1,11 @@
 ---
   time_intervals:
-    send_heroes_for_work: 10 #min
+    send_heroes_for_work: 20 #min
     refresh_heroes_positions: 3 #min
-    check_for_new_map_button: 3 #min
-    check_for_login: 5 #min
+    check_for_new_map_button: 1 #min
+    check_for_login: 1 #min
     interval_between_moviments: 1 #s
+    f5: 40 #min
 
   # how confident the bot needs to be to click the button 0-1
   trashhold:
@@ -12,10 +13,10 @@
     commom: 0.8
     select_wallet_buttons: 0.8
     go_to_work_btn: 0.9
-    green_bar: 0.9
+    green_bar: 0.85
 
   scroll_size: 60
   use_click_and_drag_instead_of_scroll: true
-  click_and_drag_amount: 200
+  click_and_drag_amount: 250
   only_click_heroes_with_green_bar: true
   
