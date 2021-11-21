@@ -3,3 +3,4 @@ mss
 pyautogui
 pyyaml
 requests
+imutils

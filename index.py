@@ -3,6 +3,7 @@ import numpy as np
 import mss
 import pyautogui
 import time
+import datetime
 import sys
 
 import yaml
@@ -299,6 +300,10 @@ def main():
         "num_shap_coin": 0,
         "tot_gain": 0
     }
+
+    starting_datetime = datetime.datetime.now()
+
+    print(f'\nStarting at {starting_datetime.strftime("%H:%M day %d/%m/%Y")}')
 
     while True:
         now = time.time()
