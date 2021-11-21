@@ -24,7 +24,7 @@ class Comparator:
         #print(accuracy_vector)
         
         # 1 digit handling
-        if (np.max(accuracy_vector) <= 0.9):
+        if (np.max(accuracy_vector) <= 0.85):
             accuracy_vector[1] = 0.99      
         
         
@@ -77,15 +77,17 @@ def filter_digits(digit_xy):
         y_coord.append(tup[1])
 
     uniques, counts = np.unique(y_coord, return_counts=True)
-    digits_y = y_coord[np.argmax(counts)]
+    digits_y = uniques[np.argmax(counts)]
 
     #print(uniques, counts)
 
-    for tup in digit_xy:
-        if tup[1] != digits_y:
-            digit_xy.remove(tup)
+    result = []
     
-    return digit_xy
+    for tup in digit_xy:
+        if tup[1] == digits_y:
+            result.append(tup)
+    
+    return result
 
 def get_crops(img, digit_xy):
     
@@ -104,7 +106,7 @@ def compute_results(digit_crops):
     # usually they are in reversed order and the first one 
     # must be discarded since it is the number of heroes
 
-    results = [comparator.compare(x) for x in digit_crops[1:-1]]
+    results = [comparator.compare(x) for x in digit_crops[1:]]
 
     s = ''
     for digit in reversed(results):
