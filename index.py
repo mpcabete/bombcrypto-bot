@@ -315,6 +315,8 @@ def main():
                 bcoin = calculate_BCOIN(chest_img)
                 sys.stdout.write(f'\nYou start from {bcoin} BCOIN')
                 bcoin_track['last_value'] = bcoin
+                with open('bcoin_gain.log','a') as bcoin_log:
+                    bcoin_log.write(f'{datetime.datetime.now()},0')
                 #bcoin_track['num_shap_coin'] += 1
                 sys.stdout.write("\n")
             except Exception as e:                
@@ -331,6 +333,10 @@ def main():
                 bcoin_track['last_value'] = bcoin
                 bcoin_track['num_shap_coin'] += 1
                 hour_mean = bcoin_track['tot_gain'] / bcoin_track['num_shap_coin']
+
+                with open('bcoin_gain.log','a') as bcoin_log:
+                    bcoin_log.write(f'{datetime.datetime.now()},{bcoin_track["tot_gain"]}')
+
                 sys.stdout.write(f"\nYou made {bcoin_track['tot_gain']} BCOIN")
                 sys.stdout.write(f"\nYou made {hour_mean} BCOIN/hour")
                 sys.stdout.write("\n")
@@ -338,6 +344,7 @@ def main():
                 sys.stdout.write('\nSomething wrong with BCOIN computation')
                 sys.stdout.write("\n")
 
+        
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
             sys.stdout.write('\nSending heroes to work.')
@@ -356,7 +363,7 @@ def main():
             last["new_map"] = now
             if clickBtn(new_map_btn_img):
                 with open('new-map.log','a') as new_map_log:
-                    new_map_log.write(str(time.time())+'\n')
+                    new_map_log.write(str(datetime.datetime.now())+'\n')
                 sys.stdout.write('\nNew Map button clicked!\n')
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
