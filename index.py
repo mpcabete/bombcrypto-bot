@@ -7,6 +7,8 @@ import sys
 
 import yaml
 
+from gain_calculator import *
+
 
 
 if __name__ == '__main__':
@@ -34,6 +36,8 @@ select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png'
 sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
 green_bar = cv2.imread('targets/green-bar.png')
+chest_img = cv2.imread('targets/chest.png')
+
 
 def dot():
     sys.stdout.write(".")
@@ -253,6 +257,31 @@ def refreshHeroes():
     sys.stdout.write('\n{} heroes sent to work so far'.format(hero_clicks))
     goToGame()
 
+def calculate_BCOIN(chest_img):
+    
+    clickBtn(chest_img)
+
+    time.sleep(3)
+
+    screen = printSreen()
+
+    screen = preprocess_image(screen)
+
+    location_list_screen = find_digits_locations(screen)
+    
+    location_list_screen = filter_digits(location_list_screen)
+
+    digit_crops_screen = get_crops(screen, location_list_screen)
+    
+    bcoin = compute_results(digit_crops_screen)
+
+    print(f'Actual BCOIN = {bcoin}')
+
+    goToGame()
+    
+    return bcoin
+
+
 def main():
     time.sleep(5)
     t = c['time_intervals']
@@ -261,11 +290,48 @@ def main():
     "login" : 0,
     "heroes" : 0,
     "new_map" : 0,
-    "refresh_heroes" : 0
+    "refresh_heroes" : 0,
+    "snap_coin": 0
+    }
+
+    bcoin_track = {
+        "last_value": 0,
+        "num_shap_coin": 0,
+        "tot_gain": 0
     }
 
     while True:
         now = time.time()
+
+        if bcoin_track['last_value'] == 0:
+            try:
+                last['snap_coin'] = now
+                sys.stdout.write('\nCheck current BCOIN.')
+                bcoin = calculate_BCOIN(chest_img)
+                sys.stdout.write(f'\nYou start from {bcoin} BCOIN')
+                bcoin_track['last_value'] = bcoin
+                #bcoin_track['num_shap_coin'] += 1
+                sys.stdout.write("\n")
+            except Exception as e:                
+                sys.stdout.write('\nSomething wrong with BCOIN computation')
+                print(e)
+                sys.stdout.write("\n")
+
+        if now - last['snap_coin'] >= 60*60: # 1 hour
+            try:
+                last['snap_coin'] = now
+                sys.stdout.write('\nCheck current BCOIN.')
+                bcoin = calculate_BCOIN(chest_img)
+                bcoin_track['tot_gain'] += (bcoin - bcoin_track['last_value'])
+                bcoin_track['last_value'] = bcoin
+                bcoin_track['num_shap_coin'] += 1
+                hour_mean = bcoin_track['tot_gain'] / bcoin_track['num_shap_coin']
+                sys.stdout.write(f"\nYou made {bcoin_track['tot_gain']} BCOIN")
+                sys.stdout.write(f"\nYou made {hour_mean} BCOIN/hour")
+                sys.stdout.write("\n")
+            except:
+                sys.stdout.write('\nSomething wrong with BCOIN computation')
+                sys.stdout.write("\n")
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
