@@ -4,3 +4,5 @@ pyautogui
 pyyaml
 requests
 imutils
+matplotlib
+scipy
