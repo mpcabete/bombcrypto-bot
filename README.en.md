@@ -1,28 +1,47 @@
 
+# About:
+  This is an open-source bot, the code is open for anyone to see, fork and
+update.
+  As the developer, I created this bot just for my personal use, I decided to
+publish to help other people and maybe get a few bucks in donation.  As the
+time went by, more and more people started opening issues, asking for help and
+suggesting changes.
+  I try to answer everyone, but lately it has been hard to keep  up. As the
+only donation I received so far amounts to only 1 BCOIN and the bot
+currently works perfectly for me. I am not feeling to motivated to spend the
+time it needs to maintain the bot. I would like to keep this bot free and open
+source, so as an incentive for me to spend the time and energy maintaining the
+bot, I have created some donation milestones so people can collectively fund
+the bot.
 
-  This is an open-source bot, the code is open for anyone to see, fork and update.
-As the developer, I created this bot just for my personal use, I decided to publish to help other people and maybe get a few bucks in donation.
-As the time went by, more and more people started opening issues, asking for help and suggesting changes. 
-I try to answer everyone, but lately it has been hard to keep  up. As the only donation I received so far amounts to only 1 BCOIN and the bot works for me, I am not feeling to motivated to spend the time it needs to maintain the bot.
-I would like to keep this bot free and open source, so as an incentive for me to spend the time and energy maintaining the bot, I have created some donation milestones so people can collectively fund the bot.
+Currently, I will be manually updating the donation counter daily, maybe in
+the future I can set it up, so it increments automatically.
 
-Currently, I will be manually updating the donation counter daily, maybe in the future I can set it up, so it increments automatically.
+1 Spend some time in my days reviewing issues, and organizing repository.
 
-A step-by-step guide in how to troubleshoot and fix the most common bugs, maybe with some flow charts.
+2 A step-by-step guide in how to troubleshoot and fix the most common bugs,
+maybe with some flow charts.
 
-A step-by-step guide in how to set up the bot in a VPS using google cloud free trial (3 months) 
+3 A step-by-step guide in how to set up the bot in a VPS using google cloud
+free trial (3 months) 
 
-Work with the people who are having this issue to solve the errors happening when running the bot in a windows double monitor setup.
+4 Implement and maintain the feature for sending selected heroes home.(a lot
+of iteration will be needed solving minor bugs, as I do not own any house).
 
-Implement and maintain the feature for sending selected heroes home.(a lot of iteration will be needed solving minor bugs, as I do not own any house).
+5 Insert an random value in every movement and delay in the bot to further
+prevent detection.
 
-Work in the bug fixes relating to the login sequence.
+6 Work in the bug fixes relating to the login sequence.
+
+7 Work with the people who are having this issue to solve the errors
+happening when running the bot in a windows double monitor setup.
+
+
 
 Review and merge pull requests.
 ``` 
-    1    2 
-[====================================================================================================]
-500$
+             1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
+[x==============|===============|==========|====================|===============|==========|===============] (500$)
 ```
 
 # Installation:
