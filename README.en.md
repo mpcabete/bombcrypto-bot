@@ -43,6 +43,12 @@ happening when running the bot in a windows double monitor setup.
              1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
 [x==============|===============|==========|====================|===============|==========|===============] (500$)
 ```
+### Smart Chain Wallet:
+#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
+
+### Paypal:
+[Donate:](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
+https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
 
 ## Disclaymer:
   
