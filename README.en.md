@@ -44,6 +44,13 @@ happening when running the bot in a windows double monitor setup.
 [x==============|===============|==========|====================|===============|==========|===============] (500$)
 ```
 
+## Disclaymer:
+  
+  The bombcrypto developers have not manifested themselves yet regarding the
+  use of bots. Do your own research and use the bot at your own risk. I am not
+  responsible for any future penalties.
+
+
 # Installation:
 ### Download and install Phython from the [site](https://www.python.org/downloads/) or from the [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab). 
 
