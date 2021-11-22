@@ -21,8 +21,8 @@ Work in the bug fixes relating to the login sequence.
 Review and merge pull requests.
 ``` 
     1    2 
-[xxx|xxxx|xxxxxxxxxx========]
-
+[====================================================================================================]
+500$
 ```
 
 # Installation:
