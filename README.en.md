@@ -18,6 +18,7 @@ Currently, I will be manually updating the donation counter daily, maybe in
 the future I can set it up, so it increments automatically.
 
 1 Spend some time in my days reviewing issues, and organizing repository.
+Review and merge pull requests.
 
 2 A step-by-step guide in how to troubleshoot and fix the most common bugs,
 maybe with some flow charts.
@@ -38,7 +39,6 @@ happening when running the bot in a windows double monitor setup.
 
 
 
-Review and merge pull requests.
 ``` 
              1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
 [x==============|===============|==========|====================|===============|==========|===============] (500$)
