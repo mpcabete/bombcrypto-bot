@@ -7,9 +7,7 @@ Desenvolvi esse bot inicialmente para o meu uso pessoal. Eu decidi publica-lo
 aqui para ajudar o pessoal e com a esperança de ganhar um trocadinho com
 doações.  Com o tempo mais e mais pessoas foram abrindo issues, pedindo ajuda,
 e dando sugestões. Eu tento responder todo mundo, mas ultimamente tem sido
-difícil acompanhar a demanda. Como o bot funciona perfeitamente para mim, e eu
-so recebi 1 BCOIN de doação até hj, acabo não me sentindo muito motivado para
-gastar o tempo e energia que o bot demanda.
+difícil acompanhar a demanda. 
 
 Eu gostaria de manter este bot grátis e com o código aberto. Para que isso
 seja possível eu estou criando algumas metas de doação para que o bot possa
