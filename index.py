@@ -155,7 +155,7 @@ def scroll():
     if not c['use_click_and_drag_instead_of_scroll']:
         pyautogui.scroll(-c['scroll_size'])
     else:
-        pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1)
+        pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1, button='left')
 
 
 def clickButtons():
@@ -289,7 +289,7 @@ def refreshHeroes():
     else:
         sys.stdout.write('\nSending all heroes to work!')
     buttonsClicked = 1
-    empty_scrolls_attempts = 3
+    empty_scrolls_attempts = c['scroll_attemps']
     while(empty_scrolls_attempts >0):
         if c['only_click_heroes_with_green_bar']:
             buttonsClicked = clickGreenBarButtons()
