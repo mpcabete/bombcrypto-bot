@@ -236,6 +236,7 @@ def login():
         return
 
     if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
+        login_attempts = login_attempts + 1
         sys.stdout.write('\nConnect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
