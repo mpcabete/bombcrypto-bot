@@ -271,7 +271,7 @@ def login():
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
-        if clickBtn(downArrow_img, name='teasureHunt', timeout=25):
+        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
