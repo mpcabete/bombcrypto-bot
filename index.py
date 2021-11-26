@@ -74,10 +74,11 @@ login_attempts = 0
 
 go_work_img = cv2.imread('targets/go-work.png')
 commom_img = cv2.imread('targets/commom-text.png')
-arrow_img = cv2.imread('targets/go-back-arrow.png')
+upArrow_img = cv2.imread('targets/up-arrow.png')
 hero_img = cv2.imread('targets/hero-icon.png')
-x_button_img = cv2.imread('targets/x.png')
 teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
+x_button_img = cv2.imread('targets/x.png')
+downArrow_img = cv2.imread('targets/down-arrow.png')
 ok_btn_img = cv2.imread('targets/ok.png')
 connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
 select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
@@ -204,7 +205,7 @@ def clickGreenBarButtons():
 
 
 def goToHeroes():
-    if clickBtn(arrow_img):
+    if clickBtn(upArrow_img):
         global login_attempts
         login_attempts = 0
 
@@ -218,13 +219,13 @@ def goToGame():
     # time.sleep(3)
     clickBtn(x_button_img)
 
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(downArrow_img)
 
 def refreshHeroesPositions():
-    clickBtn(arrow_img)
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(upArrow_img)
+    clickBtn(downArrow_img)
     # time.sleep(3)
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(downArrow_img)
 
 def login():
     global login_attempts
@@ -270,7 +271,7 @@ def login():
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
-        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
+        if clickBtn(downArrow_img, name='teasureHunt', timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
