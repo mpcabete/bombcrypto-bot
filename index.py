@@ -220,7 +220,7 @@ def goToGame():
     # time.sleep(3)
     clickBtn(x_button_img)
 
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(downArrow_img)
 
 def refreshHeroesPositions():
     clickBtn(arrow_img)
