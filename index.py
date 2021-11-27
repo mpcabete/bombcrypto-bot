@@ -75,6 +75,7 @@ login_attempts = 0
 go_work_img = cv2.imread('targets/go-work.png')
 commom_img = cv2.imread('targets/commom-text.png')
 upArrow_img = cv2.imread('targets/up-arrow.png')
+arrow_img = cv2.imread('targets/go-back-arrow.png') 
 hero_img = cv2.imread('targets/hero-icon.png')
 teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
 x_button_img = cv2.imread('targets/x.png')
@@ -219,13 +220,13 @@ def goToGame():
     # time.sleep(3)
     clickBtn(x_button_img)
 
-    clickBtn(downArrow_img)
+    clickBtn(teasureHunt_icon_img)
 
 def refreshHeroesPositions():
-    clickBtn(upArrow_img)
-    clickBtn(downArrow_img)
+    clickBtn(arrow_img)
+    clickBtn(teasureHunt_icon_img)
     # time.sleep(3)
-    clickBtn(downArrow_img)
+    clickBtn(teasureHunt_icon_img)
 
 def login():
     global login_attempts
