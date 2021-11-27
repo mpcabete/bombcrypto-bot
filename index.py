@@ -85,6 +85,7 @@ select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png'
 sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
 green_bar = cv2.imread('targets/green-bar.png')
+full_stamina = cv2.imread('targets/full-stamina.png')
 
 def dot():
     sys.stdout.write(".")
@@ -202,6 +203,26 @@ def clickGreenBarButtons():
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
 
+def clickFullBarButtons():
+    offset = 100
+    full_bars = positions(full_stamina, trashhold=ct['default'])
+    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+
+    not_working_full_bars = []
+    for bar in full_bars:
+        if not isWorking(bar, buttons):
+            not_working_full_bars.append(bar)
+
+    if len(not_working_full_bars) > 0:
+        sys.stdout.write('\nclicking in %d heroes.' % len(not_working_full_bars))
+
+    for (x, y, w, h) in not_working_full_bars:
+        pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        pyautogui.click()
+        global hero_clicks
+        hero_clicks = hero_clicks + 1
+    
+    return len(not_working_full_bars)
 
 def goToHeroes():
     if clickBtn(arrow_img):
@@ -285,21 +306,27 @@ def login():
 
 def refreshHeroes():
     goToHeroes()
-    if c['only_click_heroes_with_green_bar']:
-        print('\nSending heroes with an green stamina bar to work!')
+    
+    if c['select_heroes_mode'] == "full":
+        print('\nSending heroes with full stamina bar to work!')
+    elif c['select_heroes_mode'] == "green":
+        print('\nSending heroes with green stamina bar to work!')
     else:
-        sys.stdout.write('\nSending all heroes to work!')
+        print('\nSending all heroes to work!')
+    
     buttonsClicked = 1
     empty_scrolls_attempts = 3
+    
     while(empty_scrolls_attempts >0):
-        if c['only_click_heroes_with_green_bar']:
+        if c['select_heroes_mode'] == 'full':
+            buttonsClicked = clickFullBarButtons()
+        elif c['select_heroes_mode'] == 'green':
             buttonsClicked = clickGreenBarButtons()
         else:
             buttonsClicked = clickButtons()
+        
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
-            # print('no buttons found after scrolling, trying {} more times'.format(empty_scrolls_attempts))
-        # !mudei scroll pra baixo
         scroll()
         time.sleep(2)
     sys.stdout.write('\n{} heroes sent to work so far'.format(hero_clicks))
