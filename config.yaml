@@ -102,9 +102,25 @@
   click_and_drag_amount: 200
 
   # [en_US]
-  # Default value: true
+  # Default value: green
+  # Available options:
+  # all   = select all heroes (regardless of the stamina bar)
+  # green = select the heroes with green stamina bar (half or full)
+  # full  = select only the heroes with full stamina bar
   #
   # [pt_BR]
-  # Valor padrão: true
-  only_click_heroes_with_green_bar: true
-  
+  # Valor padrão: green
+  # Opções disponíveis:
+  # all   = seleciona todos os heróis (independente da barra de stamina)
+  # green = seleciona os heróis com a barra de stamina verde (metade ou cheia)
+  # full  = seleciona somente os heróis com a barra de stamina cheia
+  select_heroes_mode: "green"
+
+  # [en_US] Option for save logs to a file (logs.txt)
+  # Default value: False
+  # Available options: False or True
+  #
+  # [pt_BR] Opção para salvar os logs em arquivo (logs.txt)
+  # Valor padrão : False
+  # Opções disponíveis: False ou True
+  save_log_to_file: True  
