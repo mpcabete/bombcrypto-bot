@@ -85,9 +85,24 @@ select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png'
 sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
 green_bar = cv2.imread('targets/green-bar.png')
+full_stamina = cv2.imread('targets/full-stamina.png')
+
+def logger(message):
+    datetime = time.localtime()
+    formatted_datetime = time.strftime("%d/%m/%Y %H:%M:%S", datetime)
+
+    formatted_message = "[{}] \n => {} \n\n".format(formatted_datetime, message)
+
+    print(formatted_message)
+
+    if (c['save_log_to_file'] == True):
+        logger_file = open("logger.log", "a")
+        logger_file.write(formatted_message)
+        logger_file.close()
+    
+    return True
 
 def dot():
-    sys.stdout.write(".")
     sys.stdout.flush()
 
 def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
@@ -190,7 +205,7 @@ def clickGreenBarButtons():
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
-        sys.stdout.write('\nclicking in %d heroes.' % len(not_working_green_bars))
+        logger('Clicking in %d heroes.' % len(not_working_green_bars))
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
@@ -202,6 +217,26 @@ def clickGreenBarButtons():
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
 
+def clickFullBarButtons():
+    offset = 100
+    full_bars = positions(full_stamina, trashhold=ct['default'])
+    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+
+    not_working_full_bars = []
+    for bar in full_bars:
+        if not isWorking(bar, buttons):
+            not_working_full_bars.append(bar)
+
+    if len(not_working_full_bars) > 0:
+        logger('Clicking in %d heroes.' % len(not_working_full_bars))
+
+    for (x, y, w, h) in not_working_full_bars:
+        pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        pyautogui.click()
+        global hero_clicks
+        hero_clicks = hero_clicks + 1
+    
+    return len(not_working_full_bars)
 
 def goToHeroes():
     if clickBtn(arrow_img):
@@ -230,14 +265,14 @@ def login():
     global login_attempts
 
     if login_attempts > 3:
-        sys.stdout.write('\ntoo many login attempts, refreshing.')
+        logger('Too many login attempts, refreshing.')
         login_attempts = 0
         pyautogui.press('f5')
         return
 
     if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
         login_attempts = login_attempts + 1
-        sys.stdout.write('\nConnect wallet button detected, logging in!')
+        logger('Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
@@ -285,24 +320,30 @@ def login():
 
 def refreshHeroes():
     goToHeroes()
-    if c['only_click_heroes_with_green_bar']:
-        print('\nSending heroes with an green stamina bar to work!')
+
+    if c['select_heroes_mode'] == "full":
+        logger("Sending heroes with full stamina bar to work!")
+    elif c['select_heroes_mode'] == "green":
+        logger("Sending heroes with green stamina bar to work!")
     else:
-        sys.stdout.write('\nSending all heroes to work!')
+        logger("Sending all heroes to work!")
+
     buttonsClicked = 1
     empty_scrolls_attempts = c['scroll_attemps']
+
     while(empty_scrolls_attempts >0):
-        if c['only_click_heroes_with_green_bar']:
+        if c['select_heroes_mode'] == 'full':
+            buttonsClicked = clickFullBarButtons()
+        elif c['select_heroes_mode'] == 'green':
             buttonsClicked = clickGreenBarButtons()
         else:
             buttonsClicked = clickButtons()
+        
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
-            # print('no buttons found after scrolling, trying {} more times'.format(empty_scrolls_attempts))
-        # !mudei scroll pra baixo
         scroll()
         time.sleep(2)
-    sys.stdout.write('\n{} heroes sent to work so far'.format(hero_clicks))
+    logger('{} heroes sent to work so far'.format(hero_clicks))
     goToGame()
 
 def main():
@@ -321,31 +362,29 @@ def main():
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
-            sys.stdout.write('\nSending heroes to work.')
+            logger('Sending heroes to work.')
             refreshHeroes()
-            sys.stdout.write("\n")
 
         if now - last["login"] > t['check_for_login'] * 60:
-            sys.stdout.write("\nChecking if game has disconnected.")
+            logger("Checking if game has disconnected.")
             sys.stdout.flush()
             last["login"] = now
             login()
-            sys.stdout.write("\n")
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
             if clickBtn(new_map_btn_img):
                 with open('new-map.log','a') as new_map_log:
                     new_map_log.write(str(time.time())+'\n')
-                sys.stdout.write('\nNew Map button clicked!\n')
+                logger('New Map button clicked!')
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
             last["refresh_heroes"] = now
-            sys.stdout.write('\nRefreshing Heroes Positions.\n')
+            logger('Refreshing Heroes Positions.')
             refreshHeroesPositions()
 
         #clickBtn(teasureHunt)
-        sys.stdout.write(".")
+        logger(".")
         sys.stdout.flush()
 
         time.sleep(1)
