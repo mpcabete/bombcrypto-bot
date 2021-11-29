@@ -65,6 +65,7 @@ pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
 pyautogui.FAILSAFE = True
 hero_clicks = 0
 login_attempts = 0
+last_log_is_progress = False
 
 
 
@@ -87,11 +88,35 @@ new_map_btn_img = cv2.imread('targets/new-map.png')
 green_bar = cv2.imread('targets/green-bar.png')
 full_stamina = cv2.imread('targets/full-stamina.png')
 
-def logger(message):
+def logger(message, progress_indicator = False):
+    global last_log_is_progress
+
+
+
+    # Start progress indicator and append dots to in subsequent progress calls
+    if progress_indicator:
+        if not last_log_is_progress:
+            last_log_is_progress = True
+            sys.stdout.write('\n => .')
+            sys.stdout.flush()
+        else:
+            sys.stdout.write('.')
+            sys.stdout.flush()
+
+        return
+
+    if last_log_is_progress:
+        sys.stdout.write('\n\n')
+        sys.stdout.flush()
+        last_log_is_progress = False
+
+
+
     datetime = time.localtime()
     formatted_datetime = time.strftime("%d/%m/%Y %H:%M:%S", datetime)
 
     formatted_message = "[{}] \n => {} \n\n".format(formatted_datetime, message)
+
 
     print(formatted_message)
 
@@ -99,14 +124,11 @@ def logger(message):
         logger_file = open("logger.log", "a")
         logger_file.write(formatted_message)
         logger_file.close()
-    
+
     return True
 
-def dot():
-    sys.stdout.flush()
-
 def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
-    dot()
+    logger(None, progress_indicator=True)
     if not name is None:
         pass
         # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
@@ -384,7 +406,8 @@ def main():
             refreshHeroesPositions()
 
         #clickBtn(teasureHunt)
-        logger(".")
+        logger(None, progress_indicator=True)
+
         sys.stdout.flush()
 
         time.sleep(1)
