@@ -204,6 +204,9 @@ def clickButtons():
         global hero_clicks
         hero_clicks = hero_clicks + 1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
+        if hero_clicks > 20:
+            logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+            return
     return len(buttons)
 
 def isWorking(bar, buttons):
@@ -239,6 +242,9 @@ def clickGreenBarButtons():
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
+        if hero_clicks > 20:
+            logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+            return
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
 
