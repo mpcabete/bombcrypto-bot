@@ -15,25 +15,25 @@ ser financiado coletivamente. Atualmente eu atualizarei a barra das metas
 manualmente de forma diária, talvez no futuro eu automatize o processo de
 alguma forma.
 
-1.  Diariamente passar um tempo respondendo os issues, organizando o
+1  Diariamente passar um tempo respondendo os issues, organizando o
 repositório e revisando pull requests.
 
-2. [x] Um tutorial de como identificar e resolver os problemas mais comuns no
+2 [x] Um tutorial de como identificar e resolver os problemas mais comuns no
   bot, talvez com um diagrama de fluxo.
 
-3. [ ] Um tutorial de como hostear o bot em um computador virtual usando o plano
+3 [ ] Um tutorial de como hostear o bot em um computador virtual usando o plano
   de testes de 3 meses da google cloud.
 
-4. [ ] Terminar de implementar e fazer a manutenção e os ajustes necessários na
+4 [ ] Terminar de implementar e fazer a manutenção e os ajustes necessários na
   função de enviar os heróis para casa.
 
-5. - Inserir um valor aleatório em todos os movimentos e os intervalos de
+5 - Inserir um valor aleatório em todos os movimentos e os intervalos de
 espera do bot para dificultar ainda mais sua detecção.
 
-6. - Arrumar e ajustar os problemas que tem ocorrido durante o processo de
+6 - Arrumar e ajustar os problemas que tem ocorrido durante o processo de
 login.
 
-7. - Trabalhar com o pessoal para arrumar os erros que ocorrem quando o bot é
+7 - Trabalhar com o pessoal para arrumar os erros que ocorrem quando o bot é
 usado em um setup windows com dois monitores.
 
 
