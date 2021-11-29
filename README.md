@@ -39,9 +39,9 @@ usado em um setup windows com dois monitores.
 
 ``` 
              1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
-[xxxxxxxxxxxxxx|xxxxxxxxxxx=====|==========|====================|===============|==========|===============] (500$)
-                          |
-                         120$
+[xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxx==========|===============|==========|===============] (500$)
+                                                     |
+                                                    240$
 
 ```
 - 25/11/21
