@@ -220,9 +220,9 @@ def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 130
     green_bars = positions(green_bar, trashhold=ct['green_bar'])
-        logger('%d green bars detected' % len(green_bars))
+    logger('%d green bars detected' % len(green_bars))
     buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
-        logger('%d buttons detected' % len(buttons))
+    logger('%d buttons detected' % len(buttons))
 
     not_working_green_bars = []
     for bar in green_bars:
