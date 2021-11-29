@@ -220,13 +220,16 @@ def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 130
     green_bars = positions(green_bar, trashhold=ct['green_bar'])
+        logger('%d green bars detected' % len(green_bars))
     buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+        logger('%d buttons detected' % len(buttons))
 
     not_working_green_bars = []
     for bar in green_bars:
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
+        logger('%d buttons with green bar detected' % len(not_working_green_bars))
         logger('Clicking in %d heroes.' % len(not_working_green_bars))
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
@@ -257,7 +260,7 @@ def clickFullBarButtons():
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-    
+
     return len(not_working_full_bars)
 
 def goToHeroes():
@@ -360,7 +363,7 @@ def refreshHeroes():
             buttonsClicked = clickGreenBarButtons()
         else:
             buttonsClicked = clickButtons()
-        
+
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
         scroll()
