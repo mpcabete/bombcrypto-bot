@@ -1,4 +1,6 @@
 from cv2 import cv2
+from _thread import *
+from pynput.mouse import Controller
 import numpy as np
 import mss
 import pyautogui
@@ -303,6 +305,28 @@ def refreshHeroes():
         time.sleep(2)
     sys.stdout.write('\n{} heroes sent to work so far'.format(hero_clicks))
     goToGame()
+    
+def getCurTime():
+    return int(time.time())
+    
+def listenForGameCrash():
+    mouseController = Controller() #mouse movement controller
+    lastMoveTime = getCurTime() #current time
+    lastMousePos = mouseController.position #current mouse position
+
+    t = c['time_intervals']
+
+    while True: 
+        time.sleep(600) #check or move at most once every 10 minutes
+
+        if (lastMousePos != Controller().position): #check if mouse moved
+            lastMoveTime = getCurTime() #set last moved time to now
+            lastMousePos = Controller().position #update mouse position
+            
+        elif ((getCurTime() - lastMoveTime) > 600):
+            pyautogui.press('f5') #move a little bit in each direction
+            lastMoveTime = getCurTime()
+
 
 def main():
     time.sleep(5)
@@ -314,6 +338,8 @@ def main():
     "new_map" : 0,
     "refresh_heroes" : 0
     }
+    
+    start_new_thread(listenForGameCrash, ()) 
 
     while True:
         now = time.time()
