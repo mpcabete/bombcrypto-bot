@@ -10,8 +10,8 @@
     #
     # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
     # Valor padrão (em minutos): 10
-    send_heroes_for_work: 10
-    
+    send_heroes_to_work: 10
+
     # [en_US] Time interval to update heroes position in the map,
     # Default value (in minutes): 3
     #
@@ -33,18 +33,18 @@
     # Valor padrão (em minutos): 5
     check_for_login: 5
 
-    # [en_US] Time interval between moviments
+    # [en_US] Time interval between movements
     # Default value (in seconds): 1 
     #
     # [pt_BR] Intervalo de tempo entre movimentos
     # Valor padrão (em segundos): 1
-    interval_between_moviments: 1
+    interval_between_movements: 1
 
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #
   # [pt_BR] O quão confiante o bot precisa estar para clicar nos botões (valores entre 0 e 1. 0 é o valor mínimo, 1 é o valor máximo)
   #
-  trashhold:
+  threshold:
     # [en_US]
     # Default value: 0.7
     #
@@ -92,7 +92,7 @@
   #
   # [pt_BR]
   # Valor padrão: 3
-  scroll_attemps: 3
+  scroll_attempts: 3
 
   # [en_US]
   # Default value: true

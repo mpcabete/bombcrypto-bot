@@ -25,7 +25,7 @@ cat = """
                                                   ; '   : :`-:     _.`* ;
                                                .*' /  .*' ; .*`- +'  `*'
                                                `*-*   `*-*  `*-*'
-====== Please, consider buying me an coffe :) =========================
+====== Please, consider buying me an coffee :) =========================
 ==== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf =======================
 ==== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ =====
 =======================================================================
@@ -58,20 +58,14 @@ if __name__ == '__main__':
 
     stream = open("config.yaml", 'r')
     c = yaml.safe_load(stream)
-ct = c['trashhold']
+ct = c['threshold']
 
-pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
+pyautogui.PAUSE = c['time_intervals']['interval_between_movements']
 
 pyautogui.FAILSAFE = True
 hero_clicks = 0
 login_attempts = 0
 last_log_is_progress = False
-
-
-
-
-
-
 
 go_work_img = cv2.imread('targets/go-work.png')
 commom_img = cv2.imread('targets/commom-text.png')
@@ -127,7 +121,7 @@ def logger(message, progress_indicator = False):
 
     return True
 
-def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
+def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
     if not name is None:
         pass
@@ -135,7 +129,7 @@ def clickBtn(img,name=None, timeout=3, trashhold = ct['default']):
     start = time.time()
     clicked = False
     while(not clicked):
-        matches = positions(img, trashhold=trashhold)
+        matches = positions(img, threshold=threshold)
         if(len(matches)==0):
             hast_timed_out = time.time()-start > timeout
             if(hast_timed_out):
@@ -161,13 +155,13 @@ def printSreen():
         sct_img = np.array(sct.grab(sct.monitors[0]))
         return sct_img[:,:,:3]
 
-def positions(target, trashhold=ct['default']):
+def positions(target, threshold=ct['default']):
     img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
     w = target.shape[1]
     h = target.shape[0]
 
-    yloc, xloc = np.where(result >= trashhold)
+    yloc, xloc = np.where(result >= threshold)
 
 
     rectangles = []
@@ -180,7 +174,7 @@ def positions(target, trashhold=ct['default']):
 
 def scroll():
 
-    commoms = positions(commom_img, trashhold = ct['commom'])
+    commoms = positions(commom_img, threshold = ct['commom'])
     if (len(commoms) == 0):
         # print('no commom text found')
         return
@@ -196,7 +190,7 @@ def scroll():
 
 
 def clickButtons():
-    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
     # print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
@@ -220,11 +214,11 @@ def isWorking(bar, buttons):
     return True
 
 def clickGreenBarButtons():
-    # ele clicka nos q tao trabaiano mas axo q n importa
+    # It clicks on the bombers that are already working, but I don't think it matters
     offset = 130
-    green_bars = positions(green_bar, trashhold=ct['green_bar'])
+    green_bars = positions(green_bar, threshold=ct['green_bar'])
     logger('%d green bars detected' % len(green_bars))
-    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
     logger('%d buttons detected' % len(buttons))
 
     not_working_green_bars = []
@@ -250,8 +244,8 @@ def clickGreenBarButtons():
 
 def clickFullBarButtons():
     offset = 100
-    full_bars = positions(full_stamina, trashhold=ct['default'])
-    buttons = positions(go_work_img, trashhold=ct['go_to_work_btn'])
+    full_bars = positions(full_stamina, threshold=ct['default'])
+    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
 
     not_working_full_bars = []
     for bar in full_bars:
@@ -321,7 +315,7 @@ def login():
         # click ok button
 
     if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn'):
-        if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', trashhold = ct['select_wallet_buttons'] ):
+        if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', threshold = ct['select_wallet_buttons'] ):
             pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
@@ -360,7 +354,7 @@ def refreshHeroes():
         logger("Sending all heroes to work!")
 
     buttonsClicked = 1
-    empty_scrolls_attempts = c['scroll_attemps']
+    empty_scrolls_attempts = c['scroll_attempts']
 
     while(empty_scrolls_attempts >0):
         if c['select_heroes_mode'] == 'full':
@@ -391,7 +385,7 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["heroes"] > t['send_heroes_for_work'] * 60:
+        if now - last["heroes"] > t['send_heroes_to_work'] * 60:
             last["heroes"] = now
             logger('Sending heroes to work.')
             refreshHeroes()
