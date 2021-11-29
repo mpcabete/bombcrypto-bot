@@ -314,8 +314,6 @@ def listenForGameCrash():
     lastMoveTime = getCurTime() #current time
     lastMousePos = mouseController.position #current mouse position
 
-    t = c['time_intervals']
-
     while True: 
         time.sleep(600) #check or move at most once every 10 minutes
 
