@@ -313,15 +313,16 @@ def listenForGameCrash():
     mouseController = Controller() #mouse movement controller
     lastMoveTime = getCurTime() #current time
     lastMousePos = mouseController.position #current mouse position
+    t = c['time_intervals']
 
     while True: 
-        time.sleep(600) #check or move at most once every 10 minutes
+        time.sleep(t['check_for_game_crash'] * 60) #check or move at most once every 10 minutes
 
         if (lastMousePos != Controller().position): #check if mouse moved
             lastMoveTime = getCurTime() #set last moved time to now
             lastMousePos = Controller().position #update mouse position
             
-        elif ((getCurTime() - lastMoveTime) > 600):
+        elif ((getCurTime() - lastMoveTime) > t['check_for_game_crash'] * 60):
             pyautogui.press('f5') #move a little bit in each direction
             lastMoveTime = getCurTime()
 
