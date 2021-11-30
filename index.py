@@ -298,7 +298,7 @@ def login():
     if login_attempts > 3:
         logger('Too many login attempts, refreshing.')
         login_attempts = 0
-        pyautogui.press('f5')
+        pyautogui.hotkey('ctrl','f5')
         return
 
     if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
