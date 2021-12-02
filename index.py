@@ -154,16 +154,14 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         pyautogui.click()
         return True
 
-def printSreen(monitor = None):
+def printSreen():
     with mss.mss() as sct:
-        if monitor is None:
-            monitor = sct.monitors[0]
+        monitor = sct.monitors[0]
+        sct_img = np.array(sct.grab(monitor))
         # The screen part to capture
         # monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
 
         # Grab the data
-        #sct_img = np.array(sct.grab(monitor))
-        sct_img = np.array(sct.grab(monitor))
         return sct_img[:,:,:3]
 
 def positions(target, threshold=ct['default']):
@@ -444,81 +442,96 @@ def sobelOperator(img):
 
     return cv2.cvtColor(grad, cv2.COLOR_BGR2GRAY)
 
-def puzzle(t):
-    robot_position = positions(robot)
-    if len(robot_position) == 0:
-        print('puzzle not found')
-        return
-    rx, ry, rw, rh = robot_position[0]
-    print('pos')
-    print(robot_position)
-    # img = puzzle_img
-    # img = printSreen({"top": 160, "left": 160, "width": 1000, "height": 135})
-    img = printSreen()
-    img = img[ry:ry+300,rx-40:rx+rw-20]
-    # tirar a logica do printscreen e dar um crop em img
-    #TODO mudar logica pra pegar segunda pra pegar o primeiro com o crop
-
-    target = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
-    img = cv2.GaussianBlur(img, (3, 3), 0)
-    # img = cv2.Laplacian(img,cv2.CV_64F)
+def findPuzzlePieces(result, piece_img, threshold=0.5):
+    piece_w = piece_img.shape[1]
+    piece_h = piece_img.shape[0]
+    yloc, xloc = np.where(result >= threshold)
 
 
-    img = cv2.Canny(img, threshold1=t/2, threshold2=t,L2gradient=True)
-    result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
-    w = target.shape[1]
-    h = target.shape[0]
-
-    def try_until_two_pieces(threshold):
-        if threshold < 0:
-           print('no puzzle piece')
-           return
-        yloc, xloc = np.where(result >= threshold)
+    r= []
+    for (piece_x, piece_y) in zip(xloc, yloc):
+        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
+        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
 
 
-        r= []
-        for (x, y) in zip(xloc, yloc):
-            r.append([int(x), int(y), int(w), int(h)])
-            r.append([int(x), int(y), int(w), int(h)])
+    r, weights = cv2.groupRectangles(r, 1, 0.2)
 
+    if len(r) < 2:
+        print('threshold = %.3f' % threshold)
+        return findPuzzlePieces(result, piece_img,threshold-0.01)
 
-        r, weights = cv2.groupRectangles(r, 1, 0.2)
+    if len(r) == 2:
+        print('match')
+        return r
 
-        if len(r) < 2:
-            print('threshold = %.3f' % threshold)
-            return try_until_two_pieces(threshold-0.01)
+    if len(r) > 2:
+        print('overshoot by %d' % len(r))
 
-        if len(r) == 2:
-            print('match')
-            print(r)
-            return r
+        return r
 
-        if len(r) > 2:
-            print('overshoot by %d' % len(r))
-
-            return r
-
-    initial_threshold = 0.5
-    rectangles = try_until_two_pieces(initial_threshold)
-    print(rectangles)
-
-    if rectangles is None:
-        return
-
-    xs = [row[0] for row in rectangles]
+def getRightPiece(puzzle_pieces):
+    xs = [row[0] for row in puzzle_pieces]
     index_of_right_rectangle = xs.index(max(xs))
-    result = rectangles[index_of_right_rectangle]
-    print(result)
 
+    right_piece = puzzle_pieces[index_of_right_rectangle]
+    return right_piece
 
+def show(img, rectangles):
     for (x, y, w, h) in rectangles:
-        cv2.rectangle(img, (x, y), (x + w, y + h), (255,255,255), 2)
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255,255,255,255), 2)
 
     # cv2.rectangle(img, (result[0], result[1]), (result[0] + result[2], result[1] + result[3]), (255,50,255), 2)
     cv2.imshow('img',img)
     cv2.waitKey(0)
 
-puzzle(150)
+def solvePuzzle(t):
+    popup_pos = positions(robot)
+    if len(popup_pos) == 0:
+        print('puzzle not found')
+        return
+    rx, ry, _, _ = popup_pos[0]
+
+    w = 300
+    h = 100
+    x_offset = -40
+    y_offset = 40
+
+    y = ry + y_offset
+    x = rx + x_offset
+
+    img = printSreen()
+    #TODO tirar um poco de cima
+
+    cropped = img[ y : y + w , x: x + w]
+    blurred = cv2.GaussianBlur(cropped, (3, 3), 0)
+    edges = cv2.Canny(blurred, threshold1=t/2, threshold2=t,L2gradient=True)
+    # img = cv2.Laplacian(img,cv2.CV_64F)
+
+    piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
+    result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCOEFF_NORMED)
+
+    puzzle_pieces = findPuzzlePieces(result, piece_img)
+
+    if puzzle_pieces is None:
+        return
+
+    # show(edges,puzzle_pieces)
+
+    with mss.mss() as sct:
+        monitor = sct.monitors[0]
+        sct_img = np.array(sct.grab(monitor))
+    absolute_puzzle_pieces = []
+    for i, puzzle_piece in enumerate(puzzle_pieces):
+        px, py, pw, ph = puzzle_piece
+        absolute_puzzle_pieces.append( [ x + px, y + py, pw, ph])
+
+    absolute_puzzle_pieces = np.array(absolute_puzzle_pieces)
+    print(absolute_puzzle_pieces)
+    show(sct_img,absolute_puzzle_pieces)
+    print(puzzle_pieces)
+
+
+solvePuzzle(150)
 
 
 
