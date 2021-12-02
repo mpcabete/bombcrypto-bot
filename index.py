@@ -87,6 +87,9 @@ sign_btn_img = cv2.imread('targets/select-wallet-2.png')
 new_map_btn_img = cv2.imread('targets/new-map.png')
 green_bar = cv2.imread('targets/green-bar.png')
 full_stamina = cv2.imread('targets/full-stamina.png')
+puzzle_img = cv2.imread('targets/puzzle.png')
+piece = cv2.imread('targets/piece.png')
+robot = cv2.imread('targets/robot.png')
 
 def logger(message, progress_indicator = False):
     global last_log_is_progress
@@ -151,14 +154,16 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         pyautogui.click()
         return True
 
-def printSreen():
+def printSreen(monitor = None):
     with mss.mss() as sct:
+        if monitor is None:
+            monitor = sct.monitors[0]
         # The screen part to capture
-        monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
+        # monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
 
         # Grab the data
         #sct_img = np.array(sct.grab(monitor))
-        sct_img = np.array(sct.grab(sct.monitors[0]))
+        sct_img = np.array(sct.grab(monitor))
         return sct_img[:,:,:3]
 
 def positions(target, threshold=ct['default']):
@@ -422,8 +427,95 @@ def main():
         time.sleep(1)
 
 
-main()
+#main()
 
+def sobelOperator(img):
+    scale = 1
+    delta = 0
+    ddepth = cv2.CV_16S
+
+    img = cv2.GaussianBlur(img, (3, 3), 0)
+    gray = img
+    grad_x = cv2.Sobel(gray, ddepth, 1, 0, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
+    grad_y = cv2.Sobel(gray, ddepth, 0, 1, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
+    abs_grad_x = cv2.convertScaleAbs(grad_x)
+    abs_grad_y = cv2.convertScaleAbs(grad_y)
+    grad = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+
+    return cv2.cvtColor(grad, cv2.COLOR_BGR2GRAY)
+
+def puzzle(t):
+    robot_position = positions(robot)
+    if len(robot_position) == 0:
+        print('puzzle not found')
+        return
+    rx, ry, rw, rh = robot_position[0]
+    print('pos')
+    print(robot_position)
+    # img = puzzle_img
+    # img = printSreen({"top": 160, "left": 160, "width": 1000, "height": 135})
+    img = printSreen()
+    img = img[ry:ry+300,rx+20:rx+rw-20]
+    # tirar a logica do printscreen e dar um crop em img
+    #TODO mudar logica pra pegar segunda pra pegar o primeiro com o crop
+
+    target = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
+    img = cv2.GaussianBlur(img, (3, 3), 0)
+    img = cv2.Canny(img, threshold1=t/2, threshold2=t,L2gradient=True)
+    result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
+    w = target.shape[1]
+    h = target.shape[0]
+
+    def try_until_two_pieces(threshold):
+        if threshold < 0:
+           print('no puzzle piece')
+           return
+        yloc, xloc = np.where(result >= threshold)
+
+
+        r= []
+        for (x, y) in zip(xloc, yloc):
+            r.append([int(x), int(y), int(w), int(h)])
+            r.append([int(x), int(y), int(w), int(h)])
+
+
+        r, weights = cv2.groupRectangles(r, 1, 0.2)
+
+        if len(r) < 1:
+            print('threshold = %.3f' % threshold)
+            return try_until_two_pieces(threshold-0.01)
+
+        if len(r) == 1:
+            print('match')
+            print(r)
+            return r
+
+        if len(r) > 1:
+            print('overshoot by %d' % len(r))
+
+            return r
+
+    initial_threshold = 0.5
+    rectangles = try_until_two_pieces(initial_threshold)
+    print(rectangles)
+
+    if rectangles is None:
+        return
+
+    xs = [row[0] for row in rectangles]
+    index_of_right_rectangle = xs.index(max(xs))
+    result = rectangles[index_of_right_rectangle]
+    print(result)
+
+
+    for (x, y, w, h) in rectangles:
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255,255,255), 2)
+
+    # cv2.rectangle(img, (result[0], result[1]), (result[0] + result[2], result[1] + result[3]), (255,50,255), 2)
+    cv2.imshow('img',img)
+    cv2.waitKey(0)
+
+puzzle(150)
 
 
 
@@ -440,3 +532,6 @@ main()
 
 # pegar o offset dinamicamente
 # clickar so no q nao tao trabalhando pra evitar um loop infinito no final do scroll se ainda tiver um verdinho
+# pip uninstall opencv-python
+
+# pip install --upgrade opencv-python==4.5.3.56
