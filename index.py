@@ -455,12 +455,15 @@ def puzzle(t):
     # img = puzzle_img
     # img = printSreen({"top": 160, "left": 160, "width": 1000, "height": 135})
     img = printSreen()
-    img = img[ry:ry+300,rx+20:rx+rw-20]
+    img = img[ry:ry+300,rx-40:rx+rw-20]
     # tirar a logica do printscreen e dar um crop em img
     #TODO mudar logica pra pegar segunda pra pegar o primeiro com o crop
 
     target = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
     img = cv2.GaussianBlur(img, (3, 3), 0)
+    # img = cv2.Laplacian(img,cv2.CV_64F)
+
+
     img = cv2.Canny(img, threshold1=t/2, threshold2=t,L2gradient=True)
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
     w = target.shape[1]
@@ -481,16 +484,16 @@ def puzzle(t):
 
         r, weights = cv2.groupRectangles(r, 1, 0.2)
 
-        if len(r) < 1:
+        if len(r) < 2:
             print('threshold = %.3f' % threshold)
             return try_until_two_pieces(threshold-0.01)
 
-        if len(r) == 1:
+        if len(r) == 2:
             print('match')
             print(r)
             return r
 
-        if len(r) > 1:
+        if len(r) > 2:
             print('overshoot by %d' % len(r))
 
             return r
