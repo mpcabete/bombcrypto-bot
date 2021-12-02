@@ -1,6 +1,5 @@
 [![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)](https://github.com/mpcabete/bombcrypto-bot/blob/main/README.en.md)
-# Ainda estou trabalhando no capcha, nao to conseguindo monitorar as mensagens
-# nos issues, cuidado com os links pessoal!
+# Ainda estou trabalhando no capcha, nao to conseguindo monitorar as mensagens nos issues, cuidado com os links pessoal!
   
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
