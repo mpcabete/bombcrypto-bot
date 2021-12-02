@@ -3,6 +3,10 @@
 
 ## Vou tirar essa mensagem quando estiver funcionando.
 ------------
+# Still working on the capcha.
+
+## I will remove this message when it is working again
+------------
   
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
