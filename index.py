@@ -484,7 +484,7 @@ def show(img, rectangles):
     cv2.imshow('img',img)
     cv2.waitKey(0)
 
-def solvePuzzle(t):
+def getPiecesPosition(t):
     popup_pos = positions(robot)
     if len(popup_pos) == 0:
         print('puzzle not found')
@@ -531,7 +531,7 @@ def solvePuzzle(t):
     print(puzzle_pieces)
 
 
-solvePuzzle(150)
+getPiecesPosition(150)
 
 
 
