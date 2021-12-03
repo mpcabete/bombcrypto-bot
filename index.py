@@ -461,6 +461,7 @@ def login():
         return
 
     if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
+        solveCapcha()
         login_attempts = login_attempts + 1
         logger('Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
