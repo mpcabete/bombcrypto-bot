@@ -278,6 +278,7 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
+    solveCapcha()
     # time.sleep(5)
     clickBtn(hero_img)
     # time.sleep(5)
@@ -549,20 +550,17 @@ def main():
         now = time.time()
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
-            solveCapcha()
             last["heroes"] = now
             logger('Sending heroes to work.')
             refreshHeroes()
 
         if now - last["login"] > t['check_for_login'] * 60:
-            solveCapcha()
             logger("Checking if game has disconnected.")
             sys.stdout.flush()
             last["login"] = now
             login()
 
         if now - last["new_map"] > t['check_for_new_map_button']:
-            solveCapcha()
             last["new_map"] = now
             if clickBtn(new_map_btn_img):
                 with open('new-map.log','a') as new_map_log:
