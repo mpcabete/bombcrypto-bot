@@ -381,68 +381,7 @@ def refreshHeroes():
     logger('{} heroes sent to work so far'.format(hero_clicks))
     goToGame()
 
-def main():
-    time.sleep(5)
-    t = c['time_intervals']
-
-    last = {
-    "login" : 0,
-    "heroes" : 0,
-    "new_map" : 0,
-    "refresh_heroes" : 0
-    }
-
-    while True:
-        now = time.time()
-
-        if now - last["heroes"] > t['send_heroes_for_work'] * 60:
-            last["heroes"] = now
-            logger('Sending heroes to work.')
-            refreshHeroes()
-
-        if now - last["login"] > t['check_for_login'] * 60:
-            logger("Checking if game has disconnected.")
-            sys.stdout.flush()
-            last["login"] = now
-            login()
-
-        if now - last["new_map"] > t['check_for_new_map_button']:
-            last["new_map"] = now
-            if clickBtn(new_map_btn_img):
-                with open('new-map.log','a') as new_map_log:
-                    new_map_log.write(str(time.time())+'\n')
-                logger('New Map button clicked!')
-
-        if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
-            last["refresh_heroes"] = now
-            logger('Refreshing Heroes Positions.')
-            refreshHeroesPositions()
-
-        #clickBtn(teasureHunt)
-        logger(None, progress_indicator=True)
-
-        sys.stdout.flush()
-
-        time.sleep(1)
-
-
-#main()
-
-def sobelOperator(img):
-    scale = 1
-    delta = 0
-    ddepth = cv2.CV_16S
-
-    img = cv2.GaussianBlur(img, (3, 3), 0)
-    gray = img
-    grad_x = cv2.Sobel(gray, ddepth, 1, 0, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
-    grad_y = cv2.Sobel(gray, ddepth, 0, 1, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
-    abs_grad_x = cv2.convertScaleAbs(grad_x)
-    abs_grad_y = cv2.convertScaleAbs(grad_y)
-    grad = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
-
-    return cv2.cvtColor(grad, cv2.COLOR_BGR2GRAY)
-
+###################### puzzle #############
 def findPuzzlePieces(result, piece_img, threshold=0.5):
     piece_w = piece_img.shape[1]
     piece_h = piece_img.shape[0]
@@ -592,10 +531,59 @@ def solveCapcha():
     pyautogui.mouseUp()
 
     # show(arr)
-solveCapcha()
 
 
 
+def main():
+    time.sleep(5)
+    t = c['time_intervals']
+
+    last = {
+    "login" : 0,
+    "heroes" : 0,
+    "new_map" : 0,
+    "refresh_heroes" : 0
+    }
+
+    while True:
+        now = time.time()
+
+        if now - last["heroes"] > t['send_heroes_for_work'] * 60:
+            solveCapcha()
+            last["heroes"] = now
+            logger('Sending heroes to work.')
+            refreshHeroes()
+
+        if now - last["login"] > t['check_for_login'] * 60:
+            solveCapcha()
+            logger("Checking if game has disconnected.")
+            sys.stdout.flush()
+            last["login"] = now
+            login()
+
+        if now - last["new_map"] > t['check_for_new_map_button']:
+            solveCapcha()
+            last["new_map"] = now
+            if clickBtn(new_map_btn_img):
+                with open('new-map.log','a') as new_map_log:
+                    new_map_log.write(str(time.time())+'\n')
+                logger('New Map button clicked!')
+
+        if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
+            solveCapcha()
+            last["refresh_heroes"] = now
+            logger('Refreshing Heroes Positions.')
+            refreshHeroesPositions()
+
+        #clickBtn(teasureHunt)
+        logger(None, progress_indicator=True)
+
+        sys.stdout.flush()
+
+        time.sleep(1)
+
+
+main()
 
 
 #cv2.imshow('img',sct_img)
