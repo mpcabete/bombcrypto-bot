@@ -1,15 +1,17 @@
 [![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)](https://github.com/mpcabete/bombcrypto-bot/blob/main/README.en.md)
-# Ainda estou trabalhando no capcha, nao to conseguindo monitorar as mensagens nos issues, cuidado com os links pessoal!
+# Depois de um longo dia a versão alpha do resolvedor de capcha está pronto!
 
-Salve familia, n sei q q ta rolando nesse chat maluco ai pq tava trabalhando no bot. Consegui fazer funcionar, to mto feliz!!!
-Eu ainda preciso resolver uns probleminhas pra ele ficar mais consistente, vou dar um tempinho aqui e mais tarde volto a programar.
-Quem quiser testar ele ta upado pra branch puzzle
-Essa versao do bot eu tirei todo o codigo e deixei só o de resolver o capcha, pra testar vc inicia ele com o capcha na tela já
+Ainda tem alguns detalhes que quero resolver, e quero ler o que foi dito nos
+issues hj, q n consegui acompanhar mto. Alem de dar uma revisada no
+codigo com a cabeça descançada amanhã. Por isso nao dei o merge ainda nessa
+branch.
+
+Para quem quiser ir testando, vc pode encontrar ele na branch [puzzle](https://github.com/mpcabete/bombcrypto-bot/tree/puzzle)
+
 Eu tive q dar esses 2 comandos aqui:
 
 pip uninstall opencv-python pip install --upgrade opencv-python==4.5.3.56
 
-Essa madruga sepa ja consigo arrumar os ultimos detalhes e dar o merge!
 
 ## Vou tirar essa mensagem quando estiver funcionando.
 ------------
