@@ -432,10 +432,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    print(solveCapcha())
-    # time.sleep(5)
+    solveCapcha()
+    #TODO tirar o sleep quando colocar o pulling
+    time.sleep(1)
     clickBtn(hero_img)
-    # time.sleep(5)
+    time.sleep(1)
+    solveCapcha()
 
 def goToGame():
     # in case of server overload popup
