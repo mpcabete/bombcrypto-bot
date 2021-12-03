@@ -62,7 +62,7 @@ ct = c['threshold']
 
 pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
 
-pyautogui.FAILSAFE = True
+pyautogui.FAILSAFE = False
 hero_clicks = 0
 login_attempts = 0
 last_log_is_progress = False
@@ -150,7 +150,7 @@ def show(rectangles, img = None):
 def getPiecesPosition(t = 150):
     popup_pos = positions(robot)
     if len(popup_pos) == 0:
-        return
+        return None
     rx, ry, _, _ = popup_pos[0]
 
     w = 380
@@ -178,7 +178,7 @@ def getPiecesPosition(t = 150):
     puzzle_pieces = findPuzzlePieces(result, piece_img)
 
     if puzzle_pieces is None:
-        return
+        return False
 
     # show(puzzle_pieces, edges)
     # exit()
@@ -201,24 +201,39 @@ def getSliderPosition():
     return position
 
 def solveCapcha():
+    #TODO adicionar a funçao de checar se um botao esta visivel
+    # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
+
     logger('checking for capcha')
     pieces_start_pos = getPiecesPosition()
     if pieces_start_pos is None :
-        return
+        return "not-found"
     slider_start_pos = getSliderPosition()
+    if not slider_start_pos:
+        print('slider_start_pos')
+        return "fail"
 
     x,y = slider_start_pos
     pyautogui.moveTo(x,y,1)
     pyautogui.mouseDown()
     pyautogui.moveTo(x+300 ,y,0.5)
     pieces_end_pos = getPiecesPosition()
+    if not pieces_end_pos:
+        print('pieces_end_pos')
+        return "fail"
+
 
 
     piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
     piece_end, _, _, _ = getRightPiece(pieces_end_pos)
     piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
     slider_start, _, = slider_start_pos
-    slider_end, _ = getSliderPosition()
+    slider_end_pos = getSliderPosition()
+    if not slider_end_pos:
+        print ('slider_end_pos')
+        return "fail"
+
+    slider_end, _ = slider_end_pos
 
     piece_domain = piece_end - piece_start
     middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
@@ -230,6 +245,7 @@ def solveCapcha():
     pyautogui.moveTo(slider_awnser,y,0.5)
     pyautogui.mouseUp()
 
+    return True
     # show(arr)
     #########################################
 
@@ -416,7 +432,7 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCapcha()
+    print(solveCapcha())
     # time.sleep(5)
     clickBtn(hero_img)
     # time.sleep(5)
