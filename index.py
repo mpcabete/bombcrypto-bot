@@ -434,7 +434,7 @@ def goToHeroes():
 
     # time.sleep(5)
     clickBtn(hero_img)
-    # time.sleep(5)
+    time.sleep(5)
     solveCapcha()
     
 def goToGame():
