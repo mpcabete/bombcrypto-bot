@@ -208,6 +208,7 @@ def getSliderPosition():
     return position
 
 def solveCapcha():
+    logger('checking for capcha')
     pieces_start_pos = getPiecesPosition()
     if pieces_start_pos is None :
         return
