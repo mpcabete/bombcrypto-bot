@@ -178,7 +178,7 @@ def getPiecesPosition(t = 150):
     puzzle_pieces = findPuzzlePieces(result, piece_img)
 
     if puzzle_pieces is None:
-        return False
+        return None
 
     # show(puzzle_pieces, edges)
     # exit()
@@ -195,7 +195,7 @@ def getPiecesPosition(t = 150):
 def getSliderPosition():
     slider_pos = positions(slider)
     if len (slider_pos) == 0:
-        return False
+        return None
     x, y, w, h = slider_pos[0]
     position = [x+w/2,y+h/2]
     return position
@@ -209,7 +209,7 @@ def solveCapcha():
     if pieces_start_pos is None :
         return "not-found"
     slider_start_pos = getSliderPosition()
-    if not slider_start_pos:
+    if not slider_start_pos is None:
         print('slider_start_pos')
         return "fail"
 
@@ -218,7 +218,7 @@ def solveCapcha():
     pyautogui.mouseDown()
     pyautogui.moveTo(x+300 ,y,0.5)
     pieces_end_pos = getPiecesPosition()
-    if not pieces_end_pos:
+    if not pieces_end_pos is None:
         print('pieces_end_pos')
         return "fail"
 
@@ -229,7 +229,7 @@ def solveCapcha():
     piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
     slider_start, _, = slider_start_pos
     slider_end_pos = getSliderPosition()
-    if not slider_end_pos:
+    if not slider_end_pos is None:
         print ('slider_end_pos')
         return "fail"
 
