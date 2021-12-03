@@ -1,3 +1,6 @@
+Feito o fork com funcao waitHeores(), aguarda tela de carregamento de herois e repete a tentativa 5 vezes.
+
+
 [![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)](https://github.com/mpcabete/bombcrypto-bot/blob/main/README.en.md)
   
 # Sobre:
