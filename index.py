@@ -92,6 +92,159 @@ piece = cv2.imread('targets/piece.png')
 robot = cv2.imread('targets/robot.png')
 slider = cv2.imread('targets/slider.png')
 
+
+###################### puzzle #############
+def findPuzzlePieces(result, piece_img, threshold=0.5):
+    piece_w = piece_img.shape[1]
+    piece_h = piece_img.shape[0]
+    yloc, xloc = np.where(result >= threshold)
+
+
+    r= []
+    for (piece_x, piece_y) in zip(xloc, yloc):
+        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
+        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
+
+
+    r, weights = cv2.groupRectangles(r, 1, 0.2)
+
+    if len(r) < 2:
+        print('threshold = %.3f' % threshold)
+        return findPuzzlePieces(result, piece_img,threshold-0.01)
+
+    if len(r) == 2:
+        print('match')
+        return r
+
+    if len(r) > 2:
+        print('overshoot by %d' % len(r))
+
+        return r
+
+def getRightPiece(puzzle_pieces):
+    xs = [row[0] for row in puzzle_pieces]
+    index_of_right_rectangle = xs.index(max(xs))
+
+    right_piece = puzzle_pieces[index_of_right_rectangle]
+    return right_piece
+
+def getLeftPiece(puzzle_pieces):
+    xs = [row[0] for row in puzzle_pieces]
+    index_of_left_rectangle = xs.index(min(xs))
+
+    left_piece = puzzle_pieces[index_of_left_rectangle]
+    return left_piece
+
+def show(rectangles, img = None):
+
+    if img is None:
+        with mss.mss() as sct:
+            monitor = sct.monitors[0]
+            img = np.array(sct.grab(monitor))
+
+    for (x, y, w, h) in rectangles:
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255,255,255,255), 2)
+
+    # cv2.rectangle(img, (result[0], result[1]), (result[0] + result[2], result[1] + result[3]), (255,50,255), 2)
+    cv2.imshow('img',img)
+    cv2.waitKey(0)
+
+def getPiecesPosition(t = 150):
+    popup_pos = positions(robot)
+    if len(popup_pos) == 0:
+        print('puzzle not found')
+        return
+    rx, ry, _, _ = popup_pos[0]
+
+    w = 380
+    h = 200
+    x_offset = -40
+    y_offset = 65
+
+    y = ry + y_offset
+    x = rx + x_offset
+
+    img = printSreen()
+    #TODO tirar um poco de cima
+
+    cropped = img[ y : y + h , x: x + w]
+    blurred = cv2.GaussianBlur(cropped, (3, 3), 0)
+    edges = cv2.Canny(blurred, threshold1=t/2, threshold2=t,L2gradient=True)
+    # img = cv2.Laplacian(img,cv2.CV_64F)
+
+    # gray_piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
+    piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
+    print('----')
+    print(piece_img.shape)
+    print(edges.shape)
+    print('----')
+    # piece_img = cv2.Canny(gray_piece_img, threshold1=t/2, threshold2=t,L2gradient=True)
+    # result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCOEFF_NORMED)
+    result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCORR_NORMED)
+
+    puzzle_pieces = findPuzzlePieces(result, piece_img)
+
+    if puzzle_pieces is None:
+        return
+
+    # show(puzzle_pieces, edges)
+    # exit()
+
+    absolute_puzzle_pieces = []
+    for i, puzzle_piece in enumerate(puzzle_pieces):
+        px, py, pw, ph = puzzle_piece
+        absolute_puzzle_pieces.append( [ x + px, y + py, pw, ph])
+
+    absolute_puzzle_pieces = np.array(absolute_puzzle_pieces)
+    # show(absolute_puzzle_pieces)
+    return absolute_puzzle_pieces
+
+def getSliderPosition():
+    slider_pos = positions(slider)
+    if len (slider_pos) == 0:
+        return False
+    x, y, w, h = slider_pos[0]
+    position = [x+w/2,y+h/2]
+    return position
+
+def solveCapcha():
+    pieces_start_pos = getPiecesPosition()
+    if pieces_start_pos is None :
+        return
+    slider_start_pos = getSliderPosition()
+
+    x,y = slider_start_pos
+    pyautogui.moveTo(x,y,1)
+    pyautogui.mouseDown()
+    pyautogui.moveTo(x+300 ,y,0.5)
+    pieces_end_pos = getPiecesPosition()
+
+
+    piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
+    piece_end, _, _, _ = getRightPiece(pieces_end_pos)
+    piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
+    slider_start, _, = slider_start_pos
+    slider_end, _ = getSliderPosition()
+    print (piece_start)
+    print (piece_end)
+    print (piece_middle)
+    print (slider_start)
+    print (slider_end)
+
+    piece_domain = piece_end - piece_start
+    middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
+    print('middle_piece_in_percent{} '.format(middle_piece_in_percent ))
+
+    slider_domain = slider_end - slider_start
+    slider_awnser = slider_start + (middle_piece_in_percent * slider_domain)
+    # arr = np.array([[int(piece_start),int(y-20),int(10),int(10)],[int(piece_middle),int(y-20),int(10),int(10)],[int(piece_end-20),int(y),int(10),int(10)],[int(slider_awnser),int(y),int(20),int(20)]])
+
+    pyautogui.moveTo(slider_awnser,y,0.5)
+    pyautogui.mouseUp()
+
+    # show(arr)
+    #########################################
+
 def logger(message, progress_indicator = False):
     global last_log_is_progress
 
@@ -382,156 +535,6 @@ def refreshHeroes():
     logger('{} heroes sent to work so far'.format(hero_clicks))
     goToGame()
 
-###################### puzzle #############
-def findPuzzlePieces(result, piece_img, threshold=0.5):
-    piece_w = piece_img.shape[1]
-    piece_h = piece_img.shape[0]
-    yloc, xloc = np.where(result >= threshold)
-
-
-    r= []
-    for (piece_x, piece_y) in zip(xloc, yloc):
-        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
-        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
-
-
-    r, weights = cv2.groupRectangles(r, 1, 0.2)
-
-    if len(r) < 2:
-        print('threshold = %.3f' % threshold)
-        return findPuzzlePieces(result, piece_img,threshold-0.01)
-
-    if len(r) == 2:
-        print('match')
-        return r
-
-    if len(r) > 2:
-        print('overshoot by %d' % len(r))
-
-        return r
-
-def getRightPiece(puzzle_pieces):
-    xs = [row[0] for row in puzzle_pieces]
-    index_of_right_rectangle = xs.index(max(xs))
-
-    right_piece = puzzle_pieces[index_of_right_rectangle]
-    return right_piece
-
-def getLeftPiece(puzzle_pieces):
-    xs = [row[0] for row in puzzle_pieces]
-    index_of_left_rectangle = xs.index(min(xs))
-
-    left_piece = puzzle_pieces[index_of_left_rectangle]
-    return left_piece
-
-def show(rectangles, img = None):
-
-    if img is None:
-        with mss.mss() as sct:
-            monitor = sct.monitors[0]
-            img = np.array(sct.grab(monitor))
-
-    for (x, y, w, h) in rectangles:
-        cv2.rectangle(img, (x, y), (x + w, y + h), (255,255,255,255), 2)
-
-    # cv2.rectangle(img, (result[0], result[1]), (result[0] + result[2], result[1] + result[3]), (255,50,255), 2)
-    cv2.imshow('img',img)
-    cv2.waitKey(0)
-
-def getPiecesPosition(t = 150):
-    popup_pos = positions(robot)
-    if len(popup_pos) == 0:
-        print('puzzle not found')
-        return
-    rx, ry, _, _ = popup_pos[0]
-
-    w = 380
-    h = 200
-    x_offset = -40
-    y_offset = 65
-
-    y = ry + y_offset
-    x = rx + x_offset
-
-    img = printSreen()
-    #TODO tirar um poco de cima
-
-    cropped = img[ y : y + h , x: x + w]
-    blurred = cv2.GaussianBlur(cropped, (3, 3), 0)
-    edges = cv2.Canny(blurred, threshold1=t/2, threshold2=t,L2gradient=True)
-    # img = cv2.Laplacian(img,cv2.CV_64F)
-
-    # gray_piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
-    piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
-    print('----')
-    print(piece_img.shape)
-    print(edges.shape)
-    print('----')
-    # piece_img = cv2.Canny(gray_piece_img, threshold1=t/2, threshold2=t,L2gradient=True)
-    # result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCOEFF_NORMED)
-    result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCORR_NORMED)
-
-    puzzle_pieces = findPuzzlePieces(result, piece_img)
-
-    if puzzle_pieces is None:
-        return
-
-    # show(puzzle_pieces, edges)
-    # exit()
-
-    absolute_puzzle_pieces = []
-    for i, puzzle_piece in enumerate(puzzle_pieces):
-        px, py, pw, ph = puzzle_piece
-        absolute_puzzle_pieces.append( [ x + px, y + py, pw, ph])
-
-    absolute_puzzle_pieces = np.array(absolute_puzzle_pieces)
-    # show(absolute_puzzle_pieces)
-    return absolute_puzzle_pieces
-
-def getSliderPosition():
-    slider_pos = positions(slider)
-    if len (slider_pos) == 0:
-        return False
-    x, y, w, h = slider_pos[0]
-    position = [x+w/2,y+h/2]
-    return position
-
-def solveCapcha():
-    pieces_start_pos = getPiecesPosition()
-    if pieces_start_pos is None :
-        return
-    slider_start_pos = getSliderPosition()
-
-    x,y = slider_start_pos
-    pyautogui.moveTo(x,y,1)
-    pyautogui.mouseDown()
-    pyautogui.moveTo(x+300 ,y,0.5)
-    pieces_end_pos = getPiecesPosition()
-
-
-    piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
-    piece_end, _, _, _ = getRightPiece(pieces_end_pos)
-    piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
-    slider_start, _, = slider_start_pos
-    slider_end, _ = getSliderPosition()
-    print (piece_start)
-    print (piece_end)
-    print (piece_middle)
-    print (slider_start)
-    print (slider_end)
-
-    piece_domain = piece_end - piece_start
-    middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
-    print('middle_piece_in_percent{} '.format(middle_piece_in_percent ))
-
-    slider_domain = slider_end - slider_start
-    slider_awnser = slider_start + (middle_piece_in_percent * slider_domain)
-    # arr = np.array([[int(piece_start),int(y-20),int(10),int(10)],[int(piece_middle),int(y-20),int(10),int(10)],[int(piece_end-20),int(y),int(10),int(10)],[int(slider_awnser),int(y),int(20),int(20)]])
-
-    pyautogui.moveTo(slider_awnser,y,0.5)
-    pyautogui.mouseUp()
-
-    # show(arr)
 
 
 
