@@ -209,7 +209,7 @@ def solveCapcha():
     if pieces_start_pos is None :
         return "not-found"
     slider_start_pos = getSliderPosition()
-    if not slider_start_pos is None:
+    if slider_start_pos is None:
         print('slider_start_pos')
         return "fail"
 
@@ -218,7 +218,7 @@ def solveCapcha():
     pyautogui.mouseDown()
     pyautogui.moveTo(x+300 ,y,0.5)
     pieces_end_pos = getPiecesPosition()
-    if not pieces_end_pos is None:
+    if pieces_end_pos is None:
         print('pieces_end_pos')
         return "fail"
 
@@ -229,7 +229,7 @@ def solveCapcha():
     piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
     slider_start, _, = slider_start_pos
     slider_end_pos = getSliderPosition()
-    if not slider_end_pos is None:
+    if slider_end_pos is None:
         print ('slider_end_pos')
         return "fail"
 
