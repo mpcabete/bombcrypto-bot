@@ -26,6 +26,13 @@
     # Valor padrão (em minutos): 3
     check_for_new_map_button: 3
     
+    # [en_US] Time interval to check for capcha.
+    # Default value (in minutes): 1
+    #
+    # [pt_BR] Intervalo de tempo para verificar se precisa resolver o capcha.
+    # Valor padrão (em minutos): 1
+    check_for_capcha: 1
+
     # [en_US] Time interval to check for login request
     # Default value (in minutes): 3
     #

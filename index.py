@@ -548,11 +548,17 @@ def main():
     "login" : 0,
     "heroes" : 0,
     "new_map" : 0,
+    "check_for_capcha" : 0,
     "refresh_heroes" : 0
     }
 
     while True:
         now = time.time()
+
+        if now - last["check_for_capcha"] > t['check_for_capcha'] * 60:
+            last["check_for_capcha"] = now
+            logger('Checking for capcha.')
+            solveCapcha()
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
