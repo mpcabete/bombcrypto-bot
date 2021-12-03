@@ -109,11 +109,9 @@ def findPuzzlePieces(result, piece_img, threshold=0.5):
     r, weights = cv2.groupRectangles(r, 1, 0.2)
 
     if len(r) < 2:
-        print('threshold = %.3f' % threshold)
         return findPuzzlePieces(result, piece_img,threshold-0.01)
 
     if len(r) == 2:
-        print('match')
         return r
 
     if len(r) > 2:
@@ -152,7 +150,6 @@ def show(rectangles, img = None):
 def getPiecesPosition(t = 150):
     popup_pos = positions(robot)
     if len(popup_pos) == 0:
-        print('puzzle not found')
         return
     rx, ry, _, _ = popup_pos[0]
 
@@ -174,10 +171,6 @@ def getPiecesPosition(t = 150):
 
     # gray_piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
     piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
-    print('----')
-    print(piece_img.shape)
-    print(edges.shape)
-    print('----')
     # piece_img = cv2.Canny(gray_piece_img, threshold1=t/2, threshold2=t,L2gradient=True)
     # result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCOEFF_NORMED)
     result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCORR_NORMED)
@@ -226,15 +219,9 @@ def solveCapcha():
     piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
     slider_start, _, = slider_start_pos
     slider_end, _ = getSliderPosition()
-    print (piece_start)
-    print (piece_end)
-    print (piece_middle)
-    print (slider_start)
-    print (slider_end)
 
     piece_domain = piece_end - piece_start
     middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
-    print('middle_piece_in_percent{} '.format(middle_piece_in_percent ))
 
     slider_domain = slider_end - slider_start
     slider_awnser = slider_start + (middle_piece_in_percent * slider_domain)
@@ -340,10 +327,8 @@ def scroll():
 
     commoms = positions(commom_img, threshold = ct['commom'])
     if (len(commoms) == 0):
-        # print('no commom text found')
         return
     x,y,w,h = commoms[len(commoms)-1]
-    # print('moving to {},{} and scrolling'.format(x,y))
 #
     pyautogui.moveTo(x,y,1)
 
@@ -355,7 +340,6 @@ def scroll():
 
 def clickButtons():
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
-    # print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
         pyautogui.click()
@@ -470,11 +454,7 @@ def login():
     if clickBtn(sign_btn_img, name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        # time.sleep(5)
         if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
-            # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
         return
