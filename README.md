@@ -25,24 +25,23 @@ bot, talvez com um diagrama de fluxo.
 de testes de 3 meses da google cloud.
 
 - [ ] 4 - Terminar de implementar e fazer a manutenção e os ajustes necessários na
-função de enviar os heróis para casa.
+função de enviar os heróis para casa. <<--< trabalhando nesse
 
-- 5 - Inserir um valor aleatório em todos os movimentos e os intervalos de
+- [ ] 5 - Inserir um valor aleatório em todos os movimentos e os intervalos de
 espera do bot para dificultar ainda mais sua detecção.
 
-- 6 - Arrumar e ajustar os problemas que tem ocorrido durante o processo de
+- [ ] 6 - Arrumar e ajustar os problemas que tem ocorrido durante o processo de
 login.
 
-- 7 - Trabalhar com o pessoal para arrumar os erros que ocorrem quando o bot é
+- [ ] 7 - Trabalhar com o pessoal para arrumar os erros que ocorrem quando o bot é
 usado em um setup windows com dois monitores.
 
 
 ``` 
              1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
-[xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxx==========|===============|==========|===============] (500$)
-                                                     |
-                                                    240$
-
+[xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxxxxxxx] (500$)
+                                                                                                           |
+                                                                                                          500$
 ```
 - 25/11/21
  
@@ -55,9 +54,10 @@ https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
 
 ## Aviso:
 
-Os desenvolvedores do jogo ainda não se pronunciaram oficialmente em relação
-ao uso de bots, faça sua pesquisa e use o bot por sua própria conta e risco.
-Não me responsabilizo por eventuais penalidades sofridas por quem usar o bot.
+#### Os desenvolvedores do jogo se pronunciaram e agora o uso de auto clickers e
+#### bots é oficialmente PROIBIDO.
+#### Não me responsabilizo por eventuais penalidades sofridas por quem usar o bot,
+#### use por sua própria conta e risco.
 
 # Instalação:
 ### Baixe e instale o Python pelo [site](https://www.python.org/downloads/) ou pela [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
