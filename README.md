@@ -54,10 +54,9 @@ https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
 
 ## Aviso:
 
-#### Os desenvolvedores do jogo se pronunciaram e agora o uso de auto clickers e
-#### bots é oficialmente PROIBIDO.
-#### Não me responsabilizo por eventuais penalidades sofridas por quem usar o bot,
-#### use por sua própria conta e risco.
+#### Os desenvolvedores do jogo se pronunciaram e agora o uso de auto clickers
+e o uso de bots é oficialmente PROIBIDO.  Não me responsabilizo por eventuais
+penalidades sofridas por quem usar o bot, use por sua própria conta e risco.
 
 # Instalação:
 ### Baixe e instale o Python pelo [site](https://www.python.org/downloads/) ou pela [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
