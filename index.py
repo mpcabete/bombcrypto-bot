@@ -379,7 +379,7 @@ def getPiecesPosition(t = 150):
     return absolute_puzzle_pieces
 
 def getSliderPosition():
-    slider_pos = positions(slider)
+    slider_pos = positions(slider, return_0=True)
     if len (slider_pos) == 0:
         return False
     x, y, w, h = slider_pos[0]
@@ -394,9 +394,11 @@ def check_puzzle():
 
 def solveCaptcha():
     pieces_start_pos = getPiecesPosition()
-    if pieces_start_pos is None :
+    if pieces_start_pos is False:
         return
     slider_start_pos = getSliderPosition()
+    if slider_start_pos is False:
+        return
 
     x,y = slider_start_pos
     # pyautogui.moveTo(x,y,1)
@@ -750,6 +752,9 @@ def main():
             if clickBtn(new_map_btn_img):
                 logger("New map!")
                 last["new_map"] = now
+                sleep(1, 2)
+                check_puzzle()
+                sleep(2, 3)
                 sendMapReport()
                 sleep(3, 5)
                 sendBCoinReport()
