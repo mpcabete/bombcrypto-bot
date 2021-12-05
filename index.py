@@ -39,6 +39,7 @@ if stream is not None:
     c = yaml.safe_load(stream)
     ct = c['threshold']
     telegram_data = c['telegram']
+    metamask_data = c['metamask']
     chest_data = c['value_chests']
     offsets = c['offsets']
     stream.close()
@@ -406,7 +407,7 @@ def solveCaptcha():
     hc.move((int(x),int(y)), np.random.randint(1,2))
     pyautogui.mouseDown()
     # pyautogui.moveTo(x+300 ,y,0.5)
-    hc.move((int(x + 300),int(y)), np.random.randint(1,2))
+    hc.move((int(x + 350),int(y)), np.random.randint(1,2))
     pieces_end_pos = getPiecesPosition()
 
 
@@ -431,6 +432,7 @@ def solveCaptcha():
 
     # pyautogui.moveTo(slider_awnser,y,0.5)
     hc.move((int(slider_awnser),int(y)), np.random.randint(1,2))
+    time.sleep(1)
     pyautogui.mouseUp()
     time.sleep(2)
 
@@ -594,16 +596,21 @@ def login():
 
     if clickBtn(connect_wallet_btn_img):
         logger('Connect wallet button detected, logging in!')
-        # logger("Found login button.")
         time.sleep(2)
         solveCaptcha()
-        waitForImg(sign_btn_img)
+        waitForImg((sign_btn_img, metamask_unlock_img))
 
     metamask_unlock_coord = positions(metamask_unlock_img)
     if metamask_unlock_coord is not False:
-        logger("Found unlock button. Waiting 10 seconds for password")
-        time.sleep(10)
-        clickBtn(metamask_unlock_coord)
+        if(metamask_data["enable_login_metamask"] is False):
+            logger("Metamask Locked! But login with password is disabled. Exiting.")
+            exit()
+        logger("Found unlock button. Waiting for password")
+        password = metamask_data["password"]
+        pyautogui.typewrite(password, interval=0.1)
+        sleep(1, 3)
+        if clickBtn(metamask_unlock_img):
+            logger("Unlock button clicked")
 
     if clickBtn(sign_btn_img):
         logger("Found sign button. Waiting to check if logged in.")
@@ -693,16 +700,17 @@ def check_for_logout():
     else:
         return False
 
-def waitForImg(img, timeout=30, threshold=0.5):
-	start = time.time()
-	while True:
-		matches = positions(img, threshold=threshold)
-		if(matches is False):
-			hast_timed_out = time.time()-start > timeout
-			if(hast_timed_out):
-				return False
-			continue
-		return True
+def waitForImg(imgs, timeout=30, threshold=0.5):
+    start = time.time()
+    while True:
+        for img in imgs:
+            matches = positions(img, threshold=threshold)
+            if(matches is False):
+                hast_timed_out = time.time()-start > timeout
+                if(hast_timed_out):
+                    return False
+                continue
+            return True
 
 def sleep(min, max):
 	sleep = random.uniform(min,max)
