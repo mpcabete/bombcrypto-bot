@@ -91,7 +91,7 @@ if telegram_data['telegram_mode'] == True:
     try:
         TBot = telegram.Bot(token=telegram_data["telegram_bot_key"])
     except:
-        print("Bot not initialized! See configuration file.")
+        logger("Bot not initialized! See configuration file.")
 
 def sendTelegramMessage(message):
     if telegram_data['telegram_mode'] == False:
@@ -101,7 +101,7 @@ def sendTelegramMessage(message):
             for chat_id in telegram_data["telegram_chat_id"]:
                 TBot.send_message(text=message, chat_id=chat_id)
     except:
-        print("Unable to send telegram message. See configuration file.")
+        logger("Unable to send telegram message. See configuration file.")
 
 def sendPossibleAmountReport(baseImage):
     if telegram_data['telegram_mode'] == False:
@@ -218,7 +218,6 @@ def logger(message, telegram=False):
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     if not name is None:
         pass
-        # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
     clicked = False
     while(not clicked):
@@ -299,7 +298,7 @@ def findPuzzlePieces(result, piece_img, threshold=0.5):
         return r
 
     if len(r) > 2:
-        print('overshoot by %d' % len(r))
+        logger('overshoot by %d' % len(r))
 
         return r
 
@@ -333,7 +332,7 @@ def show(rectangles, img = None):
 def getPiecesPosition(t = 150):
     popup_pos = positions(robot)
     if popup_pos is False:
-        print('puzzle not found')
+        logger('puzzle not found')
         return
     rx, ry, _, _ = popup_pos[0]
 
