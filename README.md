@@ -1,5 +1,3 @@
-[![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)](https://github.com/mpcabete/bombcrypto-bot/blob/main/README.en.md)
-  
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
 
@@ -15,53 +13,33 @@ ser financiado coletivamente. Atualmente eu atualizarei a barra das metas
 manualmente de forma diária, talvez no futuro eu automatize o processo de
 alguma forma.
 
-- 1 - Diariamente passar um tempo respondendo os issues, organizando o
-repositório e revisando pull requests.
-
-- [x] 2 - Um tutorial de como identificar e resolver os problemas mais comuns no
-bot, talvez com um diagrama de fluxo.
-
-- [ ] 3 - Um tutorial de como hostear o bot em um computador virtual usando o plano
-de testes de 3 meses da google cloud.
-
-- [ ] 4 - Terminar de implementar e fazer a manutenção e os ajustes necessários na
-função de enviar os heróis para casa. <<--< trabalhando nesse
-
-- [ ] 5 - Inserir um valor aleatório em todos os movimentos e os intervalos de
+- [ ] 1 - Inserir um valor aleatório em todos os movimentos e os intervalos de
 espera do bot para dificultar ainda mais sua detecção.
 
-- [ ] 6 - Arrumar e ajustar os problemas que tem ocorrido durante o processo de
-login.
-
-- [ ] 7 - Trabalhar com o pessoal para arrumar os erros que ocorrem quando o bot é
-usado em um setup windows com dois monitores.
+- [ ] 2 - Implementar com o telegram para facilitar o gerenciamento.
 
 
 ``` 
-             1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
-[xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxxxxxxx] (500$)
-                                                                                                           |
-                                                                                                          500$
+             (15%)        (30%)     (40%)             (60%)         (75%)     (85%)
+[---------------|----------|----------------|-------------|----------|------------] (500$)
+ |
+ 0$
 ```
-- 25/11/21
+- 04/12/21
  
-### Smart Chain Wallet:
-#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
-
-### Paypal:
-[Donate:](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
-https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
+### Wallet:
+#### 0x29f3f79179C942d227ec38755c0C1Ea4976672C1
 
 ## Aviso:
 
 #### Os desenvolvedores do jogo se pronunciaram e agora o uso de auto clickers
-e o uso de bots é oficialmente PROIBIDO.  Não me responsabilizo por eventuais
+e o uso de bots é oficialmente PROIBIDO. Não me responsabilizo por eventuais
 penalidades sofridas por quem usar o bot, use por sua própria conta e risco.
 
 # Instalação:
-### Baixe e instale o Python pelo [site](https://www.python.org/downloads/) ou pela [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
+### Baixe e instale o Python pelo [site](https://www.python.org/downloads/)
 
-Se você baixar pelo site é importante marcar a opção para adicionar o
+É importante marcar a opção para adicionar o
 python ao PATH:
 ![Check Add python to PATH](https://github.com/mpcabete/bombcrypto-bot/raw/ee1b3890e67bc30e372359db9ae3feebc9c928d8/readme-images/path.png)
 
@@ -211,6 +189,4 @@ exemplo na pasta “targets” para uma tirada no seu próprio computador:
 ## Curtiu? Dê aquela fortalecida :)
 
 ### Wallet:
-#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
-### Paypal:
-[Donate](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
+#### 0x29f3f79179C942d227ec38755c0C1Ea4976672C1

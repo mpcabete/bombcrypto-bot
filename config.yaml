@@ -1,5 +1,3 @@
----
-
   # [en_US] Time intervals configuration
   #
   # [pt_BR] Configurações de intervalos de tempo
@@ -12,33 +10,12 @@
     # Valor padrão (em minutos): 10
     send_heroes_for_work: 10
     
-    # [en_US] Time interval to update heroes position in the map,
+    # [en_US] Time interval to update heroes position in the map
     # Default value (in minutes): 3
     #
     # [pt_BR] Intervalo de tempo para atualizar a posição dos heróis no mapa
     # Valor padrão (em minutos): 3
     refresh_heroes_positions: 3
-    
-    # [en_US] Time interval to check for new maps
-    # Default value (in minutes): 3 
-    #
-    # [pt_BR] Intervalo de tempo para verificar por novos mapas
-    # Valor padrão (em minutos): 3
-    check_for_new_map_button: 3
-    
-    # [en_US] Time interval to check for capcha.
-    # Default value (in minutes): 1
-    #
-    # [pt_BR] Intervalo de tempo para verificar se precisa resolver o capcha.
-    # Valor padrão (em minutos): 1
-    check_for_capcha: 1
-
-    # [en_US] Time interval to check for login request
-    # Default value (in minutes): 3
-    #
-    # [pt_BR] Intervalo de tempo para verificar se existe solicitação de login
-    # Valor padrão (em minutos): 5
-    check_for_login: 5
 
     # [en_US] Time interval between moviments
     # Default value (in seconds): 1 
@@ -46,6 +23,35 @@
     # [pt_BR] Intervalo de tempo entre movimentos
     # Valor padrão (em segundos): 1
     interval_between_moviments: 1
+
+  # [en_US] Value of chests
+  #
+  # [pt_BR] Valor de cada bau
+  #
+  value_chests:
+    value_chest1: 0.01425
+    value_chest2: 0.0325
+    value_chest3: 0.1625
+    value_chest4: 0.325
+
+  # [en_US] Telegram configs
+  #
+  # [pt_BR] Configs do telegram
+  #
+  telegram:
+    telegram_mode: false
+    telegram_chat_id: ["<CHAT ID TELEGRAM 1>", "<CHAT ID TELEGRAM 2>"]
+    telegram_bot_key: "<TELEGRAM BOT TOKEN>"
+    enable_coin_report: false
+    enable_map_report: false
+
+  # [en_US] Metamask configs
+  #
+  # [pt_BR] Configs da metamask
+  #
+  metamask:
+    enable_login_metamask: false
+    password: "<METAMASK PASSWORD>"
 
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #
@@ -60,11 +66,11 @@
     default: 0.7
 
     # [en_US]
-    # Default value: 0.8
+    # Default value: 0.6
     #
     # [pt_BR]
-    # Valor padrão: 0.8
-    commom: 0.8
+    # Valor padrão: 0.6
+    error: 0.6
 
     # [en_US]
     # Default value: 0.8
@@ -87,6 +93,21 @@
     # Valor padrão: 0.9
     green_bar: 0.9
 
+    # [en_US]
+    # Default value: 0.5
+    #
+    # [pt_BR]
+    # Valor padrão: 0.5
+    chest: 0.5
+
+  # [en_US] distance in pixels to click the work button
+  #
+  # [pt_BR] distancia em pixels para clickar no botão work
+  #
+  offsets:
+    work_button: 130
+    work_button_full: 100
+
   # [en_US]
   # Default value: 60
   #
@@ -94,12 +115,12 @@
   # Valor padrão: 60
   scroll_size: 60
 
-# [en_US]
+  # [en_US]
   # Default value: 3
   #
   # [pt_BR]
   # Valor padrão: 3
-  scroll_attemps: 3
+  scroll_attempts: 3
 
   # [en_US]
   # Default value: true
@@ -128,7 +149,7 @@
   # all   = seleciona todos os heróis (independente da barra de stamina)
   # green = seleciona os heróis com a barra de stamina verde (metade ou cheia)
   # full  = seleciona somente os heróis com a barra de stamina cheia
-  select_heroes_mode: "green"
+  select_heroes_mode: "full"
 
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False
@@ -137,4 +158,11 @@
   # [pt_BR] Opção para salvar os logs em arquivo (logs.txt)
   # Valor padrão : False
   # Opções disponíveis: False ou True
-  save_log_to_file: False
+  save_log_to_file: True  
+
+  # [en_US] monitor that bot will use for play
+  # Default value: 1
+  #
+  # [pt_BR] monitor que o bot usara para jogar
+  # Valor padrão: 1
+  monitor_to_use: 1
