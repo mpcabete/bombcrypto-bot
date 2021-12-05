@@ -16,7 +16,7 @@ alguma forma.
 - [ ] 1 - Inserir um valor aleatório em todos os movimentos e os intervalos de
 espera do bot para dificultar ainda mais sua detecção.
 
-- [ ] 2 - Implementar com o telegram para facilitar o gerenciamento.
+- [x] 2 - Implementar com o telegram para facilitar o gerenciamento.
 
 
 ``` 
