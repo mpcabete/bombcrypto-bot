@@ -40,6 +40,7 @@ if stream is not None:
     ct = c['threshold']
     telegram_data = c['telegram']
     chest_data = c['value_chests']
+    offsets = c['offsets']
     stream.close()
 else:
     logger("Config file not found. Exiting.")
@@ -480,7 +481,7 @@ def isWorking(bar, buttons):
     return True
 
 def clickGreenBarButtons():
-    offset = 130
+    offset = offsets['work_button']
     green_bars = positions(green_bar, threshold=ct['green_bar'])
     # logger('%d green bars detected' % len(green_bars))
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
@@ -509,7 +510,7 @@ def clickGreenBarButtons():
     return len(not_working_green_bars)
 
 def clickFullBarButtons():
-    offset = 100
+    offset = offsets['work_button_full']
     full_bars = positions(full_stamina, threshold=ct['default'])
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
 
