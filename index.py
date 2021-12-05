@@ -9,8 +9,8 @@ import sys
 import yaml
 import random
 
-# TODO: add character indicator, add config for password in metamask, add offset in config, add kill bot on button pressed
-# TODO: colocar minimo na config ex minimo time 10 minutos
+# TODO: add character indicator, add kill bot on button pressed
+
 banner = """
 ====== Bomb Crypto Bot - Vin35 Version ======
 =============================================
@@ -49,7 +49,7 @@ else:
     exit()
 
 hc = HumanClicker()
-pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
+pyautogui.PAUSE = c['time_intervals']['interval_between_movements']
 
 pyautogui.FAILSAFE = False
 hero_clicks = 0
@@ -746,7 +746,7 @@ def main():
         now = time.time()
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
-            last["heroes"] = now
+            last["heroes"] = now + (random.randint(0, t['send_heroes_for_work_variable']) * 60)
             last["refresh_heroes"] = now
             logger('Sending heroes to work.', telegram=True)
             refreshHeroes()
@@ -772,7 +772,7 @@ def main():
             sleep(1, 3)
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
-            last["refresh_heroes"] = now
+            last["refresh_heroes"] = now + (random.randint(0, t['refresh_heroes_positions_variable']) * 60)
             logger('Refreshing Heroes Positions.')
             refreshHeroesPositions()
 
