@@ -2,117 +2,121 @@
 
   # [en_US] Time intervals configuration
   #
-  # [pt_BR] Configura√ß√µes de intervalos de tempo
+  # [pt_BR] ConfiguraÁıes de intervalos de tempo
   #
   time_intervals:
     # [en_US] Time interval for check if there are available heroes to work
     # Default value (in minutes): 10
     #
-    # [pt_BR] Intervalo de tempo para verificar se h√° her√≥is dispon√≠veis para trabalhar
-    # Valor padr√£o (em minutos): 10
+    # [pt_BR] Intervalo de tempo para verificar se h· herÛis disponÌveis para trabalhar
+    # Valor padr„o (em minutos): 10
     send_heroes_for_work: 10
     
     # [en_US] Time interval to update heroes position in the map,
     # Default value (in minutes): 3
     #
-    # [pt_BR] Intervalo de tempo para atualizar a posi√ß√£o dos her√≥is no mapa
-    # Valor padr√£o (em minutos): 3
+    # [pt_BR] Intervalo de tempo para atualizar a posiÁ„o dos herÛis no mapa
+    # Valor padr„o (em minutos): 3
     refresh_heroes_positions: 3
     
     # [en_US] Time interval to check for new maps
     # Default value (in minutes): 3 
     #
     # [pt_BR] Intervalo de tempo para verificar por novos mapas
-    # Valor padr√£o (em minutos): 3
+    # Valor padr„o (em minutos): 3
     check_for_new_map_button: 3
     
-    # [en_US] Time interval to check for capcha.
-    # Default value (in minutes): 1
-    #
     # [pt_BR] Intervalo de tempo para verificar se precisa resolver o capcha.
-    # Valor padr√£o (em minutos): 1
-    check_for_capcha: 1
-
+    # Valor padr„o (em minutos): 1
+    check_for_captcha: 1
+    
     # [en_US] Time interval to check for login request
     # Default value (in minutes): 3
     #
-    # [pt_BR] Intervalo de tempo para verificar se existe solicita√ß√£o de login
-    # Valor padr√£o (em minutos): 5
+    # [pt_BR] Intervalo de tempo para verificar se existe solicitaÁ„o de login
+    # Valor padr„o (em minutos): 5
     check_for_login: 5
 
     # [en_US] Time interval between moviments
     # Default value (in seconds): 1 
     #
     # [pt_BR] Intervalo de tempo entre movimentos
-    # Valor padr√£o (em segundos): 1
+    # Valor padr„o (em segundos): 1
     interval_between_moviments: 1
+    
+    # [en_US] Mouse last movement time limit before F5 (Solve stuck situations Ex: screen w/o buttons)
+    # Default value (in minutes): 5 
+    #
+    # [pt_BR] Tempo limite que o mouse pode ficar sem se movimentar acionar o F5
+    # Valor padr„o (em minutos): 5
+    check_for_game_crash: 5 #min
 
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #
-  # [pt_BR] O qu√£o confiante o bot precisa estar para clicar nos bot√µes (valores entre 0 e 1. 0 √© o valor m√≠nimo, 1 √© o valor m√°ximo)
+  # [pt_BR] O qu„o confiante o bot precisa estar para clicar nos botıes (valores entre 0 e 1. 0 È o valor mÌnimo, 1 È o valor m·ximo)
   #
   threshold:
     # [en_US]
     # Default value: 0.7
     #
     # [pt_BR]
-    # Valor padr√£o: 0.7
+    # Valor padr„o: 0.7
     default: 0.7
 
     # [en_US]
     # Default value: 0.8
     #
     # [pt_BR]
-    # Valor padr√£o: 0.8
+    # Valor padr„o: 0.8
     commom: 0.8
 
     # [en_US]
     # Default value: 0.8
     #
     # [pt_BR]
-    # Valor padr√£o: 0.8
+    # Valor padr„o: 0.8
     select_wallet_buttons: 0.8
 
     # [en_US]
     # Default value: 0.9
     #
     # [pt_BR]
-    # Valor padr√£o: 0.9
+    # Valor padr„o: 0.9
     go_to_work_btn: 0.9
 
     # [en_US]
     # Default value: 0.9
     #
     # [pt_BR]
-    # Valor padr√£o: 0.9
+    # Valor padr„o: 0.9
     green_bar: 0.9
 
   # [en_US]
   # Default value: 60
   #
   # [pt_BR]
-  # Valor padr√£o: 60
+  # Valor padr„o: 60
   scroll_size: 60
 
 # [en_US]
   # Default value: 3
   #
   # [pt_BR]
-  # Valor padr√£o: 3
+  # Valor padr„o: 3
   scroll_attemps: 3
 
   # [en_US]
   # Default value: true
   #
   # [pt_BR]
-  # Valor padr√£o: true
+  # Valor padr„o: true
   use_click_and_drag_instead_of_scroll: true
 
   # [en_US]
   # Default value: 200
   #
   # [pt_BR]
-  # Valor padr√£o: 200
+  # Valor padr„o: 200
   click_and_drag_amount: 200
 
   # [en_US]
@@ -123,18 +127,18 @@
   # full  = select only the heroes with full stamina bar
   #
   # [pt_BR]
-  # Valor padr√£o: green
-  # Op√ß√µes dispon√≠veis:
-  # all   = seleciona todos os her√≥is (independente da barra de stamina)
-  # green = seleciona os her√≥is com a barra de stamina verde (metade ou cheia)
-  # full  = seleciona somente os her√≥is com a barra de stamina cheia
-  select_heroes_mode: "green"
+  # Valor padr„o: green
+  # OpÁıes disponÌveis:
+  # all   = seleciona todos os herÛis (independente da barra de stamina)
+  # green = seleciona os herÛis com a barra de stamina verde (metade ou cheia)
+  # full  = seleciona somente os herÛis com a barra de stamina cheia
+  select_heroes_mode: "all"
 
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False
   # Available options: False or True
   #
-  # [pt_BR] Op√ß√£o para salvar os logs em arquivo (logs.txt)
-  # Valor padr√£o : False
-  # Op√ß√µes dispon√≠veis: False ou True
-  save_log_to_file: False
+  # [pt_BR] OpÁ„o para salvar os logs em arquivo (logs.txt)
+  # Valor padr„o : False
+  # OpÁıes disponÌveis: False ou True
+  save_log_to_file: True
