@@ -54,7 +54,6 @@ data = requests.get('https://raw.githubusercontent.com/vin350/bombcrypto-bot/mai
 if data is not None:
     v = yaml.safe_load(data.text)
     version = v['version']
-    print('version: ' + version)
     data.close()
 else:
     logger("Version not found. Exiting.")
@@ -481,7 +480,10 @@ def scroll():
 
 def clickButtons():
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
-    # print('buttons: {}'.format(len(buttons)))
+
+    if c['debug'] is not False:
+        logger('%d buttons detected' % len(buttons))
+
     if buttons is False:
         return False
     for (x, y, w, h) in buttons:
@@ -510,9 +512,11 @@ def isWorking(bar, buttons):
 def clickGreenBarButtons():
     offset = offsets['work_button']
     green_bars = positions(green_bar, threshold=ct['green_bar'])
-    # logger('%d green bars detected' % len(green_bars))
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
-    # logger('%d buttons detected' % len(buttons))
+
+    if c['debug'] is not False:
+        logger('%d green bars detected' % len(green_bars))
+        logger('%d buttons detected' % len(buttons))
 
     not_working_green_bars = []
     if green_bars is False:
@@ -541,6 +545,10 @@ def clickFullBarButtons():
     offset = offsets['work_button_full']
     full_bars = positions(full_stamina, threshold=ct['default'])
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
+
+    if c['debug'] is not False:
+        logger('%d FULL bars detected' % len(full_bars))
+        logger('%d buttons detected' % len(buttons))
 
     not_working_full_bars = []
     if full_bars is False:
@@ -766,6 +774,7 @@ def randomMouseMovement():
     hc.move((int(x), int(y)), np.random.randint(1,3))
 
 def main():
+    print('version: ' + c['version'])
     if version > c['version']:
         logger('New version available. Please update.', telegram=True)
     input("Press Enter to start...")

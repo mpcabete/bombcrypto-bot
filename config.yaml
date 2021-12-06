@@ -1,4 +1,4 @@
-  version: "1.1.0"
+  version: "1.1.1"
 
   # [en_US] Time intervals configuration
   #
@@ -102,11 +102,11 @@
     go_to_work_btn: 0.9
 
     # [en_US]
-    # Default value: 0.8
+    # Default value: 0.95
     #
     # [pt_BR]
-    # Valor padrão: 0.8
-    green_bar: 0.8
+    # Valor padrão: 0.95
+    green_bar: 0.95
 
     # [en_US]
     # Default value: 0.5
@@ -182,3 +182,10 @@
   # [pt_BR] monitor que o bot usara para jogar
   # Valor padrão: 1
   monitor_to_use: 1
+
+  # [en_US] show more information
+  # Default value: false
+  #
+  # [pt_BR] mostra mais informações 
+  # Valor padrão: false
+  debug: False
