@@ -1,35 +1,21 @@
-  version: "1.1.6"
-
   # [en_US] Time intervals configuration
   #
   # [pt_BR] Configurações de intervalos de tempo
   #
   time_intervals:
     # [en_US] Time interval for check if there are available heroes to work
-    # Default value (in minutes): 10
+    # Default value (in minutes): [10,15]
     #
     # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
-    # Valor padrão (em minutos): 10
-    send_heroes_for_work: 10
-    # [en_US] Value to vary the range, avoid detection
-    # Default value (in minutes): 5
-    #
-    # [pt_BR] Valor para variar o intervalo, evita detecção
-    # Valor padrão (em minutos): 5
-    send_heroes_for_work_variable: 5
+    # Valor padrão (em minutos): [10,15]
+    send_heroes_for_work: [10,15]
     
     # [en_US] Time interval to update heroes position in the map
-    # Default value (in minutes): 3
+    # Default value (in minutes): [3,5]
     #
     # [pt_BR] Intervalo de tempo para atualizar a posição dos heróis no mapa
-    # Valor padrão (em minutos): 3
-    refresh_heroes_positions: 3
-    # [en_US] Value to vary the range, avoid detection
-    # Default value (in minutes): 2
-    #
-    # [pt_BR] Valor para variar o intervalo, evita detecção
-    # Valor padrão (em minutos): 2
-    refresh_heroes_positions_variable: 2
+    # Valor padrão (em minutos): [3,5]
+    refresh_heroes_positions: [3,5]
 
     # [en_US] Time interval between movements
     # Default value (in seconds): 1 
@@ -120,9 +106,10 @@
   # [pt_BR] distancia em pixels para clickar no botão work
   #
   offsets:
-    work_button: 130
-    work_button_full: 100
-    character_indicator: 100
+    work_button: [120,140]
+    work_button_full: [90,110]
+    work_button_all: [10,50]
+    character_indicator: [100,200]
 
   # [en_US]
   # Default value: 60
@@ -189,3 +176,16 @@
   # [pt_BR] mostra mais informações 
   # Valor padrão: false
   debug: False
+
+
+
+
+
+
+
+
+
+  # [en_US] DON'T TOUCH
+  #
+  # [pt_BR] NÃO MEXE
+  version: "1.1.7"

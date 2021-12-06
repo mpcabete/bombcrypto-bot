@@ -39,6 +39,7 @@ stream = open("config.yaml", 'r')
 if stream is not None:
     c = yaml.safe_load(stream)
     ct = c['threshold']
+    t = c['time_intervals']
     telegram_data = c['telegram']
     metamask_data = c['metamask']
     chest_data = c['value_chests']
@@ -62,12 +63,13 @@ else:
 
 hc = HumanClicker()
 pyautogui.PAUSE = c['time_intervals']['interval_between_movements']
-
 pyautogui.FAILSAFE = False
-hero_clicks = 0
-login_attempts = 0
 general_check_time = 1
 
+hero_clicks = 0
+login_attempts = 0
+next_refresh_heroes = t['send_heroes_for_work'][0]
+next_refresh_heroes_positions = t['refresh_heroes_positions'][0]
 
 go_work_img = cv2.imread('targets/go-work.png')
 home_img = cv2.imread('targets/home.png')
@@ -470,7 +472,9 @@ def solveCaptcha():
     # show(arr)
 
 def scroll():
-
+    offset = offsets['character_indicator']
+    offset_random = random.uniform(offset[0], offset[1])
+    
     # width, height = pyautogui.size()
     # pyautogui.moveTo(width/2-200, height/2,1)
     character_indicator_pos = positions(character_indicator)
@@ -478,7 +482,7 @@ def scroll():
         return
 
     x, y, w, h = character_indicator_pos[0]
-    hc.move((int(x+(w/2)),int(y+h+offsets['character_indicator'])), np.random.randint(1,2))
+    hc.move((int(x+(w/2)),int(y+h+offset_random)), np.random.randint(1,2))
 
     if not c['use_click_and_drag_instead_of_scroll']:
         pyautogui.click()
@@ -491,6 +495,7 @@ def scroll():
 
 def clickButtons():
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
+    offset = offsets['work_button_all']
 
     if c['debug'] is not False:
         logger('%d buttons detected' % len(buttons))
@@ -498,8 +503,9 @@ def clickButtons():
     if buttons is False:
         return False
     for (x, y, w, h) in buttons:
+        offset_random = random.uniform(offset[0], offset[1])
         # pyautogui.moveTo(x+(w/2),y+(h/2),1)
-        hc.move((int(x+(w/2)),int(y+(h/2))), np.random.randint(1,2))
+        hc.move((int(x+offset_random),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -507,6 +513,7 @@ def clickButtons():
         if hero_clicks > 15:
             logger('too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
+        sleep(1, 3)
     logger('Clicking in %d heroes detected.' % len(buttons), telegram=True)
     return len(buttons)
 
@@ -540,9 +547,10 @@ def clickGreenBarButtons():
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
+        offset_random = random.uniform(offset[0], offset[1])
         # isWorking(y, buttons)
         # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
-        hc.move((int(x+offset+(w/2)),int(y+(h/2))), np.random.randint(1,2))
+        hc.move((int(x+offset_random+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -550,6 +558,7 @@ def clickGreenBarButtons():
             logger('too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
+        sleep(1, 3)
     return len(not_working_green_bars)
 
 def clickFullBarButtons():
@@ -572,14 +581,16 @@ def clickFullBarButtons():
         logger('Clicking in %d heroes with FULL bar detected.' % len(not_working_full_bars), telegram=True)
 
     for (x, y, w, h) in not_working_full_bars:
+        offset_random = random.uniform(offset[0], offset[1])
         # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
-        hc.move((int(x+offset+(w/2)),int(y+(h/2))), np.random.randint(1,2))
+        hc.move((int(x+offset_random+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
         if hero_clicks > 15:
             logger('too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
+        sleep(1, 3)
 
     return len(not_working_full_bars)
 
@@ -628,6 +639,8 @@ def goToGame():
 
 def refreshHeroesPositions():
     logger("Refreshing heroes Positions.")
+    global next_refresh_heroes_positions
+    next_refresh_heroes_positions = random.uniform(t['refresh_heroes_positions'][0], t['refresh_heroes_positions'][1])
     if current_screen() == "thunt":
         if clickBtn(arrow_img):
             time.sleep(5)
@@ -720,6 +733,8 @@ def refreshHeroes():
 
     buttonsClicked = 0
     empty_scrolls_attempts = c['scroll_attempts']
+    global next_refresh_heroes
+    next_refresh_heroes = random.uniform(t['send_heroes_for_work'][0], t['send_heroes_for_work'][1])
 
     while(empty_scrolls_attempts > 0):
         if c['select_heroes_mode'] == 'full':
@@ -795,8 +810,6 @@ def main():
     input("Press Enter to start...")
     logger("Starting bot...", telegram=True)
 
-    t = c['time_intervals']
-
     last = {
     "login" : 0,
     "heroes" : 0,
@@ -814,8 +827,8 @@ def main():
 
         now = time.time()
 
-        if now - last["heroes"] > t['send_heroes_for_work'] * 60:
-            last["heroes"] = now + (random.randint(0, t['send_heroes_for_work_variable']) * 60)
+        if now - last["heroes"] > next_refresh_heroes * 60:
+            last["heroes"] = now
             last["refresh_heroes"] = now
             logger('Sending heroes to work.', telegram=True)
             refreshHeroes()
@@ -840,8 +853,8 @@ def main():
             clickBtn(x_button_img)
             sleep(1, 3)
 
-        if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
-            last["refresh_heroes"] = now + (random.randint(0, t['refresh_heroes_positions_variable']) * 60)
+        if now - last["refresh_heroes"] > next_refresh_heroes_positions * 60:
+            last["refresh_heroes"] = now
             refreshHeroesPositions()
 
         check_for_logout()
