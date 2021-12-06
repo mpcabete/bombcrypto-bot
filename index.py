@@ -145,12 +145,12 @@ def sendBCoinReport():
         with mss.mss() as sct:
             sct_img = np.array(sct.grab(sct.monitors[c['monitor_to_use']]))
             crop_img = sct_img[y:y+h, x:x+w]
-            cv2.imwrite('bcoin-report.png', crop_img)
+            cv2.imwrite('bcoin-report.%s' % telegram_data["format_of_images"], crop_img)
             time.sleep(1)
             try:
                 for chat_id in telegram_data["telegram_chat_id"]:
                     # TBot.send_document(chat_id=chat_id, document=open('bcoin-report.png', 'rb'))
-                    TBot.send_photo(chat_id=chat_id, photo=open('bcoin-report.png', 'rb'))
+                    TBot.send_photo(chat_id=chat_id, photo=open('bcoin-report.%s' % telegram_data["format_of_images"], 'rb'))
             except:
                 logger("Telegram offline...")
     clickBtn(x_button_img)
@@ -178,20 +178,19 @@ def sendMapReport():
         crop_img = sct_img[newY0:newY1, newX0:newX1]
         # resized = cv2.resize(crop_img, (500, 250))
 
-        cv2.imwrite('map-report.png', crop_img)
+        cv2.imwrite('map-report.%s' % telegram_data["format_of_images"], crop_img)
         time.sleep(1)
         try:
             for chat_id in telegram_data["telegram_chat_id"]:
                 # TBot.send_document(chat_id=chat_id, document=open('map-report.png', 'rb'))
-                TBot.send_photo(chat_id=chat_id, photo=open('map-report.png', 'rb'))
+                TBot.send_photo(chat_id=chat_id, photo=open('map-report.%s' % telegram_data["format_of_images"], 'rb'))
         except:
             logger("Telegram offline...")
 
-        sendPossibleAmountReport(sct_img[:,:,:3])
-        # try:
-        #     sendPossibleAmountReport(crop_img)
-        # except:
-        #     logger("Error finding chests.")
+        try:
+            sendPossibleAmountReport(sct_img[:,:,:3])
+        except:
+            logger("Error finding chests.")
 
     clickBtn(x_button_img)
     logger("Map Report sent.", telegram=True)
@@ -315,14 +314,15 @@ def getLeftPiece(puzzle_pieces):
     left_piece = puzzle_pieces[index_of_left_rectangle]
     return left_piece
 
-def show(rectangles, img = None):
+def show(rectangles = None, img = None):
 
     if img is None:
         with mss.mss() as sct:
             img = np.array(sct.grab(sct.monitors[c['monitor_to_use']]))
 
-    for (x, y, w, h) in rectangles:
-        cv2.rectangle(img, (x, y), (x + w, y + h), (255,255,255,255), 2)
+    if rectangles is not None:
+        for (x, y, w, h) in rectangles:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255,255,255,255), 2)
 
     # cv2.rectangle(img, (result[0], result[1]), (result[0] + result[2], result[1] + result[3]), (255,50,255), 2)
     cv2.imshow('img',img)
@@ -614,7 +614,7 @@ def login():
         logger('Connect wallet button detected, logging in!')
         time.sleep(2)
         solveCaptcha()
-        waitForImg((sign_btn_img, metamask_unlock_img))
+        waitForImg((sign_btn_img, metamask_unlock_img), multiple=True)
 
     metamask_unlock_coord = positions(metamask_unlock_img)
     if metamask_unlock_coord is not False:
@@ -629,12 +629,12 @@ def login():
             logger("Unlock button clicked")
 
     if clickBtn(sign_btn_img):
-        logger("Found sign button. Waiting 25s to check if logged in.")
+        logger("Found sign button. Waiting to check if logged in.")
         time.sleep(5)
         if clickBtn(sign_btn_img): ## twice because metamask glitch
             logger("Found glitched sign button. Waiting to check if logged in.")
-        time.sleep(25)
-        # waitForImg(teasureHunt_icon_img, timeout=60)
+        # time.sleep(25)
+        waitForImg(teasureHunt_icon_img, timeout=60)
 
     if current_screen() == "main":
         logger("Logged in.", telegram=True)
@@ -717,14 +717,23 @@ def check_for_logout():
     else:
         return False
 
-def waitForImg(imgs, timeout=30, threshold=0.5):
+def waitForImg(imgs, timeout=30, threshold=0.5, multiple=False):
     start = time.time()
     while True:
-        for img in imgs:
-            matches = positions(img, threshold=threshold)
-            if(matches is False):
+        if multiple is not False:
+            for img in imgs:
+                matches = positions(img, threshold=threshold)
+                if matches is False:
+                    hast_timed_out = time.time()-start > timeout
+                    if hast_timed_out is not False:
+                        return False
+                    continue
+                return True
+        else:
+            matches = positions(imgs, threshold=threshold)
+            if matches is False:
                 hast_timed_out = time.time()-start > timeout
-                if(hast_timed_out):
+                if hast_timed_out is not False:
                     return False
                 continue
             return True

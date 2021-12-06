@@ -56,6 +56,7 @@
     telegram_bot_key: "<TELEGRAM BOT TOKEN>"
     enable_coin_report: false
     enable_map_report: false
+    format_of_images: "jpg"
 
   # [en_US] Metamask configs
   #
