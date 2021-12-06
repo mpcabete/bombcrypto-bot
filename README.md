@@ -1,6 +1,6 @@
 <h1 align="center">
 
-![Check Add python to PATH](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/images/readme/banner.jpg)
+![Bomb Crypto Banner](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/images/readme/banner.jpg)
 
   <a href="https://reactnative.dev/">
     Bomb Crypto
