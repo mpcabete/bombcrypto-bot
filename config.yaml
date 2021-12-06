@@ -165,7 +165,7 @@
   # all   = seleciona todos os heróis (independente da barra de stamina)
   # green = seleciona os heróis com a barra de stamina verde (metade ou cheia)
   # full  = seleciona somente os heróis com a barra de stamina cheia
-  select_heroes_mode: "all"
+  select_heroes_mode: "green"
 
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False

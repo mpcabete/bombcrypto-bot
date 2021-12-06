@@ -8,6 +8,7 @@ import time
 import sys
 import yaml
 import random
+import requests
 
 # TODO: add kill bot on button pressed, server maintenance
 
@@ -45,6 +46,18 @@ if stream is not None:
     stream.close()
 else:
     logger("Config file not found. Exiting.")
+    time.sleep(3)
+    exit()
+
+data = requests.get('https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/config.yaml')
+
+if data is not None:
+    v = yaml.safe_load(data.text)
+    version = v['version']
+    print('version: ' + version)
+    data.close()
+else:
+    logger("Version not found. Exiting.")
     time.sleep(3)
     exit()
 
@@ -753,6 +766,8 @@ def randomMouseMovement():
     hc.move((int(x), int(y)), np.random.randint(1,3))
 
 def main():
+    if version > c['version']:
+        logger('New version available. Please update.', telegram=True)
     input("Press Enter to start...")
     logger("Starting bot...", telegram=True)
 

@@ -5,4 +5,5 @@ PyAutoGUI==0.9.53
 pyclick==0.0.2
 python_telegram_bot==13.8.1
 PyYAML==6.0
+requests==2.26.0
 telegram==0.0.1
