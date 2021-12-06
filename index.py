@@ -441,7 +441,7 @@ def solveCaptcha():
     # print(piece_middle)
     # print(slider_start)
     # print(slider_end)
-    
+
     if piece_start is False or piece_end is False or piece_middle is False or slider_start is False or slider_end is False:
         return False
 
@@ -788,7 +788,8 @@ def randomMouseMovement():
     hc.move((int(x), int(y)), np.random.randint(1,3))
 
 def main():
-    print('version: ' + c['version'])
+    print('Git Version: ' + version)
+    print('Version installed: ' + c['version'])
     if version > c['version']:
         logger('New version available. Please update.', telegram=True)
     input("Press Enter to start...")
