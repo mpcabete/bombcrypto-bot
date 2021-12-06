@@ -498,7 +498,7 @@ def clickGreenBarButtons():
     offset = offsets['work_button']
     green_bars = positions(green_bar, threshold=ct['green_bar'])
     # logger('%d green bars detected' % len(green_bars))
-    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
+    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
     # logger('%d buttons detected' % len(buttons))
 
     not_working_green_bars = []
@@ -527,7 +527,7 @@ def clickGreenBarButtons():
 def clickFullBarButtons():
     offset = offsets['work_button_full']
     full_bars = positions(full_stamina, threshold=ct['default'])
-    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
+    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
 
     not_working_full_bars = []
     if full_bars is False:
