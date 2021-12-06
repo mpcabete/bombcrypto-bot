@@ -454,7 +454,7 @@ def goToGame():
 
 def refreshHeroesPositions():
 
-logger('🔃 Refreshing Heroes Positions')
+    logger('🔃 Refreshing Heroes Positions')
     clickBtn(images['go-back-arrow'])
     clickBtn(images['treasure-hunt-icon'])
 
@@ -619,7 +619,6 @@ def main():
             last["new_map"] = now
 
             if clickBtn(images['new-map']):
-            if clickBtn(new_map_btn_img):
                 loggerMapClicked()
 
 

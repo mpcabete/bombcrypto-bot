@@ -88,7 +88,7 @@
     green_bar: 0.9
 
   home:
-    enable: True
+    enable: False
     # If bot is sending the wrong hero home, make this number bigger.
     # if bot is not sending any hero home make this number smaller.
     hero_threshold: 0.8
