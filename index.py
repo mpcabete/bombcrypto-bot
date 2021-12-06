@@ -163,7 +163,7 @@ def sendBCoinReport():
             try:
                 for chat_id in telegram_data["telegram_chat_id"]:
                     # TBot.send_document(chat_id=chat_id, document=open('bcoin-report.png', 'rb'))
-                    TBot.send_photo(chat_id=chat_id, photo=open('bcoin-report.%s' % telegram_data["format_of_images"], 'rb'))
+                    TBot.send_photo(chat_id=chat_id, photo=open('./logs/bcoin-report.%s' % telegram_data["format_of_images"], 'rb'))
             except:
                 logger("Telegram offline...")
     clickBtn(x_button_img)
@@ -196,7 +196,7 @@ def sendMapReport():
         try:
             for chat_id in telegram_data["telegram_chat_id"]:
                 # TBot.send_document(chat_id=chat_id, document=open('map-report.png', 'rb'))
-                TBot.send_photo(chat_id=chat_id, photo=open('map-report.%s' % telegram_data["format_of_images"], 'rb'))
+                TBot.send_photo(chat_id=chat_id, photo=open('./logs/map-report.%s' % telegram_data["format_of_images"], 'rb'))
         except:
             logger("Telegram offline...")
 
@@ -220,7 +220,7 @@ def logger(message, telegram=False):
         sendTelegramMessage(formatted_message)
 
     if (c['save_log_to_file'] == True):
-        logger_file = open("logger.log", "a", encoding='utf-8')
+        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
         logger_file.write(formatted_message + '\n')
         logger_file.close()
 
