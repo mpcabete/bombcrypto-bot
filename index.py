@@ -392,8 +392,8 @@ def getPiecesPosition(t = 150):
     return absolute_puzzle_pieces
 
 def getSliderPosition():
-    slider_pos = positions(slider, return_0=True)
-    if len (slider_pos) == 0:
+    slider_pos = positions(slider)
+    if slider_pos is False:
         return False
     x, y, w, h = slider_pos[0]
     position = [x+w/2,y+h/2]
@@ -428,11 +428,9 @@ def solveCaptcha():
     piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
     slider_start, _, = slider_start_pos
     slider_end, _ = getSliderPosition()
-    # print (piece_start)
-    # print (piece_end)
-    # print (piece_middle)
-    # print (slider_start)
-    # print (slider_end)
+    
+    if piece_start and piece_end and piece_middle and slider_start and slider_end is False:
+        return False
 
     piece_domain = piece_end - piece_start
     middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
