@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
+
 from os import listdir
+from src.logger import logger, loggerMapClicked
+
 import numpy as np
 import mss
 import pyautogui
@@ -27,13 +30,17 @@ cat = """
                                                   ; '   : :`-:     _.`* ;
                                                .*' /  .*' ; .*`- +'  `*'
                                                `*-*   `*-*  `*-*'
-====== Please, consider buying me an coffe :) =========================
-==== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf =======================
-==== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ =====
-=======================================================================
+=========================================================================
+================ Please, consider buying me an coffe :) =================
+=========================================================================
+============== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf ===============
+===== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ ======
+=========================================================================
 
 >>---> Press ctrl + c to kill the bot.
+
 >>---> Some configs can be fount in the config.yaml file."""
+
 
 print(cat)
 
@@ -56,7 +63,6 @@ data = '{"n":"pageview","u":"https://mpcabete.xyz/bombcryptodebug/","d":"mpcabet
 response = requests.post('https://plausible.io/api/event', headers=headers, data=data)
 
 if __name__ == '__main__':
-
     stream = open("config.yaml", 'r')
     c = yaml.safe_load(stream)
 
@@ -73,6 +79,7 @@ pyautogui.FAILSAFE = False
 hero_clicks = 0
 login_attempts = 0
 last_log_is_progress = False
+
 
 
 
@@ -123,19 +130,15 @@ piece = cv2.imread('targets/piece.png')
 robot = cv2.imread('targets/robot.png')
 slider = cv2.imread('targets/slider.png')
 
-
-###################### puzzle #############
 def findPuzzlePieces(result, piece_img, threshold=0.5):
     piece_w = piece_img.shape[1]
     piece_h = piece_img.shape[0]
     yloc, xloc = np.where(result >= threshold)
 
-
     r= []
     for (piece_x, piece_y) in zip(xloc, yloc):
         r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
         r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
-
 
     r, weights = cv2.groupRectangles(r, 1, 0.2)
 
@@ -146,7 +149,7 @@ def findPuzzlePieces(result, piece_img, threshold=0.5):
         return r
 
     if len(r) > 2:
-        print('overshoot by %d' % len(r))
+        logger('💀 Overshoot by %d' % len(r))
 
         return r
 
@@ -234,14 +237,13 @@ def getSliderPosition():
 def solveCapcha():
     #TODO adicionar a funçao de checar se um botao esta visive
     # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
-
-    logger('checking for capcha')
+    logger('🧩 Checking for captcha')
     pieces_start_pos = getPiecesPosition()
     if pieces_start_pos is None :
         return "not-found"
     slider_start_pos = getSliderPosition()
     if slider_start_pos is None:
-        print('slider_start_pos')
+        logger('🧩 slider_start_pos')
         return "fail"
 
     x,y = slider_start_pos
@@ -250,10 +252,8 @@ def solveCapcha():
     pyautogui.moveTo(x+300 ,y,0.5)
     pieces_end_pos = getPiecesPosition()
     if pieces_end_pos is None:
-        print('pieces_end_pos')
+        logger('🧩 pieces_end_pos')
         return "fail"
-
-
 
     piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
     piece_end, _, _, _ = getRightPiece(pieces_end_pos)
@@ -261,7 +261,7 @@ def solveCapcha():
     slider_start, _, = slider_start_pos
     slider_end_pos = getSliderPosition()
     if slider_end_pos is None:
-        print ('slider_end_pos')
+        logger('🧩 slider_end_pos')
         return "fail"
 
     slider_end, _ = slider_end_pos
@@ -278,46 +278,6 @@ def solveCapcha():
 
     return True
     # show(arr)
-    #########################################
-
-def logger(message, progress_indicator = False):
-    global last_log_is_progress
-
-
-
-    # Start progress indicator and append dots to in subsequent progress calls
-    if progress_indicator:
-        if not last_log_is_progress:
-            last_log_is_progress = True
-            sys.stdout.write('\n => .')
-            sys.stdout.flush()
-        else:
-            sys.stdout.write('.')
-            sys.stdout.flush()
-
-        return
-
-    if last_log_is_progress:
-        sys.stdout.write('\n\n')
-        sys.stdout.flush()
-        last_log_is_progress = False
-
-
-
-    datetime = time.localtime()
-    formatted_datetime = time.strftime("%d/%m/%Y %H:%M:%S", datetime)
-
-    formatted_message = "[{}] \n => {} \n\n".format(formatted_datetime, message)
-
-
-    print(formatted_message)
-
-    if (c['save_log_to_file'] == True):
-        logger_file = open("logger.log", "a")
-        logger_file.write(formatted_message)
-        logger_file.close()
-
-    return True
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
@@ -423,18 +383,20 @@ def isWorking(bar, buttons):
 def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 130
+
     green_bars = positions(images['green-bar'], threshold=ct['green_bar'])
-    logger('%d green bars detected' % len(green_bars))
+    logger('🟩 %d green bars detected' % len(green_bars))
     buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
-    logger('%d buttons detected' % len(buttons))
+    logger('🆗 %d buttons detected' % len(buttons))
+
 
     not_working_green_bars = []
     for bar in green_bars:
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
-        logger('%d buttons with green bar detected' % len(not_working_green_bars))
-        logger('Clicking in %d heroes.' % len(not_working_green_bars))
+        logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
+        logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
@@ -444,7 +406,7 @@ def clickGreenBarButtons():
         global hero_clicks
         hero_clicks = hero_clicks + 1
         if hero_clicks > 20:
-            logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+            logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
             return
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
@@ -460,7 +422,7 @@ def clickFullBarButtons():
             not_working_full_bars.append(bar)
 
     if len(not_working_full_bars) > 0:
-        logger('Clicking in %d heroes.' % len(not_working_full_bars))
+        logger('👆 Clicking in %d heroes' % len(not_working_full_bars))
 
     for (x, y, w, h) in not_working_full_bars:
         pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
@@ -491,16 +453,20 @@ def goToGame():
     clickBtn(images['treasure-hunt-icon'])
 
 def refreshHeroesPositions():
+
+logger('🔃 Refreshing Heroes Positions')
     clickBtn(images['go-back-arrow'])
     clickBtn(images['treasure-hunt-icon'])
+
     # time.sleep(3)
     clickBtn(images['treasure-hunt-icon'])
 
 def login():
     global login_attempts
+    logger('😿 Checking if game has disconnected')
 
     if login_attempts > 3:
-        logger('Too many login attempts, refreshing.')
+        logger('🔃 Too many login attempts, refreshing')
         login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
         return
@@ -508,7 +474,7 @@ def login():
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         solveCapcha()
         login_attempts = login_attempts + 1
-        logger('Connect wallet button detected, logging in!')
+        logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
@@ -550,6 +516,7 @@ def login():
         # print('ok button clicked')
 
 
+
 def sendHeroesHome():
     if not ch['enable']:
         return
@@ -588,14 +555,16 @@ def sendHeroesHome():
 
 
 def refreshHeroes():
+    logger('🏢 Search for heroes to work')
+
     goToHeroes()
 
     if c['select_heroes_mode'] == "full":
-        logger("Sending heroes with full stamina bar to work!")
+        logger('⚒️ Sending heroes with full stamina bar to work', 'green')
     elif c['select_heroes_mode'] == "green":
-        logger("Sending heroes with green stamina bar to work!")
+        logger('⚒️ Sending heroes with green stamina bar to work', 'green')
     else:
-        logger("Sending all heroes to work!")
+        logger('⚒️ Sending all heroes to work', 'green')
 
     buttonsClicked = 1
     empty_scrolls_attempts = c['scroll_attemps']
@@ -614,7 +583,7 @@ def refreshHeroes():
             empty_scrolls_attempts = empty_scrolls_attempts - 1
         scroll()
         time.sleep(2)
-    logger('{} heroes sent to work so far'.format(hero_clicks))
+    logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
 
@@ -626,40 +595,37 @@ def main():
     "login" : 0,
     "heroes" : 0,
     "new_map" : 0,
-    "check_for_capcha" : 0,
+    "check_for_captcha" : 0,
     "refresh_heroes" : 0
     }
 
     while True:
         now = time.time()
 
-        if now - last["check_for_capcha"] > t['check_for_capcha'] * 60:
-            last["check_for_capcha"] = now
-            logger('Checking for capcha.')
+        if now - last["check_for_captcha"] > t['check_for_captcha'] * 60:
+            last["check_for_captcha"] = now
             solveCapcha()
 
         if now - last["heroes"] > t['send_heroes_for_work'] * 60:
             last["heroes"] = now
-            logger('Sending heroes to work.')
             refreshHeroes()
 
         if now - last["login"] > t['check_for_login'] * 60:
-            logger("Checking if game has disconnected.")
             sys.stdout.flush()
             last["login"] = now
             login()
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
+
             if clickBtn(images['new-map']):
-                with open('new-map.log','a') as new_map_log:
-                    new_map_log.write(str(time.time())+'\n')
-                logger('New Map button clicked!')
+            if clickBtn(new_map_btn_img):
+                loggerMapClicked()
+
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
             solveCapcha()
             last["refresh_heroes"] = now
-            logger('Refreshing Heroes Positions.')
             refreshHeroesPositions()
 
         #clickBtn(teasureHunt)
@@ -668,8 +634,6 @@ def main():
         sys.stdout.flush()
 
         time.sleep(1)
-
-
 main()
 # sendHeroesHome()
 

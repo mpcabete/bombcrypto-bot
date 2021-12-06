@@ -1,4 +1,15 @@
-new-map.log
+# IDE
 .vim
+
+# test
 test.py
-logger.log
+
+# log
+/logs/new-map.log
+/logs/logger.log
+
+# cache
+/src/__pycache__
+
+# vscode plugins
+/.history
