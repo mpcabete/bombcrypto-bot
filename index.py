@@ -160,12 +160,12 @@ def sendBCoinReport():
         with mss.mss() as sct:
             sct_img = np.array(sct.grab(sct.monitors[c['monitor_to_use']]))
             crop_img = sct_img[y:y+h, x:x+w]
-            cv2.imwrite('bcoin-report.%s' % telegram_data["format_of_images"], crop_img)
+            cv2.imwrite('./logs/bcoin-report.%s' % telegram_data["format_of_images"], crop_img)
             time.sleep(1)
             try:
                 for chat_id in telegram_data["telegram_chat_id"]:
                     # TBot.send_document(chat_id=chat_id, document=open('bcoin-report.png', 'rb'))
-                    TBot.send_photo(chat_id=chat_id, photo=open('bcoin-report.%s' % telegram_data["format_of_images"], 'rb'))
+                    TBot.send_photo(chat_id=chat_id, photo=open('./logs/bcoin-report.%s' % telegram_data["format_of_images"], 'rb'))
             except:
                 logger("Telegram offline...")
     clickBtn(x_button_img)
@@ -193,12 +193,12 @@ def sendMapReport():
         crop_img = sct_img[newY0:newY1, newX0:newX1]
         # resized = cv2.resize(crop_img, (500, 250))
 
-        cv2.imwrite('map-report.%s' % telegram_data["format_of_images"], crop_img)
+        cv2.imwrite('./logs/map-report.%s' % telegram_data["format_of_images"], crop_img)
         time.sleep(1)
         try:
             for chat_id in telegram_data["telegram_chat_id"]:
                 # TBot.send_document(chat_id=chat_id, document=open('map-report.png', 'rb'))
-                TBot.send_photo(chat_id=chat_id, photo=open('map-report.%s' % telegram_data["format_of_images"], 'rb'))
+                TBot.send_photo(chat_id=chat_id, photo=open('./logs/map-report.%s' % telegram_data["format_of_images"], 'rb'))
         except:
             logger("Telegram offline...")
 
@@ -222,7 +222,7 @@ def logger(message, telegram=False):
         sendTelegramMessage(formatted_message)
 
     if (c['save_log_to_file'] == True):
-        logger_file = open("logger.log", "a", encoding='utf-8')
+        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
         logger_file.write(formatted_message + '\n')
         logger_file.close()
 
