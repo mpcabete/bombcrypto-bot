@@ -100,6 +100,24 @@ chest2 = cv2.imread('targets/chest2.png')
 chest3 = cv2.imread('targets/chest3.png')
 chest4 = cv2.imread('targets/chest4.png')
 
+def logger(message, telegram=False):
+    datetime = time.localtime()
+    formatted_datetime = time.strftime("%d/%m/%Y %H:%M:%S", datetime)
+
+    formatted_message = "[{}] => {}".format(formatted_datetime, message)
+
+    print(formatted_message)
+
+    if telegram == True:
+        sendTelegramMessage(formatted_message)
+
+    if (c['save_log_to_file'] == True):
+        logger_file = open("logger.log", "a", encoding='utf-8')
+        logger_file.write(formatted_message + '\n')
+        logger_file.close()
+
+    return True
+
 # Initialize telegram
 if telegram_data['telegram_mode'] == True:
     try:
@@ -209,24 +227,6 @@ def sendMapReport():
 
     clickBtn(x_button_img)
     logger("Map Report sent.", telegram=True)
-
-def logger(message, telegram=False):
-    datetime = time.localtime()
-    formatted_datetime = time.strftime("%d/%m/%Y %H:%M:%S", datetime)
-
-    formatted_message = "[{}] => {}".format(formatted_datetime, message)
-
-    print(formatted_message)
-
-    if telegram == True:
-        sendTelegramMessage(formatted_message)
-
-    if (c['save_log_to_file'] == True):
-        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
-        logger_file.write(formatted_message + '\n')
-        logger_file.close()
-
-    return True
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     if not name is None:
