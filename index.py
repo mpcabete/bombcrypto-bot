@@ -314,6 +314,9 @@ def findPuzzlePieces(result, piece_img, threshold=0.5):
         return r
 
 def getRightPiece(puzzle_pieces):
+    if puzzle_pieces is False:
+        return False
+
     xs = [row[0] for row in puzzle_pieces]
     index_of_right_rectangle = xs.index(max(xs))
 
@@ -321,6 +324,9 @@ def getRightPiece(puzzle_pieces):
     return right_piece
 
 def getLeftPiece(puzzle_pieces):
+    if puzzle_pieces is False:
+        return False
+
     xs = [row[0] for row in puzzle_pieces]
     index_of_left_rectangle = xs.index(min(xs))
 
@@ -377,7 +383,7 @@ def getPiecesPosition(t = 150):
     puzzle_pieces = findPuzzlePieces(result, piece_img)
 
     if puzzle_pieces is None:
-        return
+        return False
 
     # show(puzzle_pieces, edges)
     # exit()
@@ -421,7 +427,8 @@ def solveCaptcha():
     # pyautogui.moveTo(x+300 ,y,0.5)
     hc.move((int(x + 350),int(y)), np.random.randint(1,2))
     pieces_end_pos = getPiecesPosition()
-
+    if pieces_end_pos is False:
+        return False
 
     piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
     piece_end, _, _, _ = getRightPiece(pieces_end_pos)
@@ -429,7 +436,13 @@ def solveCaptcha():
     slider_start, _, = slider_start_pos
     slider_end, _ = getSliderPosition()
     
-    if piece_start or piece_end or piece_middle or slider_start or slider_end is False:
+    # print(piece_start)
+    # print(piece_end)
+    # print(piece_middle)
+    # print(slider_start)
+    # print(slider_end)
+    
+    if piece_start is False or piece_end is False or piece_middle is False or slider_start is False or slider_end is False:
         return False
 
     piece_domain = piece_end - piece_start
