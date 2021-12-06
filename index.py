@@ -699,7 +699,7 @@ def refreshHeroes():
             empty_scrolls_attempts = empty_scrolls_attempts - 1
         scroll()
         sleep(1, 3)
-    logger('{} total heroes sent'.format(hero_clicks), telegram=True)
+    logger('{} total heroes sent since the bot started'.format(hero_clicks), telegram=True)
     goToGame()
 
 def check_for_logout():
