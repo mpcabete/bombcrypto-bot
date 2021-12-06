@@ -52,27 +52,7 @@ robot = cv2.imread('targets/robot.png')
 slider = cv2.imread('targets/slider.png')
 hero_screen = cv2.imread('targets/hero-screen.png')
 first_screen = cv2.imread('targets/first_screen.png')
-
-def findImage(img,name=None, timeout=3, threshold = ct['default']):
-    logger.logger(None, progress_indicator=True)
-    if not name is None:
-        pass
-    start = time.time()
-    clicked = False
-    while(not clicked):
-        matches = positions(img, threshold=threshold)
-        if(len(matches)==0):
-            hast_timed_out = time.time()-start > timeout
-            if(hast_timed_out):
-                if not name is None:
-                    pass
-                return False
-            continue
-
-        x,y,w,h = matches[0]
-        solveCapModule.solveCaptcha()                         
-        return True
-    
+  
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger.logger(None, progress_indicator=True)
     if not name is None:
@@ -118,7 +98,6 @@ def positions(target, threshold=ct['default']):
     return rectangles
 
 def scroll():
-
     commoms = positions(commom_img, threshold = ct['commom'])
     if (len(commoms) == 0):
         return
@@ -208,12 +187,10 @@ def goToHeroes():
 def goToGame():
     clickBtn(x_button_img)
     clickBtn(x_button_img)
-    waitShowScreen(teasureHunt_icon_img)
     clickBtn(teasureHunt_icon_img)
 
 def refreshHeroesPositions():
     clickBtn(arrow_img)
-    waitShowScreen(teasureHunt_icon_img)
     clickBtn(teasureHunt_icon_img)
     clickBtn(teasureHunt_icon_img)
 
@@ -226,20 +203,18 @@ def login():
         pyautogui.hotkey('ctrl','f5')
         return
     
-    if findImage(connect_wallet_btn_img):
-        if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
-            solveCapModule.solveCaptcha()
-            login_attempts = login_attempts + 1
-            logger.logger('Connect wallet button detected, logging in!')
-            time.sleep(2)
+    if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
+        solveCapModule.solveCaptcha()
+        login_attempts = login_attempts + 1
+        logger.logger('Connect wallet button detected, logging in!')
+        time.sleep(2)
     
-    if findImage(sign_btn_img):
-        if clickBtn(sign_btn_img, name='sign button', timeout=8):
-            login_attempts = login_attempts + 1
-            time.sleep(randint(3,5))
-            if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
-                login_attempts = 0
-                return
+    if clickBtn(sign_btn_img, name='sign button', timeout=8):
+        login_attempts = login_attempts + 1
+        time.sleep(randint(3,5))
+        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
+            login_attempts = 0
+            return
     
     if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn'):
         if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', threshold = ct['select_wallet_buttons'] ):
@@ -247,23 +222,10 @@ def login():
     
     else:
         pass
-    
-    if findImage(ok_btn_img):
-        if clickBtn(ok_btn_img, name='okBtn', timeout=5):
-            pass
-    
-def waitShowScreen(screen_type):
-    count_timer = time.time()
-    
-    while not findImage(screen_type):
-        logger.logger(f"Waiting to show screen {screen_type} to play")
-        time.sleep(1)
-        if count_timer - time.time() > 10:
-            print("Game crashed\nRestarting All")
-            pyautogui.hotkey('ctrl','f5')
-            goToGame()
-            
-'''
+
+    if clickBtn(ok_btn_img, name='okBtn', timeout=5):
+        pass
+                
 def waitHeroes():
     #repeat times for retry detecting the Heroes screen
     repeat = 5
@@ -280,12 +242,11 @@ def waitHeroes():
     logger.logger('Heroes Screen not loaded. Retrying next time')
     pyautogui.hotkey('ctrl','f5')                
     goToGame()
-'''    
+    
 def refreshHeroes():
     solveCapModule.solveCaptcha()
     goToHeroes()
     solveCapModule.solveCaptcha()
-    
     
     select_heroes = ["full","green","all"]
     selected = choice(select_heroes)
@@ -301,8 +262,7 @@ def refreshHeroes():
     buttonsClicked = 1
     empty_scrolls_attempts = c['scroll_attemps']
     
-    #waitHeroes()
-    waitShowScreen(hero_screen) #aguarda aparecer a tela dos herois para continuar ou reiniciar 
+    waitHeroes()
     while(empty_scrolls_attempts >0):
         if selected == 'full':
             buttonsClicked = clickFullBarButtons()
@@ -353,50 +313,39 @@ def main():
 
     while True:
         now = time.time()         
-        
-        if findImage(robot):
-            print("try to find bot")            
-            if now - last["check_for_captcha"] > t['check_for_captcha'] * 60:
-                last["check_for_captcha"] = now
-                logger.logger('Checking for capcha.')
-                solveCapModule.solveCaptcha()
+          
+        if now - last["check_for_captcha"] > t['check_for_captcha'] * 60:
+            last["check_for_captcha"] = now
+            logger.logger('Checking for capcha.')
+            solveCapModule.solveCaptcha()
         
         if now - last["login"] > randint(2,5) * 60:
-            print("try to find login")            
-            if findImage(first_screen):
-                time.sleep(randint(1,2))            
-                logger.logger("Checking if game has disconnected.")
-                sys.stdout.flush()
-                last["login"] = now
-                login()
-                time.sleep(2)    
+            time.sleep(randint(1,2))            
+            logger.logger("Checking if game has disconnected.")
+            sys.stdout.flush()
+            last["login"] = now
+            login()
+            time.sleep(2)    
         
         if now - last["heroes"] > randint(8,12) * 60:
-            print("try to send heroes")            
-            if findImage (hero_img) or findImage(map_page):
-                last["heroes"] = now
-                logger.logger('Sending heroes to work.')
-                time.sleep(randint(3,5))                
-                refreshHeroes()        
+            last["heroes"] = now
+            logger.logger('Sending heroes to work.')
+            time.sleep(randint(3,5))                
+            refreshHeroes()        
         
         if now - last["refresh_heroes"] > randint(5,25) * 60 :
-            print("try to refresh heroes")            
-            if findImage (arrow_img):
-                time.sleep(randint(1,2))            
-                last["refresh_heroes"] = now
-                logger.logger('Refreshing Heroes Positions.')
-                refreshHeroesPositions()     
-         
+            time.sleep(randint(1,2))            
+            last["refresh_heroes"] = now
+            logger.logger('Refreshing Heroes Positions.')
+            refreshHeroesPositions()           
         
-        print("try to find new map")  
         if now - last["new_map"] > randint(3,6):
-            if findImage (new_map_btn_img):
-                time.sleep(randint(1,2))            
-                last["new_map"] = now
-                if clickBtn(new_map_btn_img):
-                    with open('new-map.log','a') as new_map_log:
-                        new_map_log.write(str(time.time())+'\n')
-                    logger.logger('New Map button clicked!')
+            time.sleep(randint(1,2))            
+            last["new_map"] = now
+            if clickBtn(new_map_btn_img):
+                with open('new-map.log','a') as new_map_log:
+                    new_map_log.write(str(time.time())+'\n')
+                logger.logger('New Map button clicked!')
         
         logger.logger(None, progress_indicator=True)
         sys.stdout.flush()
