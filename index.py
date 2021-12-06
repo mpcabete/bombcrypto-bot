@@ -112,7 +112,7 @@ def logger(message, telegram=False):
         sendTelegramMessage(formatted_message)
 
     if (c['save_log_to_file'] == True):
-        logger_file = open("logger.log", "a", encoding='utf-8')
+        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
         logger_file.write(formatted_message + '\n')
         logger_file.close()
 
@@ -865,4 +865,4 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        logger('Shutting down the bot...', True)
+        logger('Shutting down the bot...', telegram=True)
