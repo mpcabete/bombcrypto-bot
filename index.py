@@ -429,7 +429,7 @@ def solveCaptcha():
     slider_start, _, = slider_start_pos
     slider_end, _ = getSliderPosition()
     
-    if piece_start and piece_end and piece_middle and slider_start and slider_end is False:
+    if piece_start or piece_end or piece_middle or slider_start or slider_end is False:
         return False
 
     piece_domain = piece_end - piece_start
