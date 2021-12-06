@@ -668,7 +668,8 @@ def login():
 
         if (login_attempts > 3):
             logger(">3 login attempts. Retrying.", telegram=True)
-            pyautogui.hotkey('ctrl', 'f5')
+            # pyautogui.hotkey('ctrl', 'f5')
+            pyautogui.hotkey('ctrl', 'shift', 'r')
             login_attempts = 0
 
             if clickBtn(metamask_cancel_button):
@@ -691,7 +692,8 @@ def handle_error():
 
     if clickBtn(ok_btn_img):
         logger("Refreshing page.")
-        pyautogui.hotkey('ctrl', 'f5')
+        # pyautogui.hotkey('ctrl', 'f5')
+        pyautogui.hotkey('ctrl', 'shift', 'r')
         waitForImg(connect_wallet_btn_img)
         login()
 
@@ -728,7 +730,8 @@ def check_for_logout():
         if positions(connect_wallet_btn_img) is not False:
             logger("Logout detected.", telegram=True)
             logger("Refreshing page.", telegram=True)
-            pyautogui.hotkey('ctrl', 'f5')
+            # pyautogui.hotkey('ctrl', 'f5')
+            pyautogui.hotkey('ctrl', 'shift', 'r')
             waitForImg(connect_wallet_btn_img)
             login()
         elif positions(sign_btn_img):
