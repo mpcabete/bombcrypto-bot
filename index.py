@@ -204,6 +204,19 @@ def sendBCoinReport():
     if(len(telegram_data["telegram_chat_id"]) <= 0 or telegram_data["enable_coin_report"] is False):
         return
 
+    if current_screen() == "main":
+        if clickBtn(teasureHunt_icon_img):
+            time.sleep(2)
+    elif current_screen() == "character":
+        if clickBtn(x_button_img):
+            time.sleep(2)
+            if clickBtn(teasureHunt_icon_img):
+                time.sleep(2)
+    elif current_screen() == "thunt":
+        time.sleep(2)
+    else:
+        return
+        
     clickBtn(chest_button)
 
     sleep(5, 15)
