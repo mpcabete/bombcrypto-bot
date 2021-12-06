@@ -852,4 +852,4 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        logger('Shtting down the bot...', True)
+        logger('Shutting down the bot...', True)
