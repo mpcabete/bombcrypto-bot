@@ -9,7 +9,7 @@ import sys
 import yaml
 import random
 
-# TODO: add kill bot on button pressed
+# TODO: add kill bot on button pressed, server maintenance
 
 banner = """
 ====== Bomb Crypto Bot - Vin35 Version ======
@@ -58,6 +58,7 @@ general_check_time = 1
 
 
 go_work_img = cv2.imread('targets/go-work.png')
+home_img = cv2.imread('targets/home.png')
 arrow_img = cv2.imread('targets/go-back-arrow.png')
 full_screen_img = cv2.imread('targets/full_screen.png')
 hero_img = cv2.imread('targets/hero-icon.png')
@@ -477,9 +478,10 @@ def clickButtons():
         global hero_clicks
         hero_clicks = hero_clicks + 1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
-        if hero_clicks > 16:
-            logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+        if hero_clicks > 15:
+            logger('too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
+    logger('Clicking in %d heroes detected.' % len(buttons), telegram=True)
     return len(buttons)
 
 def isWorking(bar, buttons):
@@ -506,7 +508,7 @@ def clickGreenBarButtons():
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
-        logger('Clicking in %d heroes with green bar detected.' % len(not_working_green_bars))
+        logger('Clicking in %d heroes with green bar detected.' % len(not_working_green_bars), telegram=True)
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
@@ -516,8 +518,8 @@ def clickGreenBarButtons():
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        if hero_clicks > 16:
-            logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+        if hero_clicks > 15:
+            logger('too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
@@ -535,7 +537,7 @@ def clickFullBarButtons():
             not_working_full_bars.append(bar)
 
     if len(not_working_full_bars) > 0:
-        logger('Clicking in %d heroes with FULL bar detected.' % len(not_working_full_bars))
+        logger('Clicking in %d heroes with FULL bar detected.' % len(not_working_full_bars), telegram=True)
 
     for (x, y, w, h) in not_working_full_bars:
         # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
@@ -543,8 +545,8 @@ def clickFullBarButtons():
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        if hero_clicks > 16:
-            logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+        if hero_clicks > 15:
+            logger('too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
 
     return len(not_working_full_bars)
@@ -573,12 +575,12 @@ def goToHeroes():
             if clickBtn(hero_img):
                 sleep(1, 3)
                 check_puzzle()
-                sleep(1,3)
+                waitForImg(home_img)
     if current_screen() == "main":
         if clickBtn(hero_img):
             sleep(1, 3)
             check_puzzle()
-            sleep(1,3)
+            waitForImg(home_img)
     if current_screen() == "unknown" or current_screen() == "login":
         check_for_logout()
 
@@ -682,7 +684,7 @@ def refreshHeroes():
     else:
         logger("Sending all heroes to work!")
 
-    buttonsClicked = 1
+    buttonsClicked = 0
     empty_scrolls_attempts = c['scroll_attempts']
 
     while(empty_scrolls_attempts > 0):
@@ -696,21 +698,22 @@ def refreshHeroes():
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
         scroll()
-        time.sleep(2)
-    logger('{} heroes sent to work so far'.format(hero_clicks), telegram=True)
+        sleep(1, 3)
+    logger('{} total heroes sent'.format(hero_clicks), telegram=True)
     goToGame()
 
 def check_for_logout():
     if current_screen() == "unknown" or current_screen() == "login":
-        if positions(connect_wallet_btn_img) or positions(sign_btn_img) is not False:
-            t = time.localtime()
-            current_time = time.strftime("%H:%M:%S", t)
-
+        if positions(connect_wallet_btn_img) is not False:
             logger("Logout detected.", telegram=True)
-            logger("Refreshing page.")
+            logger("Refreshing page.", telegram=True)
             pyautogui.hotkey('ctrl', 'f5')
             waitForImg(connect_wallet_btn_img)
             login()
+        elif positions(sign_btn_img):
+            logger("Sing button detected.", telegram=True)
+            if clickBtn(metamask_cancel_button):
+                logger("Metamask is glitched. Fixing.", telegram=True)
         else:
             return False
             
