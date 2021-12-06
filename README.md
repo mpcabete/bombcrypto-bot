@@ -1,4 +1,3 @@
-[![en](https://raw.githubusercontent.com/mpcabete/bombcrypto-bot/main/readme-images/lang-en.svg)](https://github.com/mpcabete/bombcrypto-bot/blob/main/README.en.md)
   
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
@@ -118,6 +117,32 @@ Assim que ele iniciar ele vai começar mandando os bonecos trabalhar. Para que e
 Ele vai constantemente checar se você foi desconectado para realizar o login novamente, e se o botão “new map” tá na tela para clicar nele.
 A cada 15 minutos ele manda todos os heróis taralharem.
 
+# Send home feature:
+
+## How to use it:
+Save a screenshot of the heroes you want to be sent home in the directory: /targets/heroes-to-send-home
+
+
+## How it should behave:
+It will automatically  load the screenshots of the heroes when starting up.
+After it clicks in the heroes with the green bar to send them to work, it will look if there is any of the heroes that are saved in the directory in the screen.
+If tit finds one of the heroes, the bot checks if the home button is dark and the work button is not dark.
+If both these conditions are true, it clicks the home button.
+
+## Troubleshooting:
+#### I have not been able to fine adjust it, so here is some problems that may occur, and how to solve them:
+
+- The bot should distinguish between the dark, the clear and the gray home buttons.
+  - If the bot says that a hero is working or home, but he is not, that is because the bot is not detecting the dark home button, make the option "home: home_button_trashhold" smaller. You can also replace the image send-home.png in the targets folder.
+
+  - If the bot is trapped in an loop clicking in an clear home button, he thinks that the clear button is the dark button, make the option home: home_button_trashhold bigger.
+
+- The bot should detect the heroes you saved to the directory.
+  - If the bot clicks the wrong heroes, it thinks that another hero is the one you saved the screenshot. Make the option home: hero_trashhold bigger
+  - If it does not detect your heroes, make it smaller. You can also try replacing the screenshot with another part of the hero.
+
+  ----------------
+
 ## Como funciona?
 
 O bot não interage diretamente com o jogo, ele somente tira print da tela do
@@ -205,7 +230,8 @@ exemplo na pasta “targets” para uma tirada no seu próprio computador:
     “select_heroes_mode” estiver como “green”.
 
 
-### Algumas configuraçoes podem ser mudadas no arquivo config.yaml, nao se
+### Algumas configura100  8490  100  8490    0     0  30000      0 --:--:-- --:--:-- --:--:-- 30000
+çoes podem ser mudadas no arquivo config.yaml, nao se
 ### esqueça de reiniciar o bot caso mude as configuraçoes.
 
 ## Curtiu? Dê aquela fortalecida :)

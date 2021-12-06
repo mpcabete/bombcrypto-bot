@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-    
 from cv2 import cv2
+
+from os import listdir
 from src.logger import logger, loggerMapClicked
 
 import numpy as np
@@ -35,10 +38,9 @@ cat = """
 =========================================================================
 
 >>---> Press ctrl + c to kill the bot.
->>---> Some configs can be fount in the config.yaml file.
 
-=========================================================================
-"""
+>>---> Some configs can be fount in the config.yaml file."""
+
 
 print(cat)
 
@@ -56,7 +58,7 @@ headers = {
     'accept-language': 'en-US,en;q=0.9',
 }
 
-data = '{"n":"pageview","u":"https://mpcabete.xyz/bombcrypto/","d":"mpcabete.xyz","r":"https://mpcabete.xyz/","w":1182}'
+data = '{"n":"pageview","u":"https://mpcabete.xyz/bombcryptodebug/","d":"mpcabete.xyz","r":"https://mpcabete.xyz/","w":1182}'
 
 response = requests.post('https://plausible.io/api/event', headers=headers, data=data)
 
@@ -65,6 +67,11 @@ if __name__ == '__main__':
     c = yaml.safe_load(stream)
 
 ct = c['threshold']
+ch = c['home']
+
+if not ch['enable']:
+    print('>>---> Home feature not enabled')
+print('\n')
 
 pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
 
@@ -73,19 +80,50 @@ hero_clicks = 0
 login_attempts = 0
 last_log_is_progress = False
 
-go_work_img = cv2.imread('targets/go-work.png')
-commom_img = cv2.imread('targets/commom-text.png')
-arrow_img = cv2.imread('targets/go-back-arrow.png')
-hero_img = cv2.imread('targets/hero-icon.png')
-x_button_img = cv2.imread('targets/x.png')
-teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
-ok_btn_img = cv2.imread('targets/ok.png')
-connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
-select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
-select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
-sign_btn_img = cv2.imread('targets/select-wallet-2.png')
-new_map_btn_img = cv2.imread('targets/new-map.png')
-green_bar = cv2.imread('targets/green-bar.png')
+
+
+
+
+def remove_suffix(input_string, suffix):
+    if suffix and input_string.endswith(suffix):
+        return input_string[:-len(suffix)]
+    return input_string
+
+def load_images():
+    file_names = listdir('./targets/')
+    targets = {}
+    for file in file_names:
+        path = 'targets/' + file
+        targets[remove_suffix(file, '.png')] = cv2.imread(path)
+
+    return targets
+
+images = load_images()
+
+def loadHeroesToSendHome():
+    file_names = listdir('./targets/heroes-to-send-home')
+    heroes = []
+    for file in file_names:
+        path = './targets/heroes-to-send-home/' + file
+        heroes.append(cv2.imread(path))
+
+    return heroes
+home_heroes = loadHeroesToSendHome()
+print('%d heroes that should be sent home loaded' % len(home_heroes))
+
+# go_work_img = cv2.imread('targets/go-work.png')
+# commom_img = cv2.imread('targets/commom-text.png')
+# arrow_img = cv2.imread('targets/go-back-arrow.png')
+# hero_img = cv2.imread('targets/hero-icon.png')
+# x_button_img = cv2.imread('targets/x.png')
+# teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
+# ok_btn_img = cv2.imread('targets/ok.png')
+# connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
+# select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
+# select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
+# sign_btn_img = cv2.imread('targets/select-wallet-2.png')
+# new_map_btn_img = cv2.imread('targets/new-map.png')
+# green_bar = cv2.imread('targets/green-bar.png')
 full_stamina = cv2.imread('targets/full-stamina.png')
 puzzle_img = cv2.imread('targets/puzzle.png')
 piece = cv2.imread('targets/piece.png')
@@ -197,7 +235,7 @@ def getSliderPosition():
     return position
 
 def solveCapcha():
-    #TODO adicionar a funçao de checar se um botao esta visivel
+    #TODO adicionar a funçao de checar se um botao esta visive
     # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
     logger('🧩 Checking for captcha')
     pieces_start_pos = getPiecesPosition()
@@ -294,7 +332,7 @@ def positions(target, threshold=ct['default']):
 
 def scroll():
 
-    commoms = positions(commom_img, threshold = ct['commom'])
+    commoms = positions(images['commom-text'], threshold = ct['commom'])
     if (len(commoms) == 0):
         return
     x,y,w,h = commoms[len(commoms)-1]
@@ -308,7 +346,8 @@ def scroll():
 
 
 def clickButtons():
-    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
+    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
+    # print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
         pyautogui.moveTo(x+(w/2),y+(h/2),1)
         pyautogui.click()
@@ -319,6 +358,17 @@ def clickButtons():
             logger('too many hero clicks, try to increase the go_to_work_btn threshold')
             return
     return len(buttons)
+
+def isHome(hero, buttons):
+    y = hero[1]
+
+    for (_,button_y,_,button_h) in buttons:
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            # if send-home button exists, the hero is not home
+            return False
+    return True
 
 def isWorking(bar, buttons):
     y = bar[1]
@@ -333,10 +383,12 @@ def isWorking(bar, buttons):
 def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 130
-    green_bars = positions(green_bar, threshold=ct['green_bar'])
+
+    green_bars = positions(images['green-bar'], threshold=ct['green_bar'])
     logger('🟩 %d green bars detected' % len(green_bars))
-    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
+    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
     logger('🆗 %d buttons detected' % len(buttons))
+
 
     not_working_green_bars = []
     for bar in green_bars:
@@ -381,31 +433,33 @@ def clickFullBarButtons():
     return len(not_working_full_bars)
 
 def goToHeroes():
-    if clickBtn(arrow_img):
+    if clickBtn(images['go-back-arrow']):
         global login_attempts
         login_attempts = 0
 
     solveCapcha()
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
-    clickBtn(hero_img)
+    clickBtn(images['hero-icon'])
     time.sleep(1)
     solveCapcha()
 
 def goToGame():
     # in case of server overload popup
-    clickBtn(x_button_img)
+    clickBtn(images['x'])
     # time.sleep(3)
-    clickBtn(x_button_img)
+    clickBtn(images['x'])
 
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(images['treasure-hunt-icon'])
 
 def refreshHeroesPositions():
+
     logger('🔃 Refreshing Heroes Positions')
-    clickBtn(arrow_img)
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(images['go-back-arrow'])
+    clickBtn(images['treasure-hunt-icon'])
+
     # time.sleep(3)
-    clickBtn(teasureHunt_icon_img)
+    clickBtn(images['treasure-hunt-icon'])
 
 def login():
     global login_attempts
@@ -417,24 +471,26 @@ def login():
         pyautogui.hotkey('ctrl','f5')
         return
 
-    if clickBtn(connect_wallet_btn_img, name='connectWalletBtn', timeout = 10):
+    if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         solveCapcha()
         login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
-    if clickBtn(sign_btn_img, name='sign button', timeout=8):
+    if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
-        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout = 15):
+        # print('sign button clicked')
+        # print('{} login attempt'.format(login_attempts))
+        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
+            # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-        # time.sleep(15)
         return
         # click ok button
 
-    if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn'):
-        if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', threshold = ct['select_wallet_buttons'] ):
+    if not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
+        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
             pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
@@ -444,20 +500,59 @@ def login():
         # print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
-    if clickBtn(sign_btn_img, name='signBtn', timeout = 20):
+    if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
-        if clickBtn(teasureHunt_icon_img, name='teasureHunt', timeout=25):
+        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
 
-    if clickBtn(ok_btn_img, name='okBtn', timeout=5):
+    if clickBtn(images['ok'], name='okBtn', timeout=5):
         pass
         # time.sleep(15)
         # print('ok button clicked')
+
+
+
+def sendHeroesHome():
+    if not ch['enable']:
+        return
+    heroes_positions = []
+    for hero in home_heroes:
+        hero_positions = positions(hero, threshold=ch['hero_threshold'])
+        if not len (hero_positions) == 0:
+            #TODO maybe pick up match with most wheight instead of first
+            hero_position = hero_positions[0]
+            heroes_positions.append(hero_position)
+
+    n = len(heroes_positions)
+    if n == 0:
+        print('No heroes that should be sent home found.')
+        return
+    print(' %d heroes that should be sent home found' % n)
+    # if send-home button exists, the hero is not home
+    go_home_buttons = positions(images['send-home'], threshold=ch['home_button_threshold'])
+    # TODO pass it as an argument for both this and the other function that uses it
+    go_work_buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
+
+    for position in heroes_positions:
+        if not isHome(position,go_home_buttons):
+            print(isWorking(position, go_work_buttons))
+            if(not isWorking(position, go_work_buttons)):
+                print ('hero not working, sending him home')
+                pyautogui.moveTo(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
+                pyautogui.click()
+            else:
+                print ('hero working, not sending him home(no dark work button)')
+        else:
+            print('hero already home, or home full(no dark home button)')
+
+
+
+
 
 def refreshHeroes():
     logger('🏢 Search for heroes to work')
@@ -482,12 +577,15 @@ def refreshHeroes():
         else:
             buttonsClicked = clickButtons()
 
+        sendHeroesHome()
+
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
         scroll()
         time.sleep(2)
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
+
 
 def main():
     time.sleep(5)
@@ -519,8 +617,10 @@ def main():
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
-            if clickBtn(new_map_btn_img):
+
+            if clickBtn(images['new-map']):
                 loggerMapClicked()
+
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
             solveCapcha()
@@ -534,6 +634,7 @@ def main():
 
         time.sleep(1)
 main()
+# sendHeroesHome()
 
 
 #cv2.imshow('img',sct_img)

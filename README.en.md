@@ -1,4 +1,4 @@
-
+  
 # About:
   This is an open-source bot, the code is open for anyone to see, fork and
 update.
@@ -121,6 +121,33 @@ python index.py
 As soon as you start the bot it will send the heroes to work. For it to work the game window needs to be visible.
 It will constantly check if it needs to login or press the "new map" button. 
 From 15 to 15 min it will send all heroes to work again
+
+
+# Send home feature:
+
+## How to use it:
+Save a screenshot of the heroes you want to be sent home in the directory: /targets/heroes-to-send-home
+
+
+## How it should behave:
+It will automatically  load the screenshots of the heroes when starting up.
+After it clicks in the heroes with the green bar to send them to work, it will look if there is any of the heroes that are saved in the directory in the screen.
+If tit finds one of the heroes, the bot checks if the home button is dark and the work button is not dark.
+If both these conditions are true, it clicks the home button.
+
+## Troubleshooting:
+#### I have not been able to fine adjust it, so here is some problems that may occur, and how to solve them:
+
+- The bot should distinguish between the dark, the clear and the gray home buttons.
+  - If the bot says that a hero is working or home, but he is not, that is because the bot is not detecting the dark home button, make the option "home: home_button_trashhold" smaller. You can also replace the image send-home.png in the targets folder.
+
+  - If the bot is trapped in an loop clicking in an clear home button, he thinks that the clear button is the dark button, make the option home: home_button_trashhold bigger.
+
+- The bot should detect the heroes you saved to the directory.
+  - If the bot clicks the wrong heroes, it thinks that another hero is the one you saved the screenshot. Make the option home: hero_trashhold bigger
+  - If it does not detect your heroes, make it smaller. You can also try replacing the screenshot with another part of the hero.
+
+  ----------------
 
 ## Pay me a coffe :)
 
