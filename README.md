@@ -3,7 +3,7 @@
 ![Bomb Crypto Banner](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/images/readme/banner.jpg)
 
   <a href="https://reactnative.dev/">
-    Bomb Crypto
+    Bomb Crypto Bot
   </a>
 </h1>
 
