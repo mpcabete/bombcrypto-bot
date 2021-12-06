@@ -841,7 +841,6 @@ def main():
 
         if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
             last["refresh_heroes"] = now + (random.randint(0, t['refresh_heroes_positions_variable']) * 60)
-            logger('Refreshing Heroes Positions.')
             refreshHeroesPositions()
 
         check_for_logout()
