@@ -549,11 +549,12 @@ def clickButtons():
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
     offset = offsets['work_button_all']
 
+    if buttons is False:
+        return False
+        
     if c['debug'] is not False or buttons is not False:
         logger('%d buttons detected' % len(buttons))
 
-    if buttons is False:
-        return False
     for (x, y, w, h) in buttons:
         offset_random = random.uniform(offset[0], offset[1])
         # pyautogui.moveTo(x+(w/2),y+(h/2),1)
@@ -584,13 +585,14 @@ def clickGreenBarButtons():
     green_bars = positions(green_bar, threshold=ct['green_bar'])
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
 
+    if green_bars is False:
+        return False
+
     if c['debug'] is not False or green_bars is not False or buttons is not False:
         logger('%d green bars detected' % len(green_bars))
         logger('%d buttons detected' % len(buttons))
 
     not_working_green_bars = []
-    if green_bars is False:
-        return False
     for bar in green_bars:
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
@@ -618,13 +620,14 @@ def clickFullBarButtons():
     full_bars = positions(full_stamina, threshold=ct['default'])
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
 
+    if full_bars is False:
+        return False
+
     if c['debug'] is not False or full_bars is not False or buttons is not False:
         logger('%d FULL bars detected' % len(full_bars))
         logger('%d buttons detected' % len(buttons))
 
     not_working_full_bars = []
-    if full_bars is False:
-        return False
     for bar in full_bars:
         if not isWorking(bar, buttons):
             not_working_full_bars.append(bar)
