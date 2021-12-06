@@ -158,7 +158,7 @@ def sendBCoinReport():
         with mss.mss() as sct:
             sct_img = np.array(sct.grab(sct.monitors[c['monitor_to_use']]))
             crop_img = sct_img[y:y+h, x:x+w]
-            cv2.imwrite('bcoin-report.%s' % telegram_data["format_of_images"], crop_img)
+            cv2.imwrite('./logs/bcoin-report.%s' % telegram_data["format_of_images"], crop_img)
             time.sleep(1)
             try:
                 for chat_id in telegram_data["telegram_chat_id"]:
@@ -191,7 +191,7 @@ def sendMapReport():
         crop_img = sct_img[newY0:newY1, newX0:newX1]
         # resized = cv2.resize(crop_img, (500, 250))
 
-        cv2.imwrite('map-report.%s' % telegram_data["format_of_images"], crop_img)
+        cv2.imwrite('./logs/map-report.%s' % telegram_data["format_of_images"], crop_img)
         time.sleep(1)
         try:
             for chat_id in telegram_data["telegram_chat_id"]:
