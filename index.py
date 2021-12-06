@@ -388,9 +388,10 @@ def getSliderPosition():
 
 def check_puzzle():
     puzzle_pos = positions(robot)
-    if puzzle_pos is False:
-        return False
-    solveCaptcha()
+    if puzzle_pos is not False:
+        solveCaptcha()
+    else:
+        return True
 
 def solveCaptcha():
     pieces_start_pos = getPiecesPosition()
@@ -434,7 +435,9 @@ def solveCaptcha():
     pyautogui.mouseUp()
     time.sleep(2)
 
-    if check_puzzle():
+
+    puzzle_pos = positions(robot)
+    if puzzle_pos is not False:
         logger('puzzle error')
         solveCaptcha()
     else:
@@ -584,7 +587,7 @@ def goToGame():
         clickBtn(teasureHunt_icon_img)
     if current_screen() == "character":
         if clickBtn(x_button_img):
-            time.sleep(1)
+            sleep(1, 3)
             clickBtn(teasureHunt_icon_img)
     if current_screen() == "unknown" or current_screen() == "login":
         check_for_logout()
