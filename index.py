@@ -848,5 +848,8 @@ def main():
         sys.stdout.flush()
         time.sleep(general_check_time)
 
-
-main()
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        logger('Shtting down the bot...', True)
