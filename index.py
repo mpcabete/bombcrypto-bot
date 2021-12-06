@@ -77,7 +77,6 @@ puzzle_img = cv2.imread('targets/puzzle.png')
 piece = cv2.imread('targets/piece.png')
 robot = cv2.imread('targets/robot.png')
 slider = cv2.imread('targets/slider.png')
-password_field = cv2.imread('targets/password_field.png')
 chest_button = cv2.imread('targets/treasure_chest.png')
 coin_icon = cv2.imread('targets/coin.png')
 maintenance_popup = cv2.imread('targets/maintenance.png')
@@ -567,12 +566,16 @@ def current_screen():
 def goToHeroes():
     if current_screen() == "thunt":
         if clickBtn(arrow_img):
-            time.sleep(3)
+            sleep(1, 3)
             if clickBtn(hero_img):
-                time.sleep(10)
+                sleep(1, 3)
+                check_puzzle()
+                sleep(1,3)
     if current_screen() == "main":
         if clickBtn(hero_img):
-            time.sleep(10)
+            sleep(1, 3)
+            check_puzzle()
+            sleep(1,3)
     if current_screen() == "unknown" or current_screen() == "login":
         check_for_logout()
 
