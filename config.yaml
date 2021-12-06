@@ -119,6 +119,7 @@
   offsets:
     work_button: 130
     work_button_full: 100
+    character_indicator: 100
 
   # [en_US]
   # Default value: 60

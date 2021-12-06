@@ -9,7 +9,7 @@ import sys
 import yaml
 import random
 
-# TODO: add character indicator, add kill bot on button pressed
+# TODO: add kill bot on button pressed
 
 banner = """
 ====== Bomb Crypto Bot - Vin35 Version ======
@@ -445,15 +445,23 @@ def solveCaptcha():
 
 def scroll():
 
-    width, height = pyautogui.size()
-    pyautogui.moveTo(width/2-200, height/2,1)
+    # width, height = pyautogui.size()
+    # pyautogui.moveTo(width/2-200, height/2,1)
+    character_indicator_pos = positions(character_indicator)
+    if character_indicator_pos is False:
+        return
+
+    x, y, w, h = character_indicator_pos[0]
+    hc.move((int(x+(w/2)),int(y+h+offsets['character_indicator'])), np.random.randint(1,2))
 
     if not c['use_click_and_drag_instead_of_scroll']:
         pyautogui.click()
         pyautogui.scroll(-c['scroll_size'])
     else:
-        pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1, button='left')
-
+        # pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1, button='left')
+        pyautogui.mouseDown(button='left')
+        hc.move((int(x),int(y+(-c['click_and_drag_amount']))), np.random.randint(1,2))
+        pyautogui.mouseUp(button='left')
 
 def clickButtons():
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
@@ -461,7 +469,8 @@ def clickButtons():
     if buttons is False:
         return False
     for (x, y, w, h) in buttons:
-        pyautogui.moveTo(x+(w/2),y+(h/2),1)
+        # pyautogui.moveTo(x+(w/2),y+(h/2),1)
+        hc.move((int(x+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -500,7 +509,8 @@ def clickGreenBarButtons():
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
         # isWorking(y, buttons)
-        pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        hc.move((int(x+offset+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -526,7 +536,8 @@ def clickFullBarButtons():
         logger('Clicking in %d heroes with FULL bar detected.' % len(not_working_full_bars))
 
     for (x, y, w, h) in not_working_full_bars:
-        pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        hc.move((int(x+offset+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
