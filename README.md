@@ -13,10 +13,14 @@ ser financiado coletivamente. Atualmente eu atualizarei a barra das metas
 manualmente de forma diária, talvez no futuro eu automatize o processo de
 alguma forma.
 
-- [ ] 1 - Inserir um valor aleatório em todos os movimentos e os intervalos de
+- [x] 1 - Inserir um valor aleatório em todos os movimentos e os intervalos de
 espera do bot para dificultar ainda mais sua detecção.
 
 - [x] 2 - Implementar com o telegram para facilitar o gerenciamento.
+
+- [x] 3 - Implementar Movimentos "Humanizados" para evitar detecção.
+
+- [ ] 4 - Implementar uma tecla para fechar o bot.
 
 
 ``` 
