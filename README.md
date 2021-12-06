@@ -33,12 +33,13 @@ espera do bot para dificultar ainda mais sua detecção.
 
 
 ``` 
+- 06/12/21
              (15%)        (30%)         (50%)        (70%)      (85%)     (100%)
 [XXXXXXXX-------|----------|--------------|-----------|----------|------------] (500R$)
         |
       40R$
 ```
-- 06/12/21
+
  
 ## 🎁 Wallet
 ### 0x29f3f79179C942d227ec38755c0C1Ea4976672C1
@@ -55,24 +56,24 @@ penalidades sofridas por quem usar o bot, use por sua própria conta e risco.
 
 É importante marcar a opção para adicionar o
 python ao PATH:
-![Check Add python to PATH](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/readme-images/path.png)
+![Check Add python to PATH](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/image/readme/path.png)
 
 ### Realize o download do codigo no formato zip, e extraia o arquivo.
 
 ### Copie o caminho até a pasta do bot:
 
-![caminho](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/readme-images/address.png)
+![caminho](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/image/readme/address.png)
 
 ### Abra o terminal.
 
 Aperte a tecla do windows + r e digite "cmd":
 
-![launch terminal](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/readme-images/cmd.png)
+![launch terminal](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/image/readme/cmd.png)
 
 ### Navegue até a pasta do bot:
 Digite o comando "cd" + caminho que você copiou:
 
-![cd](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/readme-images/cd.png)
+![cd](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/image/readme/cd.png)
 
 ### Instale as dependências:
 
@@ -81,7 +82,7 @@ pip install -r requirements.txt
 ```
 
   
-![pip](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/readme-images/pip.png)
+![pip](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/image/readme/pip.png)
 
 ### Pronto! Agora é só iniciar o bot com o comando
 
@@ -89,7 +90,7 @@ pip install -r requirements.txt
 python index.py
 ```
 
-![run](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/readme-images/run.png)
+![run](https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/image/readme/run.png)
 
 
 ## ⚒️ Como usar?
