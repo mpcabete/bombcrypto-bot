@@ -551,8 +551,8 @@ def clickButtons():
 
     if buttons is False:
         return False
-        
-    if c['debug'] is not False or buttons is not False:
+
+    if c['debug'] is not False:
         logger('%d buttons detected' % len(buttons))
 
     for (x, y, w, h) in buttons:
@@ -583,12 +583,12 @@ def isWorking(bar, buttons):
 def clickGreenBarButtons():
     offset = offsets['work_button']
     green_bars = positions(green_bar, threshold=ct['green_bar'])
-    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
+    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
 
-    if green_bars is False:
+    if green_bars is False or buttons is False:
         return False
 
-    if c['debug'] is not False or green_bars is not False or buttons is not False:
+    if c['debug'] is not False:
         logger('%d green bars detected' % len(green_bars))
         logger('%d buttons detected' % len(buttons))
 
@@ -618,12 +618,12 @@ def clickGreenBarButtons():
 def clickFullBarButtons():
     offset = offsets['work_button_full']
     full_bars = positions(full_stamina, threshold=ct['default'])
-    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
+    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
 
-    if full_bars is False:
-        return False
+    if full_bars is False or buttons is False:
+        return
 
-    if c['debug'] is not False or full_bars is not False or buttons is not False:
+    if c['debug'] is not False:
         logger('%d FULL bars detected' % len(full_bars))
         logger('%d buttons detected' % len(buttons))
 
