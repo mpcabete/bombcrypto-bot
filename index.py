@@ -629,11 +629,12 @@ def login():
             logger("Unlock button clicked")
 
     if clickBtn(sign_btn_img):
-        logger("Found sign button. Waiting to check if logged in.")
+        logger("Found sign button. Waiting 25s to check if logged in.")
         time.sleep(5)
         if clickBtn(sign_btn_img): ## twice because metamask glitch
             logger("Found glitched sign button. Waiting to check if logged in.")
-        waitForImg(teasureHunt_icon_img)
+        time.sleep(25)
+        # waitForImg(teasureHunt_icon_img, timeout=60)
 
     if current_screen() == "main":
         logger("Logged in.", telegram=True)
