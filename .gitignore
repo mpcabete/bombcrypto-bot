@@ -1,7 +1,2 @@
-# log
-logger.log
-map-report.*
-bcoin-report.*
-
 # vscode plugins
 /.history
