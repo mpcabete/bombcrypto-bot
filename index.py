@@ -107,9 +107,11 @@ def loadHeroesToSendHome():
         path = './targets/heroes-to-send-home/' + file
         heroes.append(cv2.imread(path))
 
+    print('>>---> %d heroes that should be sent home loaded' % len(heroes))
     return heroes
-home_heroes = loadHeroesToSendHome()
-print('%d heroes that should be sent home loaded' % len(home_heroes))
+
+if ch['enable']:
+    home_heroes = loadHeroesToSendHome()
 
 # go_work_img = cv2.imread('targets/go-work.png')
 # commom_img = cv2.imread('targets/commom-text.png')
