@@ -175,8 +175,8 @@ def sendMapReport():
     if(len(telegram_data["telegram_chat_id"]) <= 0 or telegram_data["enable_map_report"] is False):
         return
 
-    back = positions(arrow_img)
-    full_screen = positions(full_screen_img)
+    back = positions(arrow_img, return_0=True)
+    full_screen = positions(full_screen_img, return_0=True)
     if len(back) <= 0 or len(full_screen) <= 0:
         return
     x, y, _, _ = back[0]
