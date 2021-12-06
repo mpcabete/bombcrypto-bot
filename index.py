@@ -4,6 +4,8 @@ import numpy as np
 import mss
 import pyautogui
 import telegram
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 import time
 import sys
 import yaml
@@ -120,8 +122,43 @@ def logger(message, telegram=False):
 
 # Initialize telegram
 if telegram_data['telegram_mode'] == True:
+    logger("Initializing telegram...")
     try:
         TBot = telegram.Bot(token=telegram_data["telegram_bot_key"])
+
+        def send_print(update: Update, context: CallbackContext) -> None:
+            update.message.reply_text('Proccessing...')
+            screenshot = printScreen()
+            cv2.imwrite('./logs/print-report.%s' % telegram_data["format_of_images"], screenshot)
+            update.message.reply_photo(photo=open('./logs/print-report.%s' % telegram_data["format_of_images"], 'rb'))
+
+        def send_id(update: Update, context: CallbackContext) -> None:
+            update.message.reply_text(f'Your id is: {update.effective_user.id}')
+
+        def send_map(update: Update, context: CallbackContext) -> None:
+            update.message.reply_text('Proccessing...')
+            if sendMapReport() is None:
+                update.message.reply_text('An error has occurred.')
+
+        def send_bcoin(update: Update, context: CallbackContext) -> None:
+            update.message.reply_text('Proccessing...')
+            if sendBCoinReport() is None:
+                update.message.reply_text('An error has occurred.')
+
+        commands = [
+            ['print', send_print],
+            ['id', send_id],
+            ['map', send_map],
+            ['bcoin', send_bcoin]
+            ]
+
+        updater = Updater(telegram_data["telegram_bot_key"])
+
+        for command in commands:
+            updater.dispatcher.add_handler(CommandHandler(command[0], command[1]))
+
+        updater.start_polling()
+        # updater.idle()
     except:
         logger("Bot not initialized! See configuration file.")
 
@@ -188,11 +225,25 @@ def sendBCoinReport():
                 logger("Telegram offline...")
     clickBtn(x_button_img)
     logger("BCoin Report sent.", telegram=True)
+    return True
 
 def sendMapReport():
     if telegram_data['telegram_mode'] == False:
         return
     if(len(telegram_data["telegram_chat_id"]) <= 0 or telegram_data["enable_map_report"] is False):
+        return
+
+    if current_screen() == "main":
+        if clickBtn(teasureHunt_icon_img):
+            time.sleep(2)
+    elif current_screen() == "character":
+        if clickBtn(x_button_img):
+            time.sleep(2)
+            if clickBtn(teasureHunt_icon_img):
+                time.sleep(2)
+    elif current_screen() == "thunt":
+        time.sleep(2)
+    else:
         return
 
     back = positions(arrow_img, return_0=True)
@@ -227,6 +278,7 @@ def sendMapReport():
 
     clickBtn(x_button_img)
     logger("Map Report sent.", telegram=True)
+    return True
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     if not name is None:
@@ -497,7 +549,7 @@ def clickButtons():
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
     offset = offsets['work_button_all']
 
-    if c['debug'] is not False:
+    if c['debug'] is not False or buttons is not False:
         logger('%d buttons detected' % len(buttons))
 
     if buttons is False:
@@ -532,7 +584,7 @@ def clickGreenBarButtons():
     green_bars = positions(green_bar, threshold=ct['green_bar'])
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
 
-    if c['debug'] is not False:
+    if c['debug'] is not False or green_bars is not False or buttons is not False:
         logger('%d green bars detected' % len(green_bars))
         logger('%d buttons detected' % len(buttons))
 
@@ -566,7 +618,7 @@ def clickFullBarButtons():
     full_bars = positions(full_stamina, threshold=ct['default'])
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'], return_0=True)
 
-    if c['debug'] is not False:
+    if c['debug'] is not False or full_bars is not False or buttons is not False:
         logger('%d FULL bars detected' % len(full_bars))
         logger('%d buttons detected' % len(buttons))
 
