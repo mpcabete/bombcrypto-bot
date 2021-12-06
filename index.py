@@ -12,7 +12,6 @@ import sys
 
 import yaml
 
-import requests
 
 cat = """
                                                 _
@@ -44,23 +43,6 @@ cat = """
 
 print(cat)
 
-headers = {
-    'authority': 'plausible.io',
-    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36',
-    'content-type': 'text/plain',
-    'accept': '*/*',
-    'sec-gpc': '1',
-    'origin': 'https://mpcabete.xyz',
-    'sec-fetch-site': 'cross-site',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-dest': 'empty',
-    'referer': 'https://mpcabete.xyz/',
-    'accept-language': 'en-US,en;q=0.9',
-}
-
-data = '{"n":"pageview","u":"https://mpcabete.xyz/bombcryptodebug/","d":"mpcabete.xyz","r":"https://mpcabete.xyz/","w":1182}'
-
-response = requests.post('https://plausible.io/api/event', headers=headers, data=data)
 
 if __name__ == '__main__':
     stream = open("config.yaml", 'r')
