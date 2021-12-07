@@ -69,8 +69,11 @@ last_log_is_progress = False
 def addRandomness(n):
     if n < 50:
         print("INT TO LOW FOR RANDOMNESS")
-    randomness_percentage = 0.05
+    randomness_percentage = 0
     random_factor = 2 * random() * randomness_percentage * n
+    if random_factor > 5:
+        print( '!!! -----------too big' )
+        random_factor = 5
     without_average_random_factor = n - (randomness_percentage * n)
     randomized_n = int(without_average_random_factor + random_factor)
     logger('{} with randomness -> {}'.format(n, randomized_n))
