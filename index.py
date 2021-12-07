@@ -84,6 +84,7 @@ general_check_time = 1
 check_for_updates = 15
 
 heroes_clicked = 0
+heroes_clicked_total = 0
 login_attempts = 0
 next_refresh_heroes = t['send_heroes_for_work'][0]
 next_refresh_heroes_positions = t['refresh_heroes_positions'][0]
@@ -581,8 +582,9 @@ def clickButtons():
         # pyautogui.moveTo(x+(w/2),y+(h/2),1)
         hc.move((int(x+offset_random),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
+        global heroes_clicked_total
         global heroes_clicked
-        heroes_clicked = heroes_clicked + 1
+        heroes_clicked_total = heroes_clicked_total + 1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
         if heroes_clicked > 15:
             logger('Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True, emoji='⚠️')
@@ -627,8 +629,9 @@ def clickGreenBarButtons():
         # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
         hc.move((int(x+offset_random+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
+        global heroes_clicked_total
         global heroes_clicked
-        heroes_clicked = heroes_clicked + 1
+        heroes_clicked_total = heroes_clicked_total + 1
         if heroes_clicked > 15:
             logger('Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True, emoji='⚠️')
             return
@@ -661,8 +664,9 @@ def clickFullBarButtons():
         # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
         hc.move((int(x+offset_random+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
+        global heroes_clicked_total
         global heroes_clicked
-        heroes_clicked = heroes_clicked + 1
+        heroes_clicked_total = heroes_clicked_total + 1
         if heroes_clicked > 15:
             logger('Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True, emoji='⚠️')
             return
@@ -785,6 +789,7 @@ def handleError():
     if positions(error_img, ct['error']) is not False:
         sendTelegramPrint()
         logger('Error detected, trying to resolve', telegram=True, emoji='💥')
+        clickButton(ok_btn_img)
         logger('Refreshing page', telegram=True, emoji='🔃')
         # pyautogui.hotkey('ctrl', 'f5')
         pyautogui.hotkey('ctrl', 'shift', 'r')
@@ -795,6 +800,7 @@ def handleError():
 
 def getMoreHeroes():
     global next_refresh_heroes
+    global heroes_clicked
 
     logger('Search for heroes to work', emoji='🏢')
 
@@ -808,22 +814,26 @@ def getMoreHeroes():
         logger('Sending all heroes to work!', emoji='⚒️')
 
     buttonsClicked = 0
+    heroes_clicked = 0
     empty_scrolls_attempts = c['scroll_attempts']
     next_refresh_heroes = random.uniform(t['send_heroes_for_work'][0], t['send_heroes_for_work'][1])
 
     while(empty_scrolls_attempts > 0):
         if c['select_heroes_mode'] == 'full':
             buttonsClicked = clickFullBarButtons()
+            heroes_clicked += buttonsClicked
         elif c['select_heroes_mode'] == 'green':
             buttonsClicked = clickGreenBarButtons()
+            heroes_clicked += buttonsClicked
         else:
             buttonsClicked = clickButtons()
+            heroes_clicked += buttonsClicked
 
         if buttonsClicked == 0 or buttonsClicked is None:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
             scroll()
         sleep(1, 3)
-    logger('{} total heroes sent since the bot started'.format(heroes_clicked), telegram=True, emoji='🦸')
+    logger('{} total heroes sent since the bot started'.format(heroes_clicked_total), telegram=True, emoji='🦸')
     goToTreasureHunt()
 
 def checkLogout():
@@ -898,8 +908,8 @@ def checkUpdates():
 
 def main():
     checkUpdates()
-    input('Press Enter to start')
-    logger('Starting bot', telegram=True, emoji='🤖')
+    input('Press Enter to start the bot...')
+    logger('Starting bot...', telegram=True, emoji='🤖')
 
     last = {
         "login" : 0,
