@@ -49,13 +49,13 @@ def logger(message, telegram=False):
 
     print(console_message)
 
-    # if telegram == True:
-    #     sendTelegramMessage(service_message)
+    if telegram == True:
+        sendTelegramMessage(service_message)
 
-    # if (c['save_log_to_file'] == True):
-    #     logger_file = open("./logs/logger.log", "a", encoding='utf-8')
-    #     logger_file.write(console_message + '\n')
-    #     logger_file.close()
+    if (c['save_log_to_file'] == True):
+        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
+        logger_file.write(console_message + '\n')
+        logger_file.close()
 
     return True
 
@@ -80,7 +80,7 @@ pyautogui.FAILSAFE = False
 general_check_time = 1
 check_for_updates = 15
 
-hero_clicks = 0
+heroes_clicked = 0
 login_attempts = 0
 next_refresh_heroes = t['send_heroes_for_work'][0]
 next_refresh_heroes_positions = t['refresh_heroes_positions'][0]
@@ -113,8 +113,6 @@ chest1 = cv2.imread('./images/targets/chest1.png')
 chest2 = cv2.imread('./images/targets/chest2.png')
 chest3 = cv2.imread('./images/targets/chest3.png')
 chest4 = cv2.imread('./images/targets/chest4.png')
-
-
 
 # Initialize telegram
 if telegram_data['telegram_mode'] == True:
@@ -212,20 +210,20 @@ def sendBCoinReport():
     if(len(telegram_data["telegram_chat_id"]) <= 0 or telegram_data["enable_coin_report"] is False):
         return
 
-    if current_screen() == "main":
-        if clickBtn(teasureHunt_icon_img):
+    if currentScreen() == "main":
+        if clickButton(teasureHunt_icon_img):
             time.sleep(2)
-    elif current_screen() == "character":
-        if clickBtn(x_button_img):
+    elif currentScreen() == "character":
+        if clickButton(x_button_img):
             time.sleep(2)
-            if clickBtn(teasureHunt_icon_img):
+            if clickButton(teasureHunt_icon_img):
                 time.sleep(2)
-    elif current_screen() == "thunt":
+    elif currentScreen() == "thunt":
         time.sleep(2)
     else:
         return
         
-    clickBtn(chest_button)
+    clickButton(chest_button)
 
     sleep(5, 15)
 
@@ -244,7 +242,7 @@ def sendBCoinReport():
                     TBot.send_photo(chat_id=chat_id, photo=open('./logs/bcoin-report.%s' % telegram_data["format_of_images"], 'rb'))
             except:
                 logger('😿 Telegram offline')
-    clickBtn(x_button_img)
+    clickButton(x_button_img)
     logger('📄 BCoin report sent', telegram=True)
     return True
 
@@ -254,15 +252,15 @@ def sendMapReport():
     if(len(telegram_data["telegram_chat_id"]) <= 0 or telegram_data["enable_map_report"] is False):
         return
 
-    if current_screen() == "main":
-        if clickBtn(teasureHunt_icon_img):
+    if currentScreen() == "main":
+        if clickButton(teasureHunt_icon_img):
             time.sleep(2)
-    elif current_screen() == "character":
-        if clickBtn(x_button_img):
+    elif currentScreen() == "character":
+        if clickButton(x_button_img):
             time.sleep(2)
-            if clickBtn(teasureHunt_icon_img):
+            if clickButton(teasureHunt_icon_img):
                 time.sleep(2)
-    elif current_screen() == "thunt":
+    elif currentScreen() == "thunt":
         time.sleep(2)
     else:
         return
@@ -297,11 +295,11 @@ def sendMapReport():
         except:
             logger('😿 Error finding chests')
 
-    clickBtn(x_button_img)
+    clickButton(x_button_img)
     logger('📄 Map report sent', telegram=True)
     return True
 
-def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
+def clickButton(img,name=None, timeout=3, threshold = ct['default']):
     if not name is None:
         pass
     start = time.time()
@@ -580,10 +578,10 @@ def clickButtons():
         # pyautogui.moveTo(x+(w/2),y+(h/2),1)
         hc.move((int(x+offset_random),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
-        global hero_clicks
-        hero_clicks = hero_clicks + 1
+        global heroes_clicked
+        heroes_clicked = heroes_clicked + 1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
-        if hero_clicks > 15:
+        if heroes_clicked > 15:
             logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
         sleep(1, 3)
@@ -626,9 +624,9 @@ def clickGreenBarButtons():
         # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
         hc.move((int(x+offset_random+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
-        global hero_clicks
-        hero_clicks = hero_clicks + 1
-        if hero_clicks > 15:
+        global heroes_clicked
+        heroes_clicked = heroes_clicked + 1
+        if heroes_clicked > 15:
             logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
@@ -660,15 +658,15 @@ def clickFullBarButtons():
         # pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
         hc.move((int(x+offset_random+(w/2)),int(y+(h/2))), np.random.randint(1,2))
         pyautogui.click()
-        global hero_clicks
-        hero_clicks = hero_clicks + 1
-        if hero_clicks > 15:
+        global heroes_clicked
+        heroes_clicked = heroes_clicked + 1
+        if heroes_clicked > 15:
             logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
         sleep(1, 3)
     return len(not_working_full_bars)
 
-def current_screen():
+def currentScreen():
     if positions(arrow_img) is not False:
         # sys.stdout.write("\nThunt. ")
         return "thunt"
@@ -686,40 +684,40 @@ def current_screen():
         return "unknown"
 
 def goToHeroes():
-    if current_screen() == "thunt":
-        if clickBtn(arrow_img):
+    if currentScreen() == "thunt":
+        if clickButton(arrow_img):
             sleep(1, 3)
-            if clickBtn(hero_img):
+            if clickButton(hero_img):
                 sleep(1, 3)
                 checkCaptcha()
-                waitForImg(home_img)
-    if current_screen() == "main":
-        if clickBtn(hero_img):
+                wiatForImage(home_img)
+    if currentScreen() == "main":
+        if clickButton(hero_img):
             sleep(1, 3)
             checkCaptcha()
-            waitForImg(home_img)
-    if current_screen() == "unknown" or current_screen() == "login":
-        check_for_logout()
+            wiatForImage(home_img)
+    if currentScreen() == "unknown" or currentScreen() == "login":
+        checkLogout()
 
 def goToTreasureHunt():
-    if current_screen() == "main":
-        clickBtn(teasureHunt_icon_img)
-    if current_screen() == "character":
-        if clickBtn(x_button_img):
+    if currentScreen() == "main":
+        clickButton(teasureHunt_icon_img)
+    if currentScreen() == "character":
+        if clickButton(x_button_img):
             sleep(1, 3)
-            clickBtn(teasureHunt_icon_img)
-    if current_screen() == "unknown" or current_screen() == "login":
-        check_for_logout()
+            clickButton(teasureHunt_icon_img)
+    if currentScreen() == "unknown" or currentScreen() == "login":
+        checkLogout()
 
 def refreshHeroesPositions():
     logger('🔃 Refreshing heroes positions')
     global next_refresh_heroes_positions
     next_refresh_heroes_positions = random.uniform(t['refresh_heroes_positions'][0], t['refresh_heroes_positions'][1])
-    if current_screen() == "thunt":
-        if clickBtn(arrow_img):
+    if currentScreen() == "thunt":
+        if clickButton(arrow_img):
             time.sleep(5)
-    if current_screen() == "main":
-        if clickBtn(teasureHunt_icon_img):
+    if currentScreen() == "main":
+        if clickButton(teasureHunt_icon_img):
             return True
         else:
             return False
@@ -731,11 +729,11 @@ def login():
 
     randomMouseMovement()
 
-    if clickBtn(connect_wallet_btn_img):
+    if clickButton(connect_wallet_btn_img):
         logger('🎉 Connect wallet button detected, logging in!')
         time.sleep(2)
         solveCaptcha()
-        waitForImg((sign_btn_img, metamask_unlock_img), multiple=True)
+        wiatForImage((sign_btn_img, metamask_unlock_img), multiple=True)
 
     metamask_unlock_coord = positions(metamask_unlock_img)
     if metamask_unlock_coord is not False:
@@ -746,18 +744,18 @@ def login():
         password = metamask_data["password"]
         pyautogui.typewrite(password, interval=0.1)
         sleep(1, 3)
-        if clickBtn(metamask_unlock_img):
+        if clickButton(metamask_unlock_img):
             logger('🔓 Unlock button clicked')
 
-    if clickBtn(sign_btn_img):
+    if clickButton(sign_btn_img):
         logger('✔️ Found sign button. Waiting to check if logged in')
         time.sleep(5)
-        if clickBtn(sign_btn_img): ## twice because metamask glitch
+        if clickButton(sign_btn_img): ## twice because metamask glitch
             logger('✔️ Found glitched sign button. Waiting to check if logged in')
         # time.sleep(25)
-        waitForImg(teasureHunt_icon_img, timeout=60)
+        wiatForImage(teasureHunt_icon_img, timeout=60)
 
-    if current_screen() == "main":
+    if currentScreen() == "main":
         logger('🎉 Logged in', telegram=True)
         return True
     else:
@@ -771,23 +769,23 @@ def login():
             pyautogui.hotkey('ctrl', 'shift', 'r')
             login_attempts = 0
 
-            if clickBtn(metamask_cancel_button):
+            if clickButton(metamask_cancel_button):
                 logger('🙀 Metamask is glitched, fixing')
             
-            waitForImg(connect_wallet_btn_img)
+            wiatForImage(connect_wallet_btn_img)
 
         login()
 
-    handle_error()
+    handleError()
 
-def handle_error():
+def handleError():
     if positions(error_img, ct['error']) is not False:
         sendTelegramPrint()
         logger('💥 Error detected, trying to resolve', telegram=True)
         logger('🔃 Refreshing page')
         # pyautogui.hotkey('ctrl', 'f5')
         pyautogui.hotkey('ctrl', 'shift', 'r')
-        waitForImg(connect_wallet_btn_img)
+        wiatForImage(connect_wallet_btn_img)
         login()
     else:
         return False
@@ -822,22 +820,22 @@ def getMoreHeroes():
             empty_scrolls_attempts = empty_scrolls_attempts - 1
             scroll()
         sleep(1, 3)
-    logger('🦸 {} total heroes sent since the bot started'.format(hero_clicks), telegram=True)
+    logger('🦸 {} total heroes sent since the bot started'.format(heroes_clicked), telegram=True)
     goToTreasureHunt()
 
-def check_for_logout():
-    if current_screen() == "unknown" or current_screen() == "login":
+def checkLogout():
+    if currentScreen() == "unknown" or currentScreen() == "login":
         if positions(connect_wallet_btn_img) is not False:
             sendTelegramPrint()
             logger('😿 Logout detected', telegram=True)
             logger('🔃 Refreshing page', telegram=True)
             # pyautogui.hotkey('ctrl', 'f5')
             pyautogui.hotkey('ctrl', 'shift', 'r')
-            waitForImg(connect_wallet_btn_img)
+            wiatForImage(connect_wallet_btn_img)
             login()
         elif positions(sign_btn_img):
             logger('✔️ Sing button detected', telegram=True)
-            if clickBtn(metamask_cancel_button):
+            if clickButton(metamask_cancel_button):
                 logger('🙀 Metamask is glitched, fixing', telegram=True)
         else:
             return False
@@ -845,7 +843,7 @@ def check_for_logout():
     else:
         return False
 
-def waitForImg(imgs, timeout=30, threshold=0.5, multiple=False):
+def wiatForImage(imgs, timeout=30, threshold=0.5, multiple=False):
     start = time.time()
     while True:
         if multiple is not False:
@@ -909,10 +907,10 @@ def main():
     }
 
     while True:
-        if current_screen() == "login":
+        if currentScreen() == "login":
             login()
         
-        handle_error()
+        handleError()
 
         checkCaptcha()
 
@@ -923,13 +921,13 @@ def main():
             last["refresh_heroes"] = now
             getMoreHeroes()
 
-        if current_screen() == "main":
-            if clickBtn(teasureHunt_icon_img):
+        if currentScreen() == "main":
+            if clickButton(teasureHunt_icon_img):
                 logger('▶️ Entering treasure hunt')
                 last["refresh_heroes"] = now
 
-        if current_screen() == "thunt":
-            if clickBtn(new_map_btn_img):
+        if currentScreen() == "thunt":
+            if clickButton(new_map_btn_img):
                 logger('🗺️ New map')
                 last["new_map"] = now
                 sleep(1, 2)
@@ -939,8 +937,8 @@ def main():
                 sleep(3, 5)
                 sendBCoinReport()
                 
-        if current_screen() == "character":
-            clickBtn(x_button_img)
+        if currentScreen() == "character":
+            clickButton(x_button_img)
             sleep(1, 3)
 
         if now - last["refresh_heroes"] > next_refresh_heroes_positions * 60:
@@ -951,7 +949,7 @@ def main():
             last["check_updates"] = now
             checkUpdates()
 
-        check_for_logout()
+        checkLogout()
         sys.stdout.flush()
         time.sleep(general_check_time)
 
