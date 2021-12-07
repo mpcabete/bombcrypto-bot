@@ -12,7 +12,7 @@ import yaml
 import random
 import requests
 
-# TODO: add kill bot on button pressed, server maintenance
+# TODO: add kill bot on button pressed, server maintenance, auto update com os valores anteriores da config
 
 banner = """
 ====== Bomb Crypto Bot - Vin35 Version ======
@@ -804,7 +804,7 @@ def refreshHeroes():
 
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
-        scroll()
+            scroll()
         sleep(1, 3)
     logger('{} total heroes sent since the bot started'.format(hero_clicks), telegram=True)
     goToGame()
