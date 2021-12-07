@@ -26,8 +26,8 @@ de testes de 3 meses da google cloud.
 - [x] 4 - Terminar de implementar e fazer a manutenção e os ajustes necessários na
 função de enviar os heróis para casa.
 
-- [ ] 5 - Inserir um valor aleatório em todos os movimentos e os intervalos de
-espera do bot para dificultar ainda mais sua detecção. <<--< trabalhando nesse
+- [x] 5 - Inserir um valor aleatório em todos os movimentos e os intervalos de
+espera do bot para dificultar ainda mais sua detecção.
 
 - [ ] 6 - Arrumar e ajustar os problemas que tem ocorrido durante o processo de
 login.
@@ -52,9 +52,7 @@ https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
 
 ## Aviso:
 
-#### Os desenvolvedores do jogo se pronunciaram e agora o uso de auto clickers
-e o uso de bots é oficialmente PROIBIDO.  Não me responsabilizo por eventuais
-penalidades sofridas por quem usar o bot, use por sua própria conta e risco.
+#### Os desenvolvedores do jogo se pronunciaram e agora o uso de auto clickers e o uso de bots é oficialmente PROIBIDO.  Não me responsabilizo por eventuais penalidades sofridas por quem usar o bot, use por sua própria conta e risco.
 
 # Instalação:
 ### Baixe e instale o Python pelo [site](https://www.python.org/downloads/) ou pela [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
@@ -229,9 +227,7 @@ exemplo na pasta “targets” para uma tirada no seu próprio computador:
     “select_heroes_mode” estiver como “green”.
 
 
-### Algumas configura100  8490  100  8490    0     0  30000      0 --:--:-- --:--:-- --:--:-- 30000
-çoes podem ser mudadas no arquivo config.yaml, nao se
-### esqueça de reiniciar o bot caso mude as configuraçoes.
+### Algumas configuraçoes podem ser mudadas no arquivo config.yaml, nao se esqueça de reiniciar o bot caso mude as configuraçoes.
 
 ## Curtiu? Dê aquela fortalecida :)
 
@@ -239,3 +235,4 @@ exemplo na pasta “targets” para uma tirada no seu próprio computador:
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 ### Paypal:
 [Donate](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
+
