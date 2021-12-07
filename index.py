@@ -162,6 +162,18 @@ def sendTelegramMessage(message):
     except:
         logger("Unable to send telegram message. See configuration file.")
 
+def sendTelegramPrint():
+    if telegram_data['telegram_mode'] == False:
+        return
+    try:
+        if(len(telegram_data["telegram_chat_id"]) > 0):
+            screenshot = printScreen()
+            cv2.imwrite('./logs/print-report.%s' % telegram_data["format_of_images"], screenshot)
+            for chat_id in telegram_data["telegram_chat_id"]:
+                TBot.send_photo(chat_id=chat_id, photo=open('./logs/print-report.%s' % telegram_data["format_of_images"], 'rb'))
+    except:
+        logger("Unable to send telegram message. See configuration file.")
+
 def sendPossibleAmountReport(baseImage):
     if telegram_data['telegram_mode'] == False:
         return
@@ -553,7 +565,7 @@ def clickButtons():
     offset = offsets['work_button_all']
 
     if buttons is False:
-        return False
+        return
 
     if c['debug'] is not False:
         logger('%d buttons detected' % len(buttons))
@@ -589,7 +601,7 @@ def clickGreenBarButtons():
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
 
     if green_bars is False or buttons is False:
-        return False
+        return
 
     if c['debug'] is not False:
         logger('%d green bars detected' % len(green_bars))
@@ -649,7 +661,6 @@ def clickFullBarButtons():
             logger('too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
             return
         sleep(1, 3)
-
     return len(not_working_full_bars)
 
 def current_screen():
@@ -749,6 +760,7 @@ def login():
         login_attempts += 1
 
         if (login_attempts > 3):
+            sendTelegramPrint()
             logger(">3 login attempts. Retrying.", telegram=True)
             # pyautogui.hotkey('ctrl', 'f5')
             pyautogui.hotkey('ctrl', 'shift', 'r')
@@ -765,19 +777,15 @@ def login():
 
 def handle_error():
     if positions(error_img, ct['error']) is not False:
-        t = time.localtime()
-        current_time = time.strftime("%H:%M:%S", t)
-
+        sendTelegramPrint()
         logger("Error detected. Trying to resolve.", telegram=True)
-    else:
-        return False
-
-    if clickBtn(ok_btn_img):
         logger("Refreshing page.")
         # pyautogui.hotkey('ctrl', 'f5')
         pyautogui.hotkey('ctrl', 'shift', 'r')
         waitForImg(connect_wallet_btn_img)
         login()
+    else:
+        return False
 
 def refreshHeroes():
     goToHeroes()
@@ -802,7 +810,7 @@ def refreshHeroes():
         else:
             buttonsClicked = clickButtons()
 
-        if buttonsClicked == 0:
+        if buttonsClicked == 0 or buttonsClicked is None:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
             scroll()
         sleep(1, 3)
@@ -812,6 +820,7 @@ def refreshHeroes():
 def check_for_logout():
     if current_screen() == "unknown" or current_screen() == "login":
         if positions(connect_wallet_btn_img) is not False:
+            sendTelegramPrint()
             logger("Logout detected.", telegram=True)
             logger("Refreshing page.", telegram=True)
             # pyautogui.hotkey('ctrl', 'f5')
