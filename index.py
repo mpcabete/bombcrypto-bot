@@ -176,7 +176,7 @@ def sendTelegramPrint():
             for chat_id in telegram_data["telegram_chat_id"]:
                 TBot.send_photo(chat_id=chat_id, photo=open('./logs/print-report.%s' % telegram_data["format_of_images"], 'rb'))
     except:
-        logger("Unable to send telegram message. See configuration file.")
+        logger('📄 Unable to send telegram message. See configuration file')
 
 def sendPossibleAmountReport(baseImage):
     if telegram_data['telegram_mode'] == False:
