@@ -126,23 +126,23 @@ if telegram_data['telegram_mode'] == True:
         TBot = telegram.Bot(token=telegram_data["telegram_bot_key"])
 
         def send_print(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text('Proccessing...', emoji='🔃')
+            update.message.reply_text('🔃 Proccessing...')
             screenshot = printScreen()
             cv2.imwrite('./logs/print-report.%s' % telegram_data["format_of_images"], screenshot)
             update.message.reply_photo(photo=open('./logs/print-report.%s' % telegram_data["format_of_images"], 'rb'))
 
         def send_id(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text(f'Your id is: {update.effective_user.id}', emoji='🆔')
+            update.message.reply_text(f'🆔 Your id is: {update.effective_user.id}')
 
         def send_map(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text('Proccessing...', emoji='🔃')
+            update.message.reply_text('🔃 Proccessing...')
             if sendMapReport() is None:
-                update.message.reply_text('An error has occurred', emoji='😿')
+                update.message.reply_text('😿 An error has occurred')
 
         def send_bcoin(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text('Proccessing...', emoji='🔃')
+            update.message.reply_text('🔃 Proccessing...')
             if sendBCoinReport() is None:
-                update.message.reply_text('An error has occurred', emoji='😿')
+                update.message.reply_text('😿 An error has occurred')
 
         commands = [
             ['print', send_print],
