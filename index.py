@@ -77,7 +77,7 @@ def addRandomness(n, randomn_factor_size=None):
         random_factor = 5
     without_average_random_factor = n - randomn_factor_size
     randomized_n = int(without_average_random_factor + random_factor)
-    logger('{} with randomness -> {}'.format(int(n), randomized_n))
+    # logger('{} with randomness -> {}'.format(int(n), randomized_n))
     return int(randomized_n)
 
 def moveToWithRandomness(x,y,t):
