@@ -67,11 +67,11 @@
     default: 0.7
 
     # [en_US]
-    # Default value: 0.6
+    # Default value: 0.5
     #
     # [pt_BR]
-    # Valor padrão: 0.6
-    error: 0.6
+    # Valor padrão: 0.5
+    error: 0.5
 
     # [en_US]
     # Default value: 0.8
@@ -88,18 +88,18 @@
     go_to_work_btn: 0.9
 
     # [en_US]
-    # Default value: 0.95
+    # Default value: 0.8
     #
     # [pt_BR]
-    # Valor padrão: 0.95
-    green_bar: 0.95
+    # Valor padrão: 0.8
+    green_bar: 0.8
 
     # [en_US]
-    # Default value: 0.6
+    # Default value: 0.7
     #
     # [pt_BR]
-    # Valor padrão: 0.6
-    full_bar: 0.6
+    # Valor padrão: 0.7
+    full_bar: 0.7
 
     # [en_US]
     # Default value: 0.5
@@ -195,4 +195,4 @@
   # [en_US] DON'T TOUCH
   #
   # [pt_BR] NÃO MEXE
-  version: "1.2.5"
+  version: "1.2.6"
