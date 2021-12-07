@@ -3,6 +3,8 @@ from cv2 import cv2
 
 from os import listdir
 from src.logger import logger, loggerMapClicked
+from random import randint
+from random import random
 
 import numpy as np
 import mss
@@ -64,6 +66,18 @@ last_log_is_progress = False
 
 
 
+def addRandomness(n):
+    if n < 50:
+        print("INT TO LOW FOR RANDOMNESS")
+    randomness_percentage = 0.05
+    random_factor = 2 * random() * randomness_percentage * n
+    without_average_random_factor = n - (randomness_percentage * n)
+    randomized_n = int(without_average_random_factor + random_factor)
+    logger('{} with randomness -> {}'.format(n, randomized_n))
+    return int(randomized_n)
+
+def moveToWithRandomness(x,y,t):
+    pyautogui.moveTo(addRandomness(x),addRandomness(y),t+random()/2)
 
 
 def remove_suffix(input_string, suffix):
@@ -283,7 +297,10 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
             continue
 
         x,y,w,h = matches[0]
-        pyautogui.moveTo(x+w/2,y+h/2,1)
+        pos_click_x = x+w/2
+        pos_click_y = y+h/2
+        # mudar moveto pra w randomness
+        moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
 
@@ -321,7 +338,7 @@ def scroll():
         return
     x,y,w,h = commoms[len(commoms)-1]
 #
-    pyautogui.moveTo(x,y,1)
+    moveToWithRandomness(x,y,1)
 
     if not c['use_click_and_drag_instead_of_scroll']:
         pyautogui.scroll(-c['scroll_size'])
@@ -333,7 +350,7 @@ def clickButtons():
     buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
     # print('buttons: {}'.format(len(buttons)))
     for (x, y, w, h) in buttons:
-        pyautogui.moveTo(x+(w/2),y+(h/2),1)
+        moveToWithRandomness(x+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -385,7 +402,7 @@ def clickGreenBarButtons():
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
         # isWorking(y, buttons)
-        pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -397,8 +414,8 @@ def clickGreenBarButtons():
 
 def clickFullBarButtons():
     offset = 100
-    full_bars = positions(full_stamina, threshold=ct['default'])
-    buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
+    full_bars = positions(images['full-stamina'], threshold=ct['default'])
+    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
 
     not_working_full_bars = []
     for bar in full_bars:
@@ -409,7 +426,7 @@ def clickFullBarButtons():
         logger('👆 Clicking in %d heroes' % len(not_working_full_bars))
 
     for (x, y, w, h) in not_working_full_bars:
-        pyautogui.moveTo(x+offset+(w/2),y+(h/2),1)
+        moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -527,7 +544,7 @@ def sendHeroesHome():
             print(isWorking(position, go_work_buttons))
             if(not isWorking(position, go_work_buttons)):
                 print ('hero not working, sending him home')
-                pyautogui.moveTo(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
+                moveToWithRandomness(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
                 pyautogui.click()
             else:
                 print ('hero working, not sending him home(no dark work button)')
@@ -586,15 +603,15 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["check_for_captcha"] > t['check_for_captcha'] * 60:
+        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
             solveCapcha()
 
-        if now - last["heroes"] > t['send_heroes_for_work'] * 60:
+        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
             refreshHeroes()
 
-        if now - last["login"] > t['check_for_login'] * 60:
+        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
             sys.stdout.flush()
             last["login"] = now
             login()
@@ -606,7 +623,7 @@ def main():
                 loggerMapClicked()
 
 
-        if now - last["refresh_heroes"] > t['refresh_heroes_positions'] * 60 :
+        if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
             solveCapcha()
             last["refresh_heroes"] = now
             refreshHeroesPositions()
