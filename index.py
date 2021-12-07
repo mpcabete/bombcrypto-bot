@@ -52,21 +52,11 @@ else:
     time.sleep(3)
     exit()
 
-data = requests.get('https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/config.yaml')
-
-if data is not None:
-    v = yaml.safe_load(data.text)
-    version = v['version']
-    data.close()
-else:
-    logger("Version not found. Exiting.")
-    time.sleep(3)
-    exit()
-
 hc = HumanClicker()
 pyautogui.PAUSE = c['time_intervals']['interval_between_movements']
 pyautogui.FAILSAFE = False
 general_check_time = 1
+check_for_updates = 15
 
 hero_clicks = 0
 login_attempts = 0
@@ -630,7 +620,7 @@ def clickGreenBarButtons():
 
 def clickFullBarButtons():
     offset = offsets['work_button_full']
-    full_bars = positions(full_stamina, threshold=ct['default'])
+    full_bars = positions(full_stamina, threshold=ct['full_bar'])
     buttons = positions(go_work_img, threshold=ct['go_to_work_btn'])
 
     if full_bars is False or buttons is False:
@@ -870,11 +860,26 @@ def randomMouseMovement():
     y = np.random.randint(0, y)
     hc.move((int(x), int(y)), np.random.randint(1,3))
 
-def main():
+def check_for_updates():
+    data = requests.get('https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/config.yaml')
+
+    if data is not None:
+        v = yaml.safe_load(data.text)
+        version = v['version']
+        data.close()
+    else:
+        logger("Version not found. Exiting.")
+        time.sleep(3)
+        exit()
+
     print('Git Version: ' + version)
     print('Version installed: ' + c['version'])
     if version > c['version']:
         logger('New version available. Please update.', telegram=True)
+
+
+def main():
+    check_for_updates()
     input("Press Enter to start...")
     logger("Starting bot...", telegram=True)
 
@@ -882,7 +887,8 @@ def main():
     "login" : 0,
     "heroes" : 0,
     "new_map" : 0,
-    "refresh_heroes" : 0
+    "refresh_heroes" : 0,
+    "check_updates" : 0
     }
 
     while True:
@@ -924,6 +930,10 @@ def main():
         if now - last["refresh_heroes"] > next_refresh_heroes_positions * 60:
             last["refresh_heroes"] = now
             refreshHeroesPositions()
+
+        if now - last["check_updates"] > check_for_updates * 60:
+            last["check_updates"] = now
+            check_for_updates()
 
         check_for_logout()
         sys.stdout.flush()

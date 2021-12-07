@@ -95,6 +95,13 @@
     green_bar: 0.95
 
     # [en_US]
+    # Default value: 0.6
+    #
+    # [pt_BR]
+    # Valor padrão: 0.6
+    full_bar: 0.6
+
+    # [en_US]
     # Default value: 0.5
     #
     # [pt_BR]
@@ -188,4 +195,4 @@
   # [en_US] DON'T TOUCH
   #
   # [pt_BR] NÃO MEXE
-  version: "1.2.3"
+  version: "1.2.4"
