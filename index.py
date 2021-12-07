@@ -860,7 +860,7 @@ def randomMouseMovement():
     y = np.random.randint(0, y)
     hc.move((int(x), int(y)), np.random.randint(1,3))
 
-def check_for_updates():
+def check_updates():
     data = requests.get('https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/config.yaml')
 
     if data is not None:
@@ -879,7 +879,7 @@ def check_for_updates():
 
 
 def main():
-    check_for_updates()
+    check_updates()
     input("Press Enter to start...")
     logger("Starting bot...", telegram=True)
 
@@ -933,7 +933,7 @@ def main():
 
         if now - last["check_updates"] > check_for_updates * 60:
             last["check_updates"] = now
-            check_for_updates()
+            check_updates()
 
         check_for_logout()
         sys.stdout.flush()
