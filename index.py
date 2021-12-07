@@ -690,12 +690,12 @@ def goToHeroes():
             if clickButton(hero_img):
                 sleep(1, 3)
                 checkCaptcha()
-                wiatForImage(home_img)
+                waitForImage(home_img)
     if currentScreen() == "main":
         if clickButton(hero_img):
             sleep(1, 3)
             checkCaptcha()
-            wiatForImage(home_img)
+            waitForImage(home_img)
     if currentScreen() == "unknown" or currentScreen() == "login":
         checkLogout()
 
@@ -733,7 +733,7 @@ def login():
         logger('🎉 Connect wallet button detected, logging in!')
         time.sleep(2)
         solveCaptcha()
-        wiatForImage((sign_btn_img, metamask_unlock_img), multiple=True)
+        waitForImage((sign_btn_img, metamask_unlock_img), multiple=True)
 
     metamask_unlock_coord = positions(metamask_unlock_img)
     if metamask_unlock_coord is not False:
@@ -753,7 +753,7 @@ def login():
         if clickButton(sign_btn_img): ## twice because metamask glitch
             logger('✔️ Found glitched sign button. Waiting to check if logged in')
         # time.sleep(25)
-        wiatForImage(teasureHunt_icon_img, timeout=60)
+        waitForImage(teasureHunt_icon_img, timeout=60)
 
     if currentScreen() == "main":
         logger('🎉 Logged in', telegram=True)
@@ -772,7 +772,7 @@ def login():
             if clickButton(metamask_cancel_button):
                 logger('🙀 Metamask is glitched, fixing')
             
-            wiatForImage(connect_wallet_btn_img)
+            waitForImage(connect_wallet_btn_img)
 
         login()
 
@@ -785,7 +785,7 @@ def handleError():
         logger('🔃 Refreshing page')
         # pyautogui.hotkey('ctrl', 'f5')
         pyautogui.hotkey('ctrl', 'shift', 'r')
-        wiatForImage(connect_wallet_btn_img)
+        waitForImage(connect_wallet_btn_img)
         login()
     else:
         return False
@@ -831,7 +831,7 @@ def checkLogout():
             logger('🔃 Refreshing page', telegram=True)
             # pyautogui.hotkey('ctrl', 'f5')
             pyautogui.hotkey('ctrl', 'shift', 'r')
-            wiatForImage(connect_wallet_btn_img)
+            waitForImage(connect_wallet_btn_img)
             login()
         elif positions(sign_btn_img):
             logger('✔️ Sing button detected', telegram=True)
@@ -843,7 +843,7 @@ def checkLogout():
     else:
         return False
 
-def wiatForImage(imgs, timeout=30, threshold=0.5, multiple=False):
+def waitForImage(imgs, timeout=30, threshold=0.5, multiple=False):
     start = time.time()
     while True:
         if multiple is not False:
