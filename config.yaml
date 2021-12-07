@@ -177,13 +177,19 @@
   # Valor padrão: 1
   monitor_to_use: 1
 
+  # [en_US] show emojis in console
+  # Default value: false
+  #
+  # [pt_BR] mostra emojis no console 
+  # Valor padrão: false
+  emoji: False
+
   # [en_US] show more information
   # Default value: false
   #
   # [pt_BR] mostra mais informações 
   # Valor padrão: false
   debug: False
-
 
 
 

@@ -42,22 +42,6 @@ banner = """
 
 print(banner)
 
-def logger(message, telegram=False):
-    formatted_datetime = dateFormatted()
-    console_message = "{} - {}".format(formatted_datetime, message)
-    service_message = "⏰{}\n{}".format(formatted_datetime, message)
-
-    print(console_message)
-
-    if telegram == True:
-        sendTelegramMessage(service_message)
-
-    if (c['save_log_to_file'] == True):
-        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
-        logger_file.write(console_message + '\n')
-        logger_file.close()
-
-    return True
 
 stream = open("config.yaml", 'r')
 if stream is not None:
@@ -70,9 +54,28 @@ if stream is not None:
     offsets = c['offsets']
     stream.close()
 else:
-    logger('😿 Config file not found, exiting')
+    logger('Config file not found, exiting', emoji='😿')
     time.sleep(3)
     exit()
+
+def logger(message, telegram=False, emoji=None):
+    formatted_datetime = dateFormatted()
+    console_message = "{} - {}".format(formatted_datetime, message)
+    service_message = "⏰{}\n{} {}".format(formatted_datetime, emoji, message)
+    if emoji is not None and c['emoji'] is True:
+        console_message = "{} - {} {}".format(formatted_datetime, emoji, message)
+
+    print(console_message)
+
+    if telegram == True:
+        sendTelegramMessage(service_message)
+
+    if (c['save_log_to_file'] == True):
+        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
+        logger_file.write(console_message + '\n')
+        logger_file.close()
+    return True
+
 
 hc = HumanClicker()
 pyautogui.PAUSE = c['time_intervals']['interval_between_movements']
@@ -116,30 +119,30 @@ chest4 = cv2.imread('./images/targets/chest4.png')
 
 # Initialize telegram
 if telegram_data['telegram_mode'] == True:
-    logger('📱 Initializing Telegram')
+    logger('Initializing Telegram...', emoji='📱')
     updater = Updater(telegram_data["telegram_bot_key"])
 
     try:
         TBot = telegram.Bot(token=telegram_data["telegram_bot_key"])
 
         def send_print(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text('🔃 Proccessing...')
+            update.message.reply_text('Proccessing...', emoji='🔃')
             screenshot = printScreen()
             cv2.imwrite('./logs/print-report.%s' % telegram_data["format_of_images"], screenshot)
             update.message.reply_photo(photo=open('./logs/print-report.%s' % telegram_data["format_of_images"], 'rb'))
 
         def send_id(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text(f'🆔 Your id is: {update.effective_user.id}')
+            update.message.reply_text(f'Your id is: {update.effective_user.id}', emoji='🆔')
 
         def send_map(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text('🔃 Proccessing...')
+            update.message.reply_text('Proccessing...', emoji='🔃')
             if sendMapReport() is None:
-                update.message.reply_text('😿 An error has occurred')
+                update.message.reply_text('An error has occurred', emoji='😿')
 
         def send_bcoin(update: Update, context: CallbackContext) -> None:
-            update.message.reply_text('🔃 Proccessing...')
+            update.message.reply_text('Proccessing...', emoji='🔃')
             if sendBCoinReport() is None:
-                update.message.reply_text('😿 An error has occurred')
+                update.message.reply_text('An error has occurred', emoji='😿')
 
         commands = [
             ['print', send_print],
@@ -154,7 +157,7 @@ if telegram_data['telegram_mode'] == True:
         updater.start_polling()
         # updater.idle()
     except:
-        logger('🤖 Bot not initialized, see configuration file')
+        logger('Bot not initialized, see configuration file', emoji='🤖')
 
 def sendTelegramMessage(message):
     if telegram_data['telegram_mode'] == False:
@@ -164,7 +167,7 @@ def sendTelegramMessage(message):
             for chat_id in telegram_data["telegram_chat_id"]:
                 TBot.send_message(text=message, chat_id=chat_id)
     except:
-        logger('📄 Unable to send telegram message. See configuration file')
+        logger('Error to send telegram message. See configuration file', emoji='📄')
 
 def sendTelegramPrint():
     if telegram_data['telegram_mode'] == False:
@@ -176,7 +179,7 @@ def sendTelegramPrint():
             for chat_id in telegram_data["telegram_chat_id"]:
                 TBot.send_photo(chat_id=chat_id, photo=open('./logs/print-report.%s' % telegram_data["format_of_images"], 'rb'))
     except:
-        logger('📄 Unable to send telegram message. See configuration file')
+        logger('Error to send telegram message. See configuration file', emoji='📄')
 
 def sendPossibleAmountReport(baseImage):
     if telegram_data['telegram_mode'] == False:
@@ -241,9 +244,9 @@ def sendBCoinReport():
                     # TBot.send_document(chat_id=chat_id, document=open('bcoin-report.png', 'rb'))
                     TBot.send_photo(chat_id=chat_id, photo=open('./logs/bcoin-report.%s' % telegram_data["format_of_images"], 'rb'))
             except:
-                logger('😿 Telegram offline')
+                logger('Telegram offline', emoji='😿')
     clickButton(x_button_img)
-    logger('📄 BCoin report sent', telegram=True)
+    logger('BCoin report sent', telegram=True, emoji='📄')
     return True
 
 def sendMapReport():
@@ -288,15 +291,15 @@ def sendMapReport():
                 # TBot.send_document(chat_id=chat_id, document=open('map-report.png', 'rb'))
                 TBot.send_photo(chat_id=chat_id, photo=open('./logs/map-report.%s' % telegram_data["format_of_images"], 'rb'))
         except:
-            logger('😿 Telegram offline')
+            logger('Telegram offline', emoji='😿')
 
         try:
             sendPossibleAmountReport(sct_img[:,:,:3])
         except:
-            logger('😿 Error finding chests')
+            logger('Error finding chests', telegram=True, emoji='😿')
 
     clickButton(x_button_img)
-    logger('📄 Map report sent', telegram=True)
+    logger('Map report sent', telegram=True, emoji='📄')
     return True
 
 def clickButton(img,name=None, timeout=3, threshold = ct['default']):
@@ -382,7 +385,7 @@ def findPuzzlePieces(result, piece_img, threshold=0.5):
         return r
 
     if len(r) > 2:
-        logger('🧩 Overshoot by %d attempts' % len(r))
+        # logger('🧩 Overshoot by %d attempts' % len(r))
 
         return r
 
@@ -423,7 +426,7 @@ def show(rectangles = None, img = None):
 def getPiecesPosition(t = 150):
     popup_pos = positions(robot)
     if popup_pos is False:
-        logger('🧩 Captcha not found')
+        logger('Captcha not found', emoji='🧩')
         return
     rx, ry, _, _ = popup_pos[0]
 
@@ -534,10 +537,10 @@ def solveCaptcha():
 
     puzzle_pos = positions(robot)
     if puzzle_pos is not False:
-        logger('🧩 Captcha error')
+        logger('Captcha error', emoji='🧩')
         solveCaptcha()
     else:
-        logger('🧩 Captcha solved')
+        logger('Captcha solved', emoji='🧩')
 
     # show(arr)
 
@@ -571,7 +574,7 @@ def clickButtons():
         return
 
     if c['debug'] is not False:
-        logger('✔️ %d buttons detected' % len(buttons))
+        logger('%d buttons detected' % len(buttons), emoji='✔️')
 
     for (x, y, w, h) in buttons:
         offset_random = random.uniform(offset[0], offset[1])
@@ -582,10 +585,10 @@ def clickButtons():
         heroes_clicked = heroes_clicked + 1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
         if heroes_clicked > 15:
-            logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
+            logger('Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True, emoji='⚠️')
             return
         sleep(1, 3)
-    logger('👆 Clicking in %d heroes detected.' % len(buttons), telegram=True)
+    logger('Clicking in %d heroes detected.' % len(buttons), telegram=True, emoji='👆')
     return len(buttons)
 
 def isWorking(bar, buttons):
@@ -607,15 +610,15 @@ def clickGreenBarButtons():
         return
 
     if c['debug'] is not False:
-        logger('🟩 %d green bars detected' % len(green_bars))
-        logger('🔳 %d buttons detected' % len(buttons))
+        logger('%d green bars detected' % len(green_bars), emoji='🟩')
+        logger('%d buttons detected' % len(buttons), emoji='🔳')
 
     not_working_green_bars = []
     for bar in green_bars:
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
-        logger('👆 Clicking in %d heroes with green bar detected.' % len(not_working_green_bars), telegram=True)
+        logger('Clicking in %d heroes with green bar detected.' % len(not_working_green_bars), telegram=True, emoji='👆')
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
@@ -627,7 +630,7 @@ def clickGreenBarButtons():
         global heroes_clicked
         heroes_clicked = heroes_clicked + 1
         if heroes_clicked > 15:
-            logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
+            logger('Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True, emoji='⚠️')
             return
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
         sleep(1, 3)
@@ -642,8 +645,8 @@ def clickFullBarButtons():
         return
 
     if c['debug'] is not False:
-        logger('🟩 %d FULL bars detected' % len(full_bars))
-        logger('🔳 %d buttons detected' % len(buttons))
+        logger('%d FULL bars detected' % len(full_bars), emoji='🟩')
+        logger('%d buttons detected' % len(buttons), emoji='🔳')
 
     not_working_full_bars = []
     for bar in full_bars:
@@ -651,7 +654,7 @@ def clickFullBarButtons():
             not_working_full_bars.append(bar)
 
     if len(not_working_full_bars) > 0:
-        logger('👆 Clicking in %d heroes with FULL bar detected.' % len(not_working_full_bars), telegram=True)
+        logger('Clicking in %d heroes with FULL bar detected.' % len(not_working_full_bars), telegram=True, emoji='👆')
 
     for (x, y, w, h) in not_working_full_bars:
         offset_random = random.uniform(offset[0], offset[1])
@@ -661,7 +664,7 @@ def clickFullBarButtons():
         global heroes_clicked
         heroes_clicked = heroes_clicked + 1
         if heroes_clicked > 15:
-            logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True)
+            logger('Too many hero clicks, try to increase the go_to_work_btn threshold', telegram=True, emoji='⚠️')
             return
         sleep(1, 3)
     return len(not_working_full_bars)
@@ -710,7 +713,7 @@ def goToTreasureHunt():
         checkLogout()
 
 def refreshHeroesPositions():
-    logger('🔃 Refreshing heroes positions')
+    logger('Refreshing heroes positions', emoji='🔃')
     global next_refresh_heroes_positions
     next_refresh_heroes_positions = random.uniform(t['refresh_heroes_positions'][0], t['refresh_heroes_positions'][1])
     if currentScreen() == "thunt":
@@ -730,7 +733,7 @@ def login():
     randomMouseMovement()
 
     if clickButton(connect_wallet_btn_img):
-        logger('🎉 Connect wallet button detected, logging in!')
+        logger('Connect wallet button detected, logging in!', emoji='🎉')
         time.sleep(2)
         solveCaptcha()
         waitForImage((sign_btn_img, metamask_unlock_img), multiple=True)
@@ -738,39 +741,39 @@ def login():
     metamask_unlock_coord = positions(metamask_unlock_img)
     if metamask_unlock_coord is not False:
         if(metamask_data["enable_login_metamask"] is False):
-            logger('🔒 Metamask locked! But login with password is disabled, exiting')
+            logger('Metamask locked! But login with password is disabled, exiting', emoji='🔒')
             exit()
-        logger('🔓 Found unlock button. Waiting for password')
+        logger('Found unlock button. Waiting for password', emoji='🔓')
         password = metamask_data["password"]
         pyautogui.typewrite(password, interval=0.1)
         sleep(1, 3)
         if clickButton(metamask_unlock_img):
-            logger('🔓 Unlock button clicked')
+            logger('Unlock button clicked', emoji='🔓')
 
     if clickButton(sign_btn_img):
-        logger('✔️ Found sign button. Waiting to check if logged in')
+        logger('Found sign button. Waiting to check if logged in', emoji='✔️')
         time.sleep(5)
         if clickButton(sign_btn_img): ## twice because metamask glitch
-            logger('✔️ Found glitched sign button. Waiting to check if logged in')
+            logger('Found glitched sign button. Waiting to check if logged in', emoji='✔️')
         # time.sleep(25)
         waitForImage(teasureHunt_icon_img, timeout=60)
 
     if currentScreen() == "main":
-        logger('🎉 Logged in', telegram=True)
+        logger('Logged in', telegram=True, emoji='🎉')
         return True
     else:
-        logger('😿 Login failed, trying again')
+        logger('Login failed, trying again', emoji='😿')
         login_attempts += 1
 
         if (login_attempts > 3):
             sendTelegramPrint()
-            logger('🔃 +3 login attempts, retrying', telegram=True)
+            logger('+3 login attempts, retrying', telegram=True, emoji='🔃')
             # pyautogui.hotkey('ctrl', 'f5')
             pyautogui.hotkey('ctrl', 'shift', 'r')
             login_attempts = 0
 
             if clickButton(metamask_cancel_button):
-                logger('🙀 Metamask is glitched, fixing')
+                logger('Metamask is glitched, fixing', emoji='🙀')
             
             waitForImage(connect_wallet_btn_img)
 
@@ -781,8 +784,8 @@ def login():
 def handleError():
     if positions(error_img, ct['error']) is not False:
         sendTelegramPrint()
-        logger('💥 Error detected, trying to resolve', telegram=True)
-        logger('🔃 Refreshing page')
+        logger('Error detected, trying to resolve', telegram=True, emoji='💥')
+        logger('Refreshing page', telegram=True, emoji='🔃')
         # pyautogui.hotkey('ctrl', 'f5')
         pyautogui.hotkey('ctrl', 'shift', 'r')
         waitForImage(connect_wallet_btn_img)
@@ -793,16 +796,16 @@ def handleError():
 def getMoreHeroes():
     global next_refresh_heroes
 
-    logger('🏢 Search for heroes to work')
+    logger('Search for heroes to work', emoji='🏢')
 
     goToHeroes()
 
     if c['select_heroes_mode'] == "full":
-        logger('⚒️ Sending heroes with full stamina bar to work!')
+        logger('Sending heroes with full stamina bar to work!', emoji='⚒️')
     elif c['select_heroes_mode'] == "green":
-        logger('⚒️ Sending heroes with green stamina bar to work!')
+        logger('Sending heroes with green stamina bar to work!', emoji='⚒️')
     else:
-        logger('⚒️ Sending all heroes to work!')
+        logger('Sending all heroes to work!', emoji='⚒️')
 
     buttonsClicked = 0
     empty_scrolls_attempts = c['scroll_attempts']
@@ -820,23 +823,23 @@ def getMoreHeroes():
             empty_scrolls_attempts = empty_scrolls_attempts - 1
             scroll()
         sleep(1, 3)
-    logger('🦸 {} total heroes sent since the bot started'.format(heroes_clicked), telegram=True)
+    logger('{} total heroes sent since the bot started'.format(heroes_clicked), telegram=True, emoji='🦸')
     goToTreasureHunt()
 
 def checkLogout():
     if currentScreen() == "unknown" or currentScreen() == "login":
         if positions(connect_wallet_btn_img) is not False:
             sendTelegramPrint()
-            logger('😿 Logout detected', telegram=True)
-            logger('🔃 Refreshing page', telegram=True)
+            logger('Logout detected', telegram=True, emoji='😿')
+            logger('Refreshing page', telegram=True, emoji='🔃')
             # pyautogui.hotkey('ctrl', 'f5')
             pyautogui.hotkey('ctrl', 'shift', 'r')
             waitForImage(connect_wallet_btn_img)
             login()
         elif positions(sign_btn_img):
-            logger('✔️ Sing button detected', telegram=True)
+            logger('Sing button detected', telegram=True, emoji='✔️')
             if clickButton(metamask_cancel_button):
-                logger('🙀 Metamask is glitched, fixing', telegram=True)
+                logger('Metamask is glitched, fixing', telegram=True, emoji='🙀')
         else:
             return False
             
@@ -883,20 +886,20 @@ def checkUpdates():
         version = v['version']
         data.close()
     else:
-        logger('💥 Version not found, exiting')
+        logger('Version not found, exiting', emoji='💥')
         time.sleep(3)
         exit()
 
-    print('ℹ️ Git Version: ' + version)
-    print('ℹ️ Version installed: ' + c['version'])
+    print('Git Version: ' + version)
+    print('Version installed: ' + c['version'])
     if version > c['version']:
-        logger('🎉 New version available, please update', telegram=True)
+        logger('New version available, please update', telegram=True, emoji='🎉')
 
 
 def main():
     checkUpdates()
-    input('🔳 Press Enter to start')
-    logger('🤖 Starting bot', telegram=True)
+    input('Press Enter to start')
+    logger('Starting bot', telegram=True, emoji='🤖')
 
     last = {
         "login" : 0,
@@ -923,12 +926,12 @@ def main():
 
         if currentScreen() == "main":
             if clickButton(teasureHunt_icon_img):
-                logger('▶️ Entering treasure hunt')
+                logger('Entering treasure hunt', emoji='▶️')
                 last["refresh_heroes"] = now
 
         if currentScreen() == "thunt":
             if clickButton(new_map_btn_img):
-                logger('🗺️ New map')
+                logger('New map', emoji='🗺️')
                 last["new_map"] = now
                 sleep(1, 2)
                 checkCaptcha()
@@ -957,6 +960,6 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        logger('😓 Shutting down the bot', telegram=True)
+        logger('Shutting down the bot', telegram=True, emoji='😓')
         updater.stop()
         exit()
