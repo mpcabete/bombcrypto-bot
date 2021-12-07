@@ -821,13 +821,16 @@ def getMoreHeroes():
     while(empty_scrolls_attempts > 0):
         if c['select_heroes_mode'] == 'full':
             buttonsClicked = clickFullBarButtons()
-            heroes_clicked += buttonsClicked
+            if buttonsClicked is not None:
+                heroes_clicked += buttonsClicked
         elif c['select_heroes_mode'] == 'green':
             buttonsClicked = clickGreenBarButtons()
-            heroes_clicked += buttonsClicked
+            if buttonsClicked is not None:
+                heroes_clicked += buttonsClicked
         else:
             buttonsClicked = clickButtons()
-            heroes_clicked += buttonsClicked
+            if buttonsClicked is not None:
+                heroes_clicked += buttonsClicked
 
         if buttonsClicked == 0 or buttonsClicked is None:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
