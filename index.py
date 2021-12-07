@@ -480,7 +480,7 @@ def getSliderPosition():
     position = [x+w/2,y+h/2]
     return position
 
-def check_puzzle():
+def checkCaptcha():
     puzzle_pos = positions(robot)
     if puzzle_pos is not False:
         solveCaptcha()
@@ -691,12 +691,12 @@ def goToHeroes():
             sleep(1, 3)
             if clickBtn(hero_img):
                 sleep(1, 3)
-                check_puzzle()
+                checkCaptcha()
                 waitForImg(home_img)
     if current_screen() == "main":
         if clickBtn(hero_img):
             sleep(1, 3)
-            check_puzzle()
+            checkCaptcha()
             waitForImg(home_img)
     if current_screen() == "unknown" or current_screen() == "login":
         check_for_logout()
@@ -877,7 +877,7 @@ def randomMouseMovement():
     y = np.random.randint(0, y)
     hc.move((int(x), int(y)), np.random.randint(1,3))
 
-def check_updates():
+def checkUpdates():
     data = requests.get('https://raw.githubusercontent.com/vin350/bombcrypto-bot/main/config.yaml')
 
     if data is not None:
@@ -896,16 +896,16 @@ def check_updates():
 
 
 def main():
-    check_updates()
+    checkUpdates()
     input('🔳 Press Enter to start')
     logger('🤖 Starting bot', telegram=True)
 
     last = {
-    "login" : 0,
-    "heroes" : 0,
-    "new_map" : 0,
-    "refresh_heroes" : 0,
-    "check_updates" : 0
+        "login" : 0,
+        "heroes" : 0,
+        "new_map" : 0,
+        "refresh_heroes" : 0,
+        "check_updates" : 0
     }
 
     while True:
@@ -914,7 +914,7 @@ def main():
         
         handle_error()
 
-        check_puzzle()
+        checkCaptcha()
 
         now = time.time()
 
@@ -933,7 +933,7 @@ def main():
                 logger('🗺️ New map')
                 last["new_map"] = now
                 sleep(1, 2)
-                check_puzzle()
+                checkCaptcha()
                 sleep(2, 3)
                 sendMapReport()
                 sleep(3, 5)
@@ -949,7 +949,7 @@ def main():
 
         if now - last["check_updates"] > check_for_updates * 60:
             last["check_updates"] = now
-            check_updates()
+            checkUpdates()
 
         check_for_logout()
         sys.stdout.flush()
