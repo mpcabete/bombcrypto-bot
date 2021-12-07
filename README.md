@@ -35,9 +35,9 @@ espera do bot para dificultar ainda mais sua detecção.
 ``` 
 - 06/12/21
              (15%)        (30%)         (50%)        (70%)      (85%)     (100%)
-[XXXXXXXXXXXXXXX|XXXXXXXXXX|XXXXX---------|-----------|----------|------------] (500R$)
-                                 |
-                               175R$
+[XXXXXXXXXXXXXXX|XXXXXXXXXX|XXXXXXXXXXXXXX|XXXXXXXXXXX|XXX-------|------------] (500R$)
+                                                          |
+                                                        380R$
 ```
 
  
