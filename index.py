@@ -241,15 +241,51 @@ def getSliderPosition():
     position = [x+w/2,y+h/2]
     return position
 
-def solveCapcha():
-    popup_pos = positions(robot)
+def saveCaptchaSolution(img, pos):
+    path = "./captchas-saved/{}.png".format(str(time.time()))
+    rx, ry, _, _ = pos
+
+    w = 580
+    h = 400
+    x_offset = -140
+    y_offset = 65
+
+    y = ry + y_offset
+    x = rx + x_offset
+    cropped = img[ y : y + h , x: x + w]
+
+    # cv2.imshow('img',cropped)
+    # cv2.waitKey(5000)
+    # exit()
+
+    cv2.imwrite(path, cropped)
+    #TODO tirar um poco de cima
+
+
+def alertCaptcha():
+    current = printSreen()
+    popup_pos = positions(robot,img=current)
+
     if len(popup_pos) == 0:
         return "not-found"
-    else:
-        logger('captcha!')
-        bell_sound.play()
-        time.sleep(6)
-        solveCapcha()
+
+    logger('captcha!')
+    bell_sound.play()
+
+    i=0
+    while True:
+        i = i + 1
+        last = current
+        last_popup_pos = popup_pos
+        current = printSreen()
+        popup_pos = positions(robot,img=current)
+
+        if len(popup_pos) == 0:
+            logger('solved!')
+            saveCaptchaSolution(last, last_popup_pos[0])
+            break
+
+
 #    #TODO adicionar a funçao de checar se um botao esta visive
 #    # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
 #    logger('🧩 Checking for captcha')
@@ -331,8 +367,9 @@ def printSreen():
         # Grab the data
         return sct_img[:,:,:3]
 
-def positions(target, threshold=ct['default']):
-    img = printSreen()
+def positions(target, threshold=ct['default'],img = None):
+    if img is None:
+        img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
     w = target.shape[1]
     h = target.shape[0]
@@ -455,12 +492,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCapcha()
+    alertCaptcha()
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
     time.sleep(1)
-    solveCapcha()
+    alertCaptcha()
 
 def goToGame():
     # in case of server overload popup
@@ -490,7 +527,7 @@ def login():
         return
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
-        solveCapcha()
+        alertCaptcha()
         login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
@@ -625,13 +662,14 @@ def main():
     while True:
         now = time.time()
 
+
         for last in windows:
             last["window"].activate()
             time.sleep(2)
 
             if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
                 last["check_for_captcha"] = now
-                solveCapcha()
+                alertCaptcha()
 
             if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
                 last["heroes"] = now
@@ -647,7 +685,6 @@ def main():
 
                 if clickBtn(images['new-map']):
                     loggerMapClicked()
-
 
             if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
                 solveCapcha()
