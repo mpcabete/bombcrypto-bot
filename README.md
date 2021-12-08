@@ -1,10 +1,14 @@
 # Novo capcha:
 ### Ainda nao esta rasolvido, eu atualizei o bot pra emitir um som quando detectar o captcha
+
+### Para conseguir quebrar esse novo captcha, algumas imagens de capchas resolvidos ajudariam mto a encontrar uma soluçao.  Configurei o bot pra salvar a imagem dos captchas resolvidos na pasta "saved-captchas" se quiser contribuir com os dados q vc colertar, por favor envie para o email
+  mpcabete@protonmail.com
+
 Rode o comando 
   pip install -r requirements
 novamente
 
-#### linux:
+### Precisei usar esse comando pra conseguir instalar a biblioteca simplesound com o pip no linux:
   sudo apt-get install -y python3-dev libasound2-dev
   
 # Sobre:
