@@ -4,6 +4,9 @@ Rode o comando
   pip install -r requirements
 novamente
 
+#### linux:
+  sudo apt-get install -y python3-dev libasound2-dev
+  
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
 
