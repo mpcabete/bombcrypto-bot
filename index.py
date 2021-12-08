@@ -274,7 +274,6 @@ def alertCaptcha():
     i=0
     while True:
         i = i + 1
-        logger(i)
         last = current
         last_popup_pos = popup_pos
         current = printSreen()
