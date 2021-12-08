@@ -5,7 +5,7 @@
   mpcabete@protonmail.com
 
 Rode o comando 
-  pip install -r requirements
+  `pip install -r requirements`
 novamente
 
 ### Precisei usar esse comando pra conseguir instalar a biblioteca simplesound com o pip no linux:
