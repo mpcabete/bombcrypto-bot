@@ -1,4 +1,9 @@
-  
+# Novo capcha:
+### Ainda nao esta rasolvido, eu atualizei o bot pra emitir um som quando detectar o captcha
+Rode o comando 
+  pip install -r requirements
+novamente
+
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
 
