@@ -11,6 +11,7 @@ from random import random
 import numpy as np
 import mss
 import pyautogui
+import pygetwindow
 import time
 import sys
 
@@ -645,48 +646,57 @@ def main():
     time.sleep(5)
     t = c['time_intervals']
 
-    last = {
-    "login" : 0,
-    "heroes" : 0,
-    "new_map" : 0,
-    "check_for_captcha" : 0,
-    "refresh_heroes" : 0
-    }
+    windows = []
+
+    win = [w for w in pygetwindow.getWindowsWithTitle('bombcrypto')]
+    for w in win:
+        windows.append({
+            "window": w,
+            "login" : 0,
+            "heroes" : 0,
+            "new_map" : 0,
+            "check_for_captcha" : 0,
+            "refresh_heroes" : 0
+            })
 
     while True:
         now = time.time()
 
-        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last["check_for_captcha"] = now
-            alertCaptcha()
 
-        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-            last["heroes"] = now
-            refreshHeroes()
+        for last in windows:
+            last["window"].activate()
+            time.sleep(2)
 
-        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+            if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
+                last["check_for_captcha"] = now
+                alertCaptcha()
+
+            if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+                last["heroes"] = now
+                refreshHeroes()
+
+            if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+                sys.stdout.flush()
+                last["login"] = now
+                login()
+
+            if now - last["new_map"] > t['check_for_new_map_button']:
+                last["new_map"] = now
+
+                if clickBtn(images['new-map']):
+                    loggerMapClicked()
+
+            if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+                solveCapcha()
+                last["refresh_heroes"] = now
+                refreshHeroesPositions()
+
+            #clickBtn(teasureHunt)
+            logger(None, progress_indicator=True)
+
             sys.stdout.flush()
-            last["login"] = now
-            login()
 
-        if now - last["new_map"] > t['check_for_new_map_button']:
-            last["new_map"] = now
-
-            if clickBtn(images['new-map']):
-                loggerMapClicked()
-
-
-        if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            alertCaptcha()
-            last["refresh_heroes"] = now
-            refreshHeroesPositions()
-
-        #clickBtn(teasureHunt)
-        logger(None, progress_indicator=True)
-
-        sys.stdout.flush()
-
-        time.sleep(1)
+            time.sleep(1)
 main()
 # sendHeroesHome()
 
