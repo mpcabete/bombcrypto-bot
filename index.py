@@ -687,7 +687,7 @@ def main():
                     loggerMapClicked()
 
             if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-                solveCapcha()
+                alertCaptcha()
                 last["refresh_heroes"] = now
                 refreshHeroesPositions()
 
