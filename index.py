@@ -7,6 +7,8 @@ from os import listdir
 from src.logger import logger, loggerMapClicked
 from random import randint
 from random import random
+from _thread import *
+# from pynput.mouse import Controller
 
 import numpy as np
 import mss
@@ -117,6 +119,9 @@ def loadHeroesToSendHome():
 if ch['enable']:
     home_heroes = loadHeroesToSendHome()
 
+# metamask_ext_icon_img = cv2.imread('targets/metamask-ext-ico.png')
+# metamask_taskbar_img = cv2.imread('targets/metamask-taskbar.png')
+# home_btn_img = cv2.imread('targets/home.png')
 # go_work_img = cv2.imread('targets/go-work.png')
 # commom_img = cv2.imread('targets/commom-text.png')
 # arrow_img = cv2.imread('targets/go-back-arrow.png')
@@ -358,7 +363,7 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
 
 def printSreen():
     with mss.mss() as sct:
-        monitor = sct.monitors[0]
+        monitor = sct.monitors[2]
         sct_img = np.array(sct.grab(monitor))
         # The screen part to capture
         # monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
@@ -611,7 +616,7 @@ def sendHeroesHome():
 def refreshHeroes():
     logger('🏢 Search for heroes to work')
 
-    goToHeroes()
+    # goToHeroes()
 
     if c['select_heroes_mode'] == "full":
         logger('⚒️ Sending heroes with full stamina bar to work', 'green')
@@ -640,6 +645,35 @@ def refreshHeroes():
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
+def decobreScreen():
+
+    # 3 metamask
+    if len(positions(images['select-wallet-2'], threshold=0.75)) > 0:
+        return 3
+    # 7 error popup
+    elif len(positions(images['ok'], threshold=ct['default'])) > 0:
+        return 7
+    # 2 captcha
+    elif(getPiecesPosition() is not None):
+        return 2
+    # 1 tela de login
+    elif len(positions(images['connect-wallet'], threshold=ct['default'])) > 0:
+        return 1
+    # 4 pagina main
+    elif len(positions(images['hero-icon'], threshold=ct['default'])) > 0:
+        return 4
+    # 5 pagina herois
+    elif len(positions(images['go-work'], threshold=ct['default'])) > 0:
+        return 5
+    # 6 pagina trabalho
+    elif len(positions(images['go-back-arrow'], threshold=ct['default'])) > 0:
+        return 6
+    # 8 new map
+    elif len(positions(images['new-map'], threshold=ct['default'])) > 0:
+        return 8
+
+    # 0 sem tela definida
+    return 0
 
 def main():
     time.sleep(5)
@@ -653,36 +687,96 @@ def main():
     "refresh_heroes" : 0
     }
 
+    # 0 sem tela definida
+    # 1 tela de login
+    # 2 captcha
+    # 3 metamask
+    # 4 pagina main
+    # 5 pagina herois
+    # 6 pagina trabalho
+    # 7 error popup
+    # 8 new map
+    
+    screenAnt = -1
     while True:
         now = time.time()
 
-        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last["check_for_captcha"] = now
+        screen = decobreScreen()
+
+        # 0 sem tela definida
+        if screen == 0:
+            time.sleep(10)
+            continue
+        elif screen == 1: # 1 tela de login
+            # ja tentou fazer login e não conseguiu
+            if screen == screenAnt :
+                # tentamos fazer login manualmente
+                # tenta abrir a tela de login metamask que provavelmente esta em segundo plano
+                logger('Trying manual login...')
+                if not clickBtn(images['metamask-ext-ico'], timeout = 10):
+                    if not clickBtn(images['metamask-taskbar'], timeout = 10):
+                        if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
+                            logger('Connect wallet button detected, logging in!')
+
+            elif (now - last["login"]) > (t['check_for_login'] * 60):
+                logger("Checking if game has disconnected.")
+                sys.stdout.flush()
+                last["login"] = now
+                login()
+        elif screen == 2: # 2 captcha
+            # if (now - last["check_for_capcha"]) > (t['check_for_capcha'] * 60):
+                #last["check_for_capcha"] = now
+            logger('Checking for capcha.')
+            # solveCapcha()
             alertCaptcha()
+        elif screen == 3: # 3 metamask
+            logger('Clicking MetaMask Sign button.')
+            clickBtn(images['select-wallet-2'], name='sign button', timeout=8)
+            if screenAnt == 1 and screen == 1 :
+                time.sleep(15)
+        elif screen == 4: # 4 pagina main
+            clickBtn(images['hero-icon'])
+        elif screen == 5: # 5 pagina herois
+            if (now - last["heroes"]) > (t['send_heroes_for_work'] * 60):
+                last["heroes"] = now
+                logger('Sending heroes to work.')
+                refreshHeroes()
+        elif screen == 6: # 6 pagina trabalho
+            logger('Working heroes screen.')
+            if last["heroes"] == 0 :
+                last["heroes"] = now
+            if last["refresh_heroes"] == 0 :
+                last["refresh_heroes"] = last["heroes"]
+            if (now - last["refresh_heroes"]) > (t['refresh_heroes_positions'] * 60) :
+                last["refresh_heroes"] = now
+                logger('Refreshing Heroes Positions.')
+                refreshHeroesPositions()
+        elif screen == 7: # 7 error popup
+            clickBtn(images['ok'], name='okBtn', timeout=5)
+        elif screen == 8: # 8 new map
+            if (now - last["new_map"]) > t['check_for_new_map_button']:
+                last["new_map"] = now
+                if clickBtn(images['new-map']):
+                    loggerMapClicked()
 
-        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-            last["heroes"] = now
-            refreshHeroes()
+        #opção de quando os herois vão dormir, voltar para tela main
+        if screen == 6 and (now - last["refresh_heroes"]) > (t['refresh_heroes_positions'] * 60) :
+                last["refresh_heroes"] = now
+                logger('Refreshing Heroes Positions.')
+                refreshHeroesPositions()
+        if screen == 6 and (now - last["heroes"]) > (t['send_heroes_for_work'] * 60):
+            clickBtn(images['go-back-arrow'])
+            # informa que saiu da pagina de trabalho para pagina main
+            screen = 4
 
-        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
-            sys.stdout.flush()
-            last["login"] = now
-            login()
-
-        if now - last["new_map"] > t['check_for_new_map_button']:
-            last["new_map"] = now
-
-            if clickBtn(images['new-map']):
-                loggerMapClicked()
-
-
-        if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            alertCaptcha()
-            last["refresh_heroes"] = now
-            refreshHeroesPositions()
+        screenAnt = screen
 
         #clickBtn(teasureHunt)
         logger(None, progress_indicator=True)
+
+        # se os herois tiverem trabalhando, faz um sleed pelo tempo do refresh dos herois para econimizar processamento
+        if screen == 6 :
+            time.sleep(t['refresh_heroes_positions'] * 60)
 
         sys.stdout.flush()
 
