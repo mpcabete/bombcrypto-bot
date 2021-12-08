@@ -15,4 +15,5 @@ python3-xlib==0.15
 pytweening==1.0.4
 PyYAML==6.0
 requests==2.26.0
+simpleaudio==1.0.4
 urllib3==1.26.7
