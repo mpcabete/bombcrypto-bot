@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
+import simpleaudio
+
 
 from os import listdir
 from src.logger import logger, loggerMapClicked
@@ -44,6 +46,9 @@ cat = """
 
 
 print(cat)
+
+
+bell_sound = simpleaudio.WaveObject.from_wave_file("bell.wav")
 
 
 if __name__ == '__main__':
@@ -236,49 +241,57 @@ def getSliderPosition():
     return position
 
 def solveCapcha():
-    #TODO adicionar a funçao de checar se um botao esta visive
-    # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
-    logger('🧩 Checking for captcha')
-    pieces_start_pos = getPiecesPosition()
-    if pieces_start_pos is None :
+    popup_pos = positions(robot)
+    if len(popup_pos) == 0:
         return "not-found"
-    slider_start_pos = getSliderPosition()
-    if slider_start_pos is None:
-        logger('🧩 slider_start_pos')
-        return "fail"
-
-    x,y = slider_start_pos
-    pyautogui.moveTo(x,y,1)
-    pyautogui.mouseDown()
-    pyautogui.moveTo(x+300 ,y,0.5)
-    pieces_end_pos = getPiecesPosition()
-    if pieces_end_pos is None:
-        logger('🧩 pieces_end_pos')
-        return "fail"
-
-    piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
-    piece_end, _, _, _ = getRightPiece(pieces_end_pos)
-    piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
-    slider_start, _, = slider_start_pos
-    slider_end_pos = getSliderPosition()
-    if slider_end_pos is None:
-        logger('🧩 slider_end_pos')
-        return "fail"
-
-    slider_end, _ = slider_end_pos
-
-    piece_domain = piece_end - piece_start
-    middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
-
-    slider_domain = slider_end - slider_start
-    slider_awnser = slider_start + (middle_piece_in_percent * slider_domain)
-    # arr = np.array([[int(piece_start),int(y-20),int(10),int(10)],[int(piece_middle),int(y-20),int(10),int(10)],[int(piece_end-20),int(y),int(10),int(10)],[int(slider_awnser),int(y),int(20),int(20)]])
-
-    pyautogui.moveTo(slider_awnser,y,0.5)
-    pyautogui.mouseUp()
-
-    return True
-    # show(arr)
+    else:
+        logger('captcha!')
+        bell_sound.play()
+        time.sleep(6)
+        solveCapcha()
+#    #TODO adicionar a funçao de checar se um botao esta visive
+#    # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
+#    logger('🧩 Checking for captcha')
+#    pieces_start_pos = getPiecesPosition()
+#    if pieces_start_pos is None :
+#        return "not-found"
+#    slider_start_pos = getSliderPosition()
+#    if slider_start_pos is None:
+#        logger('🧩 slider_start_pos')
+#        return "fail"
+#
+#    x,y = slider_start_pos
+#    pyautogui.moveTo(x,y,1)
+#    pyautogui.mouseDown()
+#    pyautogui.moveTo(x+300 ,y,0.5)
+#    pieces_end_pos = getPiecesPosition()
+#    if pieces_end_pos is None:
+#        logger('🧩 pieces_end_pos')
+#        return "fail"
+#
+#    piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
+#    piece_end, _, _, _ = getRightPiece(pieces_end_pos)
+#    piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
+#    slider_start, _, = slider_start_pos
+#    slider_end_pos = getSliderPosition()
+#    if slider_end_pos is None:
+#        logger('🧩 slider_end_pos')
+#        return "fail"
+#
+#    slider_end, _ = slider_end_pos
+#
+#    piece_domain = piece_end - piece_start
+#    middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
+#
+#    slider_domain = slider_end - slider_start
+#    slider_awnser = slider_start + (middle_piece_in_percent * slider_domain)
+#    # arr = np.array([[int(piece_start),int(y-20),int(10),int(10)],[int(piece_middle),int(y-20),int(10),int(10)],[int(piece_end-20),int(y),int(10),int(10)],[int(slider_awnser),int(y),int(20),int(20)]])
+#
+#    pyautogui.moveTo(slider_awnser,y,0.5)
+#    pyautogui.mouseUp()
+#
+#    return True
+#    # show(arr)
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
