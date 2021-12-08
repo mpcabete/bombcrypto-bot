@@ -1,0 +1,14 @@
+version: "3"
+services:
+  bot:
+    build:
+      context: .
+    restart: unless-stopped
+    environment:
+      - VNC_PASSWORD=123mudar
+      - TZ=America/Sao_Paulo
+      - RESOLUTION=1920x1080
+    volumes:
+       - /dev/shm:/dev/shm
+    ports:
+      - 5900:5900
