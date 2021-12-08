@@ -9,7 +9,7 @@ Rode o comando
 novamente
 
 ### Precisei usar esse comando pra conseguir instalar a biblioteca simplesound com o pip no linux:
-  sudo apt-get install -y python3-dev libasound2-dev
+  `sudo apt-get install -y python3-dev libasound2-dev`
   
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
