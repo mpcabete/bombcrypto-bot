@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
-import simpleaudio
+#import simpleaudio
 
-
+import requests
+import secrets
 from os import listdir
 from src.logger import logger, loggerMapClicked
 from random import randint
@@ -69,7 +70,13 @@ hero_clicks = 0
 login_attempts = 0
 last_log_is_progress = False
 
-
+def telegram_bot_sendtext(bot_message):
+    bot_token = secrets.bot_token
+    bot_chatID = secrets.bot_chatID
+    conta = secrets.conta
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + 'Conta: '+ conta + '\n' + bot_message
+    response = requests.get(send_text)
+    return response.json()
 
 def addRandomness(n, randomn_factor_size=None):
     if randomn_factor_size is None:
@@ -267,9 +274,9 @@ def alertCaptcha():
 
     if len(popup_pos) == 0:
         return "not-found"
-
+    tele = telegram_bot_sendtext("⚠️ ATENÇÃO! \n\n 🧩 RESOLVER NOVO CAPTCHA!")
     logger('captcha!')
-    bell_sound.play()
+    #bell_sound.play()
 
     i=0
     while True:
