@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
-import simpleaudio
+# import simpleaudio
 
 
 from os import listdir
 from src.logger import logger, loggerMapClicked
 from random import randint
 from random import random
-from _thread import *
-# from pynput.mouse import Controller
 
 import numpy as np
 import mss
@@ -17,6 +15,22 @@ import time
 import sys
 
 import yaml
+
+import re
+import winsound
+import requests
+import telepot
+import os
+
+import pytesseract as ocr
+from PIL import Image
+
+def telegram_bot_sendtext(bot_message):
+    bot_token = 'TOKEN'
+    bot_chatID = 'MESSAGE_ID'
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+    response = requests.get(send_text)
+    return response.json()
 
 
 cat = """
@@ -48,9 +62,10 @@ cat = """
 
 
 print(cat)
+test = telegram_bot_sendtext("🔌 Bot inicializado. \n\n 💰 É hora de faturar alguns BCoins!!!")
 
 
-bell_sound = simpleaudio.WaveObject.from_wave_file("bell.wav")
+# bell_sound = simpleaudio.WaveObject.from_wave_file("bell.wav")
 
 
 if __name__ == '__main__':
@@ -70,8 +85,7 @@ pyautogui.FAILSAFE = False
 hero_clicks = 0
 login_attempts = 0
 last_log_is_progress = False
-
-
+saldo_atual = 0.0
 
 def addRandomness(n, randomn_factor_size=None):
     if randomn_factor_size is None:
@@ -119,9 +133,6 @@ def loadHeroesToSendHome():
 if ch['enable']:
     home_heroes = loadHeroesToSendHome()
 
-# metamask_ext_icon_img = cv2.imread('targets/metamask-ext-ico.png')
-# metamask_taskbar_img = cv2.imread('targets/metamask-taskbar.png')
-# home_btn_img = cv2.imread('targets/home.png')
 # go_work_img = cv2.imread('targets/go-work.png')
 # commom_img = cv2.imread('targets/commom-text.png')
 # arrow_img = cv2.imread('targets/go-back-arrow.png')
@@ -273,8 +284,10 @@ def alertCaptcha():
     if len(popup_pos) == 0:
         return "not-found"
 
+    test = telegram_bot_sendtext("⚠️ ATENÇÃO! \n\n 🧩 RESOLVER NOVO CAPTCHA!")
     logger('captcha!')
-    bell_sound.play()
+    # bell_sound.play()
+    winsound.PlaySound ('bell.wav', winsound .SND_ASYNC);
 
     i=0
     while True:
@@ -511,6 +524,46 @@ def goToGame():
 
     clickBtn(images['treasure-hunt-icon'])
 
+def goSaldo():
+    global saldo_atual
+    clickBtn(images['consultar-saldo'])
+    #test = telegram_bot_sendtext("Saldo de BCoins atualizado:")
+
+    i = 10
+    coins_pos = positions(images['coin-icon'], threshold=ct['default'])
+    while(len(coins_pos) == 0 ^ i > 0):
+        coins_pos = positions(images['coin-icon'], threshold=ct['default'])
+        time.sleep(5)
+    
+    if(len(coins_pos) == 0):
+        return
+
+    # a partir da imagem do bcoin calcula a area do quadrado para print
+    k,l,m,n = coins_pos[0]
+    k = k - 44
+    l = l - 51
+    m = m + 90
+    n = n + 100
+
+    myScreen = pyautogui.screenshot(region=(k, l, m, n))
+    img_dir = r'C:\bomb\saldo1.png'
+    myScreen.save(img_dir)
+    saldoApurado = ocr.image_to_string(Image.open(img_dir))
+
+    saldoApurado = re.sub("[^\d\.]", "", saldoApurado)
+    if float(saldoApurado) > float(saldo_atual):
+        saldoApurado = saldoApurado.strip()
+
+        enviar = ('🚨 \n Seu saldo aumentou. \n Valor atual: $'+saldoApurado+' Bcoins \n 🚀🚀🚀')
+        test = telegram_bot_sendtext(enviar)
+        #test = telegram_bot_sendtext(saldoApurado)
+        #print(enviar)
+        saldo_atual = saldoApurado
+    else:
+        print("saldo igual. Nada enviado no Telegram")
+
+    clickBtn(images['x'])
+
 def refreshHeroesPositions():
 
     logger('🔃 Refreshing Heroes Positions')
@@ -682,6 +735,7 @@ def main():
     last = {
     "login" : 0,
     "heroes" : 0,
+    "ssaldo" :0,
     "new_map" : 0,
     "check_for_captcha" : 0,
     "refresh_heroes" : 0
@@ -769,6 +823,10 @@ def main():
             # informa que saiu da pagina de trabalho para pagina main
             screen = 4
 
+        if screen == 6 and ((now - last["ssaldo"]) > (addRandomness(t['get_saldo'] * 60))):
+            last["ssaldo"] = now
+            goSaldo()
+
         screenAnt = screen
 
         #clickBtn(teasureHunt)
@@ -781,6 +839,8 @@ def main():
         sys.stdout.flush()
 
         time.sleep(1)
+
+ocr.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 main()
 # sendHeroesHome()
 
