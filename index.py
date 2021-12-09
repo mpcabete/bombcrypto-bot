@@ -687,7 +687,16 @@ def main():
         sys.stdout.flush()
 
         time.sleep(1)
-main()
+
+def solveNewCaptcha(t=150):
+    img = images['nc']
+    edges = cv2.Canny(img, threshold1=t/2, threshold2=t,L2gradient=True)
+    cv2.imshow('img',edges)
+    cv2.waitKey(0)
+solveNewCaptcha()
+
+
+# main()
 # sendHeroesHome()
 
 
