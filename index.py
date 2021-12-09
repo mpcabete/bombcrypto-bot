@@ -49,7 +49,7 @@ cat = """
 print(cat)
 
 
-bell_sound = simpleaudio.WaveObject.from_wave_file("bell.wav")
+#bell_sound = simpleaudio.WaveObject.from_wave_file("bell.wav")
 
 
 if __name__ == '__main__':
