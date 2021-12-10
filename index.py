@@ -658,6 +658,8 @@ def goSaldo():
     saldoApurado = ocr.image_to_string(Image.open(img_dir))
 
     saldoApurado = re.sub("[^\d\.]", "", saldoApurado)
+    if saldoApurado == '':
+        saldoApurado = 0.0
     if float(saldoApurado) > float(saldo_atual):
         saldoApurado = saldoApurado.strip()
 
