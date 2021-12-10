@@ -19,3 +19,4 @@ simpleaudio==1.0.4
 urllib3==1.26.7
 telepot==12.7
 pytesseract
+python-telegram-bot

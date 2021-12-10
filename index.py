@@ -16,6 +16,7 @@ import sys
 
 import yaml
 
+import telegram
 import re
 import winsound
 import requests
@@ -25,13 +26,27 @@ import os
 import pytesseract as ocr
 from PIL import Image
 
-def telegram_bot_sendtext(bot_message):
-    bot_token = 'TOKEN'
-    bot_chatID = 'MESSAGE_ID'
-    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
-    response = requests.get(send_text)
-    return response.json()
+TELEGRAM_BOT_TOKEN = 'TOKEN'
+TELEGRAM_CHAT_ID  = 'CHAT_ID'
 
+bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
+
+def telegram_bot_sendtext(bot_message):
+    global bot
+    return bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=bot_message)
+
+def telegram_bot_sendphoto(photo_path):
+    global bot
+    return bot.send_photo(chat_id=TELEGRAM_CHAT_ID, photo=open(photo_path, 'rb'))
+
+
+# def telegram_bot_sendtext(bot_message):
+#     bot_token = '5065947731:AAGsr0Uov3Qe0LeQlF1jPD-jYcVe5b0vAIo'
+#     bot_chatID = '1970213580'
+#     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+#     response = requests.get(send_text)
+#     return response.json()
+# 
 
 cat = """
                                                 _
@@ -282,25 +297,112 @@ def alertCaptcha():
     popup_pos = positions(robot,img=current)
 
     if len(popup_pos) == 0:
+        logger('Captcha box não encontrado')
         return "not-found"
 
     test = telegram_bot_sendtext("⚠️ ATENÇÃO! \n\n 🧩 RESOLVER NOVO CAPTCHA!")
-    logger('captcha!')
+    logger('Captcha!')
     # bell_sound.play()
     winsound.PlaySound ('bell.wav', winsound .SND_ASYNC);
 
-    i=0
-    while True:
-        i = i + 1
-        last = current
-        last_popup_pos = popup_pos
-        current = printSreen()
-        popup_pos = positions(robot,img=current)
+    #linha para testes
 
-        if len(popup_pos) == 0:
-            logger('solved!')
-            saveCaptchaSolution(last, last_popup_pos[0])
+    slider_start_pos = getSliderPosition()
+    if slider_start_pos is None:
+        logger('Posição do slider do captcha não encontrado')
+        return
+
+    
+    slider_mov = 35
+    slider_size = positions(images['slider_size_1'], threshold=0.9)
+
+    #obten o quanto de pixels o ponteiro tem que arrastar de acordo com o tamanho do slider que aparece
+    numero_sliders = 7 # o número de repetições é a quantidade de imagens do slider-size que tenho + 1
+    for i in range(1, numero_sliders): 
+        slider_size = positions(images[f'slider_size_{i}'], threshold=0.9)
+        if(len(slider_size) > 0):
+            slider_mov = slider_mov + (10 * i)
             break
+        time.sleep(1)
+    
+    if(len(slider_size) == 0):
+        logger('Tamanho do slider do captcha não encontrado!')
+        return
+
+    slider_positions = []
+    x,y = slider_start_pos
+    for i in range(5):
+        if i == 0:
+            pyautogui.moveTo(x, y, 1)
+            pyautogui.mouseDown()
+
+            #faz o primeiro movimento e volta para abrir o primeiro item
+            pyautogui.moveTo(x + slider_mov, y, 0.15)
+            pyautogui.moveTo(x, y, 1)
+            slider_positions.append((x, y))
+        else:
+            slider_start_pos = getSliderPosition()
+            x,y = slider_start_pos
+            pyautogui.moveTo(x, y, 0.15)
+            # time.sleep(0.5)
+
+            slider_positions.append((x + slider_mov, y))
+            pyautogui.moveTo(x + slider_mov, y, 0.15)
+
+        # time.sleep(0.5)
+        #encontra a posição do captcha inteiro
+        captcha_scshot = pyautogui.screenshot(region=(popup_pos[0][0] - 120, popup_pos[0][1] + 80, popup_pos[0][2]*1.9, popup_pos[0][3]*8.3))
+        img_captcha_dir = r'C:\bomb\captcha1.png'
+        captcha_scshot.save(img_captcha_dir)
+
+        #envia a foto do captcha
+        telegram_bot_sendtext(f'Imagem /{i + 1}')
+        telegram_bot_sendphoto(img_captcha_dir)
+
+    telegram_bot_sendtext('Atenção responda  apenas com o número da posição desejada \n\r (/1)\n\r (/2)\n\r (/3)\n\r (/4)')
+
+    qtd_messages_sended = len(bot.getUpdates())
+    user_response = 0
+    # await user to response
+    while True:
+        messages_now = bot.getUpdates()
+        if len(messages_now) > qtd_messages_sended and messages_now[len(messages_now) -1].message.text.replace('/','').isdigit:
+            user_response = int(messages_now[len(messages_now) -1].message.text.replace('/',''))
+            break
+            
+        time.sleep(4)
+
+    if(user_response == 0):
+        logger('Sem resposta do usuário!')
+        return
+
+    logger(f"usuario escolheu o numero {user_response}")
+
+    pyautogui.moveTo(slider_positions[user_response-1][0], slider_positions[user_response-1][1], 0.5)
+    pyautogui.moveTo(slider_positions[user_response-1][0] + 4, slider_positions[user_response-1][1] + 3, 0.5)
+    # time.sleep(0.5)
+    pyautogui.mouseUp()
+
+    time.sleep(2)
+    if(len(positions(robot)) == 0):
+        telegram_bot_sendtext('Resolvido')
+    else:
+        telegram_bot_sendtext('Falhou')
+
+    #end da linha para testes
+
+    # i=0
+    # while True:
+    #     i = i + 1
+    #     last = current
+    #     last_popup_pos = popup_pos
+    #     current = printSreen()
+    #     popup_pos = positions(robot,img=current)
+	# 
+    #     if len(popup_pos) == 0:
+    #         logger('solved!')
+    #         saveCaptchaSolution(last, last_popup_pos[0])
+    #         break
 
 
 #    #TODO adicionar a funçao de checar se um botao esta visive
@@ -532,6 +634,7 @@ def goSaldo():
     i = 10
     coins_pos = positions(images['coin-icon'], threshold=ct['default'])
     while(len(coins_pos) == 0 ^ i > 0):
+        i = i - 1
         coins_pos = positions(images['coin-icon'], threshold=ct['default'])
         time.sleep(5)
     
