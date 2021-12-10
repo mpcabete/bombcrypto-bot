@@ -31,13 +31,25 @@ TELEGRAM_CHAT_ID  = 'CHAT_ID'
 
 bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
 
-def telegram_bot_sendtext(bot_message):
+def telegram_bot_sendtext(bot_message, num_try = 0):
     global bot
-    return bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=bot_message)
+    try:
+        return bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=bot_message)
+    except:
+        if num_try == 1:
+            bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
+            return telegram_bot_sendtext(bot_message, 1)
+        return 0
 
-def telegram_bot_sendphoto(photo_path):
+def telegram_bot_sendphoto(photo_path, num_try = 0):
     global bot
-    return bot.send_photo(chat_id=TELEGRAM_CHAT_ID, photo=open(photo_path, 'rb'))
+    try:
+        return bot.send_photo(chat_id=TELEGRAM_CHAT_ID, photo=open(photo_path, 'rb'))
+    except:
+        if num_try == 1:
+            bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
+            return telegram_bot_sendphoto(photo_path, 1)
+        return 0
 
 
 cat = """
