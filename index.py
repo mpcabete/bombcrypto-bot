@@ -39,6 +39,7 @@ def telegram_bot_sendphoto(photo_path):
     global bot
     return bot.send_photo(chat_id=TELEGRAM_CHAT_ID, photo=open(photo_path, 'rb'))
 
+
 cat = """
                                                 _
                                                 \`*-.
@@ -224,7 +225,7 @@ def getPiecesPosition(t = 150):
     x = rx + x_offset
 
     img = printSreen()
-    #TODO tirar um poco de cima
+    #TODO tirar um pouco de cima
 
     cropped = img[ y : y + h , x: x + w]
     blurred = cv2.GaussianBlur(cropped, (3, 3), 0)
@@ -343,7 +344,7 @@ def alertCaptcha():
         # time.sleep(0.5)
         #encontra a posição do captcha inteiro
         captcha_scshot = pyautogui.screenshot(region=(popup_pos[0][0] - 120, popup_pos[0][1] + 80, popup_pos[0][2]*1.9, popup_pos[0][3]*8.3))
-        img_captcha_dir = r'C:\bomb\captcha1.png'
+        img_captcha_dir = os.path.dirname(os.path.realpath(__file__)) + r'\targets\captcha1.png'
         captcha_scshot.save(img_captcha_dir)
 
         #envia a foto do captcha
@@ -640,7 +641,7 @@ def goSaldo():
     n = n + 100
 
     myScreen = pyautogui.screenshot(region=(k, l, m, n))
-    img_dir = r'C:\bomb\saldo1.png'
+    img_dir = os.path.dirname(os.path.realpath(__file__)) + r'\targets\saldo1.png'
     myScreen.save(img_dir)
     saldoApurado = ocr.image_to_string(Image.open(img_dir))
 
@@ -853,6 +854,7 @@ def main():
 
         # 0 sem tela definida
         if screen == 0:
+            logger("Não reconheceu nenhuma tela!")
             time.sleep(10)
             continue
         elif screen == 1: # 1 tela de login
