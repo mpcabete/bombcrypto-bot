@@ -29,8 +29,8 @@ requests==2.26.0
 scipy==1.7.3
 seaborn==0.11.2
 six==1.16.0
-torch==1.10.0
-torchvision==0.11.1
+torch>=1.10.0
+torchvision>=0.11.1
 tqdm==4.62.3
 typing_extensions==4.0.1
 urllib3==1.26.7
