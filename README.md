@@ -1,5 +1,10 @@
 # Novo captcha:
-### Ainda nao esta rasolvido, eu atualizei o bot pra emitir um som quando detectar o captcha
+## Quase pronto, deve sair esse fim de samana ainda!
+### Não to conseguindo acompanhar mto os issues pq to focando no codigo, por enquanto nao precisa mais mandar as imagens não, obrigado!
+
+# New captcha:
+## Still working on it, it will work!
+### As I am still focused on the code I am not following the issues closely.  No need for more screenshots for now, thanks!
 
 mpcabete@protonmail.com
 
