@@ -672,7 +672,13 @@ def goSaldo():
     myScreen = pyautogui.screenshot(region=(k, l, m, n))
     img_dir = os.path.dirname(os.path.realpath(__file__)) + r'\targets\saldo1.png'
     myScreen.save(img_dir)
-    saldoApurado = ocr.image_to_string(Image.open(img_dir))
+    saldoApurado = None
+    # pra quem ta com dificuldades em instalar o tesseract
+    try:
+        saldoApurado = ocr.image_to_string(Image.open(img_dir))
+    except:
+	logger("instalação do tesseract não reconhecida, abortando envio do saldo")
+	return
 
     saldoApurado = re.sub("[^\d\.]", "", saldoApurado)
     if saldoApurado == '':
