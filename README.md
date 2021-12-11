@@ -1,8 +1,18 @@
 # Novo captcha implementado!!!
 ## Não se esqueça de mandar aquele apoio, vamos continuar na luta!
 
+Baixe novamente todos os arquivos.
+Rode novamente o comando novamente.
+  `pip install -r requirements.txt`
+Lucre!
+
 # New captcha implemented!!
-## Do not forget to send me some love 🧡
+## Don't forget to send me some love 🧡
+
+Download tha files again.
+Run again the command:
+  `pip install -r requirements.txt`
+Profit!
 
 ### Smart Chain Wallet:
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
