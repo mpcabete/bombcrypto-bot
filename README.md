@@ -13,6 +13,7 @@ Lucre!
 Download tha files again.
 Run again the command:
   `pip install -r requirements.txt`
+  
 Profit!
 
 ### Smart Chain Wallet:
