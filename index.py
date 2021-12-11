@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
-import simpleaudio
 
+from captcha.solveCaptcha import solveCaptcha
 
 from os import listdir
 from src.logger import logger, loggerMapClicked
@@ -46,9 +46,6 @@ cat = """
 
 
 print(cat)
-
-
-bell_sound = simpleaudio.WaveObject.from_wave_file("bell.wav")
 
 
 if __name__ == '__main__':
@@ -131,47 +128,13 @@ if ch['enable']:
 # new_map_btn_img = cv2.imread('targets/new-map.png')
 # green_bar = cv2.imread('targets/green-bar.png')
 full_stamina = cv2.imread('targets/full-stamina.png')
-puzzle_img = cv2.imread('targets/puzzle.png')
-piece = cv2.imread('targets/piece.png')
+
 robot = cv2.imread('targets/robot.png')
+# puzzle_img = cv2.imread('targets/puzzle.png')
+# piece = cv2.imread('targets/piece.png')
 slider = cv2.imread('targets/slider.png')
 
-def findPuzzlePieces(result, piece_img, threshold=0.5):
-    piece_w = piece_img.shape[1]
-    piece_h = piece_img.shape[0]
-    yloc, xloc = np.where(result >= threshold)
 
-    r= []
-    for (piece_x, piece_y) in zip(xloc, yloc):
-        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
-        r.append([int(piece_x), int(piece_y), int(piece_w), int(piece_h)])
-
-    r, weights = cv2.groupRectangles(r, 1, 0.2)
-
-    if len(r) < 2:
-        return findPuzzlePieces(result, piece_img,threshold-0.01)
-
-    if len(r) == 2:
-        return r
-
-    if len(r) > 2:
-        logger('💀 Overshoot by %d' % len(r))
-
-        return r
-
-def getRightPiece(puzzle_pieces):
-    xs = [row[0] for row in puzzle_pieces]
-    index_of_right_rectangle = xs.index(max(xs))
-
-    right_piece = puzzle_pieces[index_of_right_rectangle]
-    return right_piece
-
-def getLeftPiece(puzzle_pieces):
-    xs = [row[0] for row in puzzle_pieces]
-    index_of_left_rectangle = xs.index(min(xs))
-
-    left_piece = puzzle_pieces[index_of_left_rectangle]
-    return left_piece
 
 def show(rectangles, img = None):
 
@@ -187,147 +150,9 @@ def show(rectangles, img = None):
     cv2.imshow('img',img)
     cv2.waitKey(0)
 
-def getPiecesPosition(t = 150):
-    popup_pos = positions(robot)
-    if len(popup_pos) == 0:
-        return None
-    rx, ry, _, _ = popup_pos[0]
-
-    w = 380
-    h = 200
-    x_offset = -40
-    y_offset = 65
-
-    y = ry + y_offset
-    x = rx + x_offset
-
-    img = printSreen()
-    #TODO tirar um poco de cima
-
-    cropped = img[ y : y + h , x: x + w]
-    blurred = cv2.GaussianBlur(cropped, (3, 3), 0)
-    edges = cv2.Canny(blurred, threshold1=t/2, threshold2=t,L2gradient=True)
-    # img = cv2.Laplacian(img,cv2.CV_64F)
-
-    # gray_piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
-    piece_img = cv2.cvtColor(piece, cv2.COLOR_BGR2GRAY)
-    # piece_img = cv2.Canny(gray_piece_img, threshold1=t/2, threshold2=t,L2gradient=True)
-    # result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCOEFF_NORMED)
-    result = cv2.matchTemplate(edges,piece_img,cv2.TM_CCORR_NORMED)
-
-    puzzle_pieces = findPuzzlePieces(result, piece_img)
-
-    if puzzle_pieces is None:
-        return None
-
-    # show(puzzle_pieces, edges)
-    # exit()
-
-    absolute_puzzle_pieces = []
-    for i, puzzle_piece in enumerate(puzzle_pieces):
-        px, py, pw, ph = puzzle_piece
-        absolute_puzzle_pieces.append( [ x + px, y + py, pw, ph])
-
-    absolute_puzzle_pieces = np.array(absolute_puzzle_pieces)
-    # show(absolute_puzzle_pieces)
-    return absolute_puzzle_pieces
-
-def getSliderPosition():
-    slider_pos = positions(slider)
-    if len (slider_pos) == 0:
-        return None
-    x, y, w, h = slider_pos[0]
-    position = [x+w/2,y+h/2]
-    return position
-
-def saveCaptchaSolution(img, pos):
-    path = "./captchas-saved/{}.png".format(str(time.time()))
-    rx, ry, _, _ = pos
-
-    w = 580
-    h = 400
-    x_offset = -140
-    y_offset = 65
-
-    y = ry + y_offset
-    x = rx + x_offset
-    cropped = img[ y : y + h , x: x + w]
-
-    # cv2.imshow('img',cropped)
-    # cv2.waitKey(5000)
-    # exit()
-
-    cv2.imwrite(path, cropped)
-    #TODO tirar um poco de cima
 
 
-def alertCaptcha():
-    current = printSreen()
-    popup_pos = positions(robot,img=current)
 
-    if len(popup_pos) == 0:
-        return "not-found"
-
-    logger('captcha!')
-    bell_sound.play()
-
-    i=0
-    while True:
-        i = i + 1
-        last = current
-        last_popup_pos = popup_pos
-        current = printSreen()
-        popup_pos = positions(robot,img=current)
-
-        if len(popup_pos) == 0:
-            logger('solved!')
-            saveCaptchaSolution(last, last_popup_pos[0])
-            break
-
-
-#    #TODO adicionar a funçao de checar se um botao esta visive
-#    # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
-#    logger('🧩 Checking for captcha')
-#    pieces_start_pos = getPiecesPosition()
-#    if pieces_start_pos is None :
-#        return "not-found"
-#    slider_start_pos = getSliderPosition()
-#    if slider_start_pos is None:
-#        logger('🧩 slider_start_pos')
-#        return "fail"
-#
-#    x,y = slider_start_pos
-#    pyautogui.moveTo(x,y,1)
-#    pyautogui.mouseDown()
-#    pyautogui.moveTo(x+300 ,y,0.5)
-#    pieces_end_pos = getPiecesPosition()
-#    if pieces_end_pos is None:
-#        logger('🧩 pieces_end_pos')
-#        return "fail"
-#
-#    piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
-#    piece_end, _, _, _ = getRightPiece(pieces_end_pos)
-#    piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
-#    slider_start, _, = slider_start_pos
-#    slider_end_pos = getSliderPosition()
-#    if slider_end_pos is None:
-#        logger('🧩 slider_end_pos')
-#        return "fail"
-#
-#    slider_end, _ = slider_end_pos
-#
-#    piece_domain = piece_end - piece_start
-#    middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
-#
-#    slider_domain = slider_end - slider_start
-#    slider_awnser = slider_start + (middle_piece_in_percent * slider_domain)
-#    # arr = np.array([[int(piece_start),int(y-20),int(10),int(10)],[int(piece_middle),int(y-20),int(10),int(10)],[int(piece_end-20),int(y),int(10),int(10)],[int(slider_awnser),int(y),int(20),int(20)]])
-#
-#    pyautogui.moveTo(slider_awnser,y,0.5)
-#    pyautogui.mouseUp()
-#
-#    return True
-#    # show(arr)
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
@@ -491,12 +316,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    alertCaptcha()
+    solveCaptcha()
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
     time.sleep(1)
-    alertCaptcha()
+    solveCaptcha()
 
 def goToGame():
     # in case of server overload popup
@@ -526,7 +351,7 @@ def login():
         return
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
-        alertCaptcha()
+        solveCaptcha()
         login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
@@ -658,7 +483,7 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
-            alertCaptcha()
+            solveCaptcha()
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -677,7 +502,7 @@ def main():
 
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            alertCaptcha()
+            solveCaptcha()
             last["refresh_heroes"] = now
             refreshHeroesPositions()
 
@@ -688,15 +513,9 @@ def main():
 
         time.sleep(1)
 
-def solveNewCaptcha(t=150):
-    img = images['nc']
-    edges = cv2.Canny(img, threshold1=t/2, threshold2=t,L2gradient=True)
-    cv2.imshow('img',edges)
-    cv2.waitKey(0)
-solveNewCaptcha()
 
 
-# main()
+main()
 # sendHeroesHome()
 
 

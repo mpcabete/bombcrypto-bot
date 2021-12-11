@@ -8,9 +8,9 @@ from os import listdir
 import torch
 from random import randint
 
-example_captcha_img = cv2.imread('images/example.png')
+# example_captcha_img = cv2.imread('images/example.png')
 
-model = torch.hub.load('.', 'custom', "bomb_captcha.pt", source='local')
+model = torch.hub.load('./captcha', 'custom', "captcha/bomb_captcha.pt", source='local')
 
 def getBackgroundText(img, percent_required):
     boxes = []
@@ -40,8 +40,9 @@ def remove_suffix(input_string, suffix):
         return input_string[:-len(suffix)]
     return input_string
 
+#TODO tirar duplicata
 def load_images():
-    dir_name = './images/'
+    dir_name = './captcha/images/'
     file_names = listdir(dir_name)
     targets = {}
     for file in file_names:
@@ -51,6 +52,7 @@ def load_images():
     return targets
 d = load_images()
 
+#TODO tirar duplicata
 def positions(target, threshold=0.85,img = None):
     if img is None:
         img = printSreen()
@@ -186,7 +188,8 @@ def solveCaptcha():
             pyautogui.mouseUp()
             return
 
-main()
+if __name__ == '__main__':
+    solveCaptcha()
 #TODO colocar positions em um arquivo separado e importar nos outros.
 # tirar o load digits daqui e passar como argumento na funçao
 
