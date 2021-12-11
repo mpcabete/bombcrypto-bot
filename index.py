@@ -13,12 +13,14 @@ import mss
 import pyautogui
 import time
 import sys
+import imutils
+from CaptchaSolver import captcha_solver
 
 import yaml
 
 import telegram
 import re
-import winsound
+# import winsound
 import requests
 import telepot
 import os
@@ -26,6 +28,7 @@ import os
 import pytesseract as ocr
 from PIL import Image
 from pyclick import HumanClicker
+
 
 TELEGRAM_BOT_TOKEN = 'TOKEN'
 TELEGRAM_CHAT_ID  = 'CHAT_ID'
@@ -305,6 +308,16 @@ def saveCaptchaSolution(img, pos):
     cv2.imwrite(path, cropped)
     #TODO tirar um poco de cima
 
+def trataImgCaptcha(img_captcha_dir):
+
+    img = cv2.imread(img_captcha_dir)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = cv2.medianBlur(img,5)
+    # letras brancas
+    imagem_tratada = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+    cv2.imwrite(img_captcha_dir, imagem_tratada)
+    time.sleep(1)
+    return Image.open(img_captcha_dir)
 
 def alertCaptcha():
     current = printSreen()
@@ -315,17 +328,23 @@ def alertCaptcha():
         return "not-found"
 
     test = telegram_bot_sendtext("⚠️ ATENÇÃO! \n\n 🧩 RESOLVER NOVO CAPTCHA!")
-    logger('Captcha!')
-    # bell_sound.play()
-    winsound.PlaySound ('bell.wav', winsound .SND_ASYNC);
-
-    #linha para testes
+    logger('Captcha detectado!')
+    
+    # winsound.PlaySound ('bell.wav', winsound .SND_ASYNC);
 
     slider_start_pos = getSliderPosition()
     if slider_start_pos is None:
         logger('Posição do slider do captcha não encontrado')
         return
 
+    #tentativa de ler o ocr
+    captcha_scshot = pyautogui.screenshot(region=(popup_pos[0][0] - 50, popup_pos[0][1] + 140, popup_pos[0][2] - 50, popup_pos[0][3]*2))
+    img_captcha_dir = os.path.dirname(os.path.realpath(__file__)) + r'\targets\captcha1.png'
+    captcha_scshot.save(img_captcha_dir)
+    img = trataImgCaptcha(img_captcha_dir)
+
+    captchaValue = ocr.image_to_string(img, lang='digits1')
+    captchaValue = re.sub("[^\d\.]", "", captchaValue)
     
     slider_mov = 35
     slider_size = positions(images['slider_size_1'], threshold=0.9)
@@ -345,6 +364,9 @@ def alertCaptcha():
 
     slider_positions = []
     x,y = slider_start_pos
+    cp = captcha_solver.CaptchaSolver()
+    cp.initModel('bomb_captcha.pt', 'CaptchaSolver')
+    cord_to_move = (0,0)
     for i in range(5):
         if i == 0:
             # pyautogui.moveTo(x, y, 1)
@@ -370,101 +392,56 @@ def alertCaptcha():
         img_captcha_dir = os.path.dirname(os.path.realpath(__file__)) + r'\targets\captcha1.png'
         captcha_scshot.save(img_captcha_dir)
 
+        
+        img = cv2.imread(img_captcha_dir)
+        time.sleep(0.5)
+        resultado = cp.SolveCaptcha(img, 'bomb_captcha.pt', 0.7, dir='CaptchaSolver')
+
+        if(resultado['Captcha'] == captchaValue):
+            pyautogui.moveTo(slider_positions[-1][0] + 4, slider_positions[-1][1] + 3, 0.5)
+            pyautogui.mouseUp()
+            break
+
+
+        logger(f'Valor do captcha {captchaValue}, valor da imagem {resultado["Captcha"]} ')
+
+
         #envia a foto do captcha
-        telegram_bot_sendtext(f'Imagem /{i + 1}')
-        telegram_bot_sendphoto(img_captcha_dir)
+        # telegram_bot_sendtext(f'Imagem /{i + 1}')
+        # telegram_bot_sendphoto(img_captcha_dir)
 
-    logger('Esperando pela resposta do usuário...')
-    qtd_messages_sended = len(bot.getUpdates())
-    user_response = 0
-    # await user to response
-    try:
-        while True:
-            messages_now = bot.getUpdates()
-            if len(messages_now) > qtd_messages_sended and messages_now[len(messages_now) -1].message.text.replace('/','').isdigit:
-                user_response = int(messages_now[len(messages_now) -1].message.text.replace('/',''))
-                break
-                
-            time.sleep(4)
-    except:
-        logger('Sem resposta do usuário!')
+    #logger('Esperando pela resposta do usuário...')
+    #    qtd_messages_sended = len(bot.getUpdates())
+    #    user_response = 0
+    #    # await user to response
+    #    try:
+    #        while True:
+    #            messages_now = bot.getUpdates()
+    #            if len(messages_now) > qtd_messages_sended and messages_now[len(messages_now) -1].message.text.replace('/','').isdigit:
+    #                user_response = int(messages_now[len(messages_now) -1].message.text.replace('/',''))
+    #                break
+    #                
+    #            time.sleep(4)
+    #    except:
+    #        logger('Sem resposta do usuário!')
+    #
+    #    if(user_response == 0):
+    #        logger('Sem resposta do usuário!')
+    #        return
+    #
+    #    logger(f"usuario escolheu o numero {user_response}")
+    #
+    #    pyautogui.moveTo(slider_positions[user_response-1][0], slider_positions[user_response-1][1], 0.5)
+    #    pyautogui.moveTo(slider_positions[user_response-1][0] + 4, slider_positions[user_response-1][1] + 3, 0.5)
+    #    # time.sleep(0.5)
+    #    pyautogui.mouseUp()
 
-    if(user_response == 0):
-        logger('Sem resposta do usuário!')
-        return
-
-    logger(f"usuario escolheu o numero {user_response}")
-
-    pyautogui.moveTo(slider_positions[user_response-1][0], slider_positions[user_response-1][1], 0.5)
-    pyautogui.moveTo(slider_positions[user_response-1][0] + 4, slider_positions[user_response-1][1] + 3, 0.5)
-    # time.sleep(0.5)
-    pyautogui.mouseUp()
-
-    time.sleep(2)
+    #time.sleep(2)
     if(len(positions(robot)) == 0):
         telegram_bot_sendtext('Resolvido')
     else:
         telegram_bot_sendtext('Falhou')
 
-    #end da linha para testes
-
-    # i=0
-    # while True:
-    #     i = i + 1
-    #     last = current
-    #     last_popup_pos = popup_pos
-    #     current = printSreen()
-    #     popup_pos = positions(robot,img=current)
-	# 
-    #     if len(popup_pos) == 0:
-    #         logger('solved!')
-    #         saveCaptchaSolution(last, last_popup_pos[0])
-    #         break
-
-
-#    #TODO adicionar a funçao de checar se um botao esta visive
-#    # pro bot passar um tempinho fazendo um polling dps q a funçao eh invocada.
-#    logger('🧩 Checking for captcha')
-#    pieces_start_pos = getPiecesPosition()
-#    if pieces_start_pos is None :
-#        return "not-found"
-#    slider_start_pos = getSliderPosition()
-#    if slider_start_pos is None:
-#        logger('🧩 slider_start_pos')
-#        return "fail"
-#
-#    x,y = slider_start_pos
-#    pyautogui.moveTo(x,y,1)
-#    pyautogui.mouseDown()
-#    pyautogui.moveTo(x+300 ,y,0.5)
-#    pieces_end_pos = getPiecesPosition()
-#    if pieces_end_pos is None:
-#        logger('🧩 pieces_end_pos')
-#        return "fail"
-#
-#    piece_start, _, _, _ = getLeftPiece(pieces_start_pos)
-#    piece_end, _, _, _ = getRightPiece(pieces_end_pos)
-#    piece_middle, _, _, _  = getRightPiece(pieces_start_pos)
-#    slider_start, _, = slider_start_pos
-#    slider_end_pos = getSliderPosition()
-#    if slider_end_pos is None:
-#        logger('🧩 slider_end_pos')
-#        return "fail"
-#
-#    slider_end, _ = slider_end_pos
-#
-#    piece_domain = piece_end - piece_start
-#    middle_piece_in_percent = (piece_middle - piece_start)/piece_domain
-#
-#    slider_domain = slider_end - slider_start
-#    slider_awnser = slider_start + (middle_piece_in_percent * slider_domain)
-#    # arr = np.array([[int(piece_start),int(y-20),int(10),int(10)],[int(piece_middle),int(y-20),int(10),int(10)],[int(piece_end-20),int(y),int(10),int(10)],[int(slider_awnser),int(y),int(20),int(20)]])
-#
-#    pyautogui.moveTo(slider_awnser,y,0.5)
-#    pyautogui.mouseUp()
-#
-#    return True
-#    # show(arr)
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
@@ -672,13 +649,7 @@ def goSaldo():
     myScreen = pyautogui.screenshot(region=(k, l, m, n))
     img_dir = os.path.dirname(os.path.realpath(__file__)) + r'\targets\saldo1.png'
     myScreen.save(img_dir)
-    saldoApurado = None
-    # pra quem ta com dificuldades em instalar o tesseract
-    try:
-        saldoApurado = ocr.image_to_string(Image.open(img_dir))
-    except:
-	logger("instalação do tesseract não reconhecida, abortando envio do saldo")
-	return
+    saldoApurado = ocr.image_to_string(Image.open(img_dir))
 
     saldoApurado = re.sub("[^\d\.]", "", saldoApurado)
     if saldoApurado == '':
@@ -733,23 +704,6 @@ def login():
             login_attempts = 0
         return
         # click ok button
-
-    elif not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
-        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
-            pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
-            # print('sleep in case there is no metamask text removed')
-            # time.sleep(20)
-
-    elif clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
-        login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        # time.sleep(25)
-        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
-            # print('sucessfully login, treasure hunt btn clicked')
-            login_attempts = 0
-        # time.sleep(15)
 
     if clickBtn(images['ok'], name='okBtn', timeout=5):
         pass
