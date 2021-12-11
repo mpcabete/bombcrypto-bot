@@ -2,8 +2,9 @@
 ## Não se esqueça de mandar aquele apoio, vamos continuar na luta!
 
 Baixe novamente todos os arquivos.
-Rode novamente o comando novamente.
+Rode novamente o comando.
   `pip install -r requirements.txt`
+  
 Lucre!
 
 # New captcha implemented!!
@@ -19,7 +20,7 @@ Profit!
 
 
 
-Rode novamente o comando novamente.
+Rode novamente o comando.
   `pip install -r requirements.txt`
   
 # Sobre:
