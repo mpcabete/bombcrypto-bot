@@ -1,19 +1,16 @@
-# Novo captcha:
-## Quase pronto, deve sair esse fim de samana ainda!
-### Não to conseguindo acompanhar mto os issues pq to focando no codigo, por enquanto nao precisa mais mandar as imagens não, obrigado!
+# Novo captcha implementado!!!
+## Não se esqueça de mandar aquele apoio, vamos continuar na luta!
 
-# New captcha:
-## Still working on it, it will work!
-### As I am still focused on the code I am not following the issues closely.  No need for more screenshots for now, thanks!
+# New captcha implemented!!
+## Do not forget to send me some love 🧡
 
-mpcabete@protonmail.com
+### Smart Chain Wallet:
+#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 
-Rode o comando 
-  `pip install -r requirements`
-novamente
 
-### Precisei usar esse comando pra conseguir instalar a biblioteca simplesound com o pip no linux:
-  `sudo apt-get install -y python3-dev libasound2-dev`
+
+Rode novamente o comando novamente.
+  `pip install -r requirements.txt`
   
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
