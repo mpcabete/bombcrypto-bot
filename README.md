@@ -1,5 +1,5 @@
 # Novo captcha:
-## Ainda estou trabalhando nele, vai dar certo!
+## Quase pronto, deve sair esse fim de samana ainda!
 ### Não to conseguindo acompanhar mto os issues pq to focando no codigo, por enquanto nao precisa mais mandar as imagens não, obrigado!
 
 # New captcha:
