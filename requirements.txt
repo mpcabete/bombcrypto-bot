@@ -21,7 +21,6 @@ urllib3==1.26.7
 
 # base ----------------------------------------
 Cython
-opencv-python>=4.1.2
 Pillow
 scipy>=1.4.1
 tensorboard>=2.2
