@@ -25,6 +25,7 @@ import os
 
 import pytesseract as ocr
 from PIL import Image
+from pyclick import HumanClicker
 
 TELEGRAM_BOT_TOKEN = 'TOKEN'
 TELEGRAM_CHAT_ID  = 'CHAT_ID'
@@ -51,6 +52,15 @@ def telegram_bot_sendphoto(photo_path, num_try = 0):
             return telegram_bot_sendphoto(photo_path, 1)
         return 0
 
+# initialize HumanClicker object
+hc = HumanClicker()
+
+# Any duration less than this is rounded to 0.0 to instantly move the mouse.
+pyautogui.MINIMUM_DURATION = 0.1
+# Minimal number of seconds to sleep between mouse moves.
+pyautogui.MINIMUM_SLEEP = 0.1
+# The number of seconds to pause after EVERY public function call.
+pyautogui.PAUSE = 2
 
 cat = """
                                                 _
@@ -120,8 +130,8 @@ def addRandomness(n, randomn_factor_size=None):
     return int(randomized_n)
 
 def moveToWithRandomness(x,y,t):
-    pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10),t+random()/2)
-
+    # pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10),t+random()/2)
+    hc.move((int(x), int(y)), t)
 
 def remove_suffix(input_string, suffix):
     if suffix and input_string.endswith(suffix):
@@ -237,7 +247,7 @@ def getPiecesPosition(t = 150):
     x = rx + x_offset
 
     img = printSreen()
-    #TODO tirar um pouco de cima
+    #TODO tirar um poco de cima
 
     cropped = img[ y : y + h , x: x + w]
     blurred = cv2.GaussianBlur(cropped, (3, 3), 0)
@@ -321,7 +331,7 @@ def alertCaptcha():
     slider_size = positions(images['slider_size_1'], threshold=0.9)
 
     #obten o quanto de pixels o ponteiro tem que arrastar de acordo com o tamanho do slider que aparece
-    numero_sliders = 7 # o número de repetições é a quantidade de imagens do slider-size que tenho + 1
+    numero_sliders = 8 # o número de repetições é a quantidade de imagens do slider-size que tenho + 1
     for i in range(1, numero_sliders): 
         slider_size = positions(images[f'slider_size_{i}'], threshold=0.9)
         if(len(slider_size) > 0):
@@ -337,7 +347,8 @@ def alertCaptcha():
     x,y = slider_start_pos
     for i in range(5):
         if i == 0:
-            pyautogui.moveTo(x, y, 1)
+            # pyautogui.moveTo(x, y, 1)
+            moveToWithRandomness(x, y, 1)
             pyautogui.mouseDown()
 
             #faz o primeiro movimento e volta para abrir o primeiro item
@@ -353,7 +364,7 @@ def alertCaptcha():
             slider_positions.append((x + slider_mov, y))
             pyautogui.moveTo(x + slider_mov, y, 0.15)
 
-        # time.sleep(0.5)
+        time.sleep(0.5)
         #encontra a posição do captcha inteiro
         captcha_scshot = pyautogui.screenshot(region=(popup_pos[0][0] - 120, popup_pos[0][1] + 80, popup_pos[0][2]*1.9, popup_pos[0][3]*8.3))
         img_captcha_dir = os.path.dirname(os.path.realpath(__file__)) + r'\targets\captcha1.png'
@@ -363,18 +374,20 @@ def alertCaptcha():
         telegram_bot_sendtext(f'Imagem /{i + 1}')
         telegram_bot_sendphoto(img_captcha_dir)
 
-    telegram_bot_sendtext('Atenção responda  apenas com o número da posição desejada \n\r (/1)\n\r (/2)\n\r (/3)\n\r (/4)')
-
+    logger('Esperando pela resposta do usuário...')
     qtd_messages_sended = len(bot.getUpdates())
     user_response = 0
     # await user to response
-    while True:
-        messages_now = bot.getUpdates()
-        if len(messages_now) > qtd_messages_sended and messages_now[len(messages_now) -1].message.text.replace('/','').isdigit:
-            user_response = int(messages_now[len(messages_now) -1].message.text.replace('/',''))
-            break
-            
-        time.sleep(4)
+    try:
+        while True:
+            messages_now = bot.getUpdates()
+            if len(messages_now) > qtd_messages_sended and messages_now[len(messages_now) -1].message.text.replace('/','').isdigit:
+                user_response = int(messages_now[len(messages_now) -1].message.text.replace('/',''))
+                break
+                
+            time.sleep(4)
+    except:
+        logger('Sem resposta do usuário!')
 
     if(user_response == 0):
         logger('Sem resposta do usuário!')
@@ -482,7 +495,7 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
 
 def printSreen():
     with mss.mss() as sct:
-        monitor = sct.monitors[0]
+        monitor = sct.monitors[2]
         sct_img = np.array(sct.grab(monitor))
         # The screen part to capture
         # monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
@@ -637,12 +650,16 @@ def goSaldo():
 
     i = 10
     coins_pos = positions(images['coin-icon'], threshold=ct['default'])
-    while(len(coins_pos) == 0 ^ i > 0):
+    while(len(coins_pos) == 0):
+        if i <= 0:
+            break
         i = i - 1
         coins_pos = positions(images['coin-icon'], threshold=ct['default'])
         time.sleep(5)
     
     if(len(coins_pos) == 0):
+        logger("Saldo não encontrado.")
+        clickBtn(images['x'])
         return
 
     # a partir da imagem do bcoin calcula a area do quadrado para print
@@ -669,7 +686,8 @@ def goSaldo():
         #print(enviar)
         saldo_atual = saldoApurado
     else:
-        print("saldo igual. Nada enviado no Telegram")
+        print("Saldo zero")
+        telegram_bot_sendtext("ATENÇÂO: Saldo reconhecido 0, pode estar havendo instabilidade no servidor.")
 
     clickBtn(images['x'])
 
@@ -710,18 +728,14 @@ def login():
         return
         # click ok button
 
-    if not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
+    elif not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
         if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
             pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
             # time.sleep(20)
-    else:
-        pass
-        # print('sleep in case there is no metamask text removed')
-        # time.sleep(20)
 
-    if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
+    elif clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
