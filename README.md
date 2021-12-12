@@ -1,4 +1,5 @@
 # Novo captcha implementado!!!
+Feito com a ajuda do gradissíssimo [Nucito](https://github.com/Nucito/CaptchaSolver)!
 ## Não se esqueça de mandar aquele apoio, vamos continuar na luta!
 
 Baixe novamente todos os arquivos.
