@@ -473,8 +473,7 @@ def main():
 
     windows = []
 
-    win = [w for w in pygetwindow.getWindowsWithTitle('bombcrypto')]
-    for w in win:
+    for w in pygetwindow.getWindowsWithTitle('bombcrypto'):
         windows.append({
             "window": w,
             "login" : 0,
