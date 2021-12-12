@@ -171,6 +171,7 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
                     # print('timed out')
                 return False
             # print('button not found yet')
+            return False
             continue
 
         x,y,w,h = matches[0]
@@ -316,12 +317,15 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCaptcha()
+        solveCaptcha()
     #TODO tirar o sleep quando colocar o pulling
-    time.sleep(1)
-    clickBtn(images['hero-icon'])
-    time.sleep(1)
-    solveCaptcha()
+        time.sleep(1)
+        clickBtn(images['hero-icon'])
+        time.sleep(1)
+        solveCaptcha()
+        return True
+    else:
+        return False
 
 def goToGame():
     # in case of server overload popup
@@ -333,68 +337,75 @@ def goToGame():
 
 def refreshHeroesPositions():
 
-    logger('🔃 Refreshing Heroes Positions')
-    clickBtn(images['go-back-arrow'])
-    clickBtn(images['treasure-hunt-icon'])
+    if clickBtn(images['go-back-arrow']):
+        logger('🔃 Refreshing Heroes Positions')
+        clickBtn(images['treasure-hunt-icon'])
 
-    # time.sleep(3)
-    clickBtn(images['treasure-hunt-icon'])
+        # time.sleep(3)
+        clickBtn(images['treasure-hunt-icon'])
+        return True
+    else:
+        return False
 
 def login():
     global login_attempts
-    logger('😿 Checking if game has disconnected')
+    
 
     if login_attempts > 3:
         logger('🔃 Too many login attempts, refreshing')
         login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
-        return
+        return False
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
+        logger('😿 Checking if game has disconnected')
         solveCaptcha()
         login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
-        # time.sleep(10)
+        time.sleep(10)
 
-    if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
-        # sometimes the sign popup appears imediately
-        login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
-            # print('sucessfully login, treasure hunt btn clicked')
-            login_attempts = 0
-        return
-        # click ok button
+        if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
+            # sometimes the sign popup appears imediately
+            login_attempts = login_attempts + 1
+            # print('{} login attempt'.format(login_attempts))
+            time.sleep(10)
+            if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
+                # print('sucessfully login, treasure hunt btn clicked')
+                login_attempts = 0
+                return True
+            # click ok button
 
-    if not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
-        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
-            pass
+   # if not clickBtn(select_metamask_no_hover_img, name='selectMetamaskBtn'):
+       # if clickBtn(select_wallet_hover_img, name='selectMetamaskHoverBtn', threshold = ct['select_wallet_buttons'] ):
+           # pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
             # time.sleep(20)
-    else:
-        pass
+   # else:
+       # pass
         # print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
-    if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
-        login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        # time.sleep(25)
-        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
-            # print('sucessfully login, treasure hunt btn clicked')
-            login_attempts = 0
-        # time.sleep(15)
+        if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
+            login_attempts = login_attempts + 1
+            # print('{} login attempt'.format(login_attempts))
+            # time.sleep(25)
+            time.sleep(10)
+            if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
+                # print('sucessfully login, treasure hunt btn clicked')
+                login_attempts = 0
+            # time.sleep(15)
 
-    if clickBtn(images['ok'], name='okBtn', timeout=5):
-        pass
-        # time.sleep(15)
-        # print('ok button clicked')
+        if clickBtn(images['ok'], name='okBtn', timeout=5):
+            pass
+            time.sleep(15)
+            print('ok button clicked')
 
 
+        return True
+    else:
+        return False
 
 def sendHeroesHome():
     if not ch['enable']:
@@ -429,14 +440,9 @@ def sendHeroesHome():
         else:
             print('hero already home, or home full(no dark home button)')
 
-
-
-
-
-def refreshHeroes():
+def refreshHeroesList():
     logger('🏢 Search for heroes to work')
 
-    goToHeroes()
 
     if c['select_heroes_mode'] == "full":
         logger('⚒️ Sending heroes with full stamina bar to work', 'green')
@@ -456,7 +462,6 @@ def refreshHeroes():
         else:
             buttonsClicked = clickButtons()
 
-        sendHeroesHome()
 
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
@@ -464,6 +469,14 @@ def refreshHeroes():
         time.sleep(2)
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
+
+def refreshHeroes():
+    if goToHeroes():
+        refreshHeroesList()
+
+        return True
+    else:
+        return False
 
 
 def main():
@@ -481,30 +494,44 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last["check_for_captcha"] = now
-            solveCaptcha()
-
-        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-            last["heroes"] = now
-            refreshHeroes()
-
-        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+       # if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+        if login(): 
             sys.stdout.flush()
             last["login"] = now
-            login()
+
+        if clickBtn(images['select-character-heroes']):
+            logger('Wait select heroes to work Manual.')    
+            time.sleep(30)
+            logger('Select heroes to work.')
+            refreshHeroesList()
+            clickBtn(images['select-bcoin']) 
+
+        if clickBtn(images['ok'], name='okBtn', timeout=5):
+            login_attempts = 0
+            pyautogui.hotkey('ctrl','f5')
+            # time.sleep(15)
+            # print('ok button clicked')
+
+        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 20):
+            last["check_for_captcha"] = now
+            solveCaptcha()
+            clickBtn(images['treasure-hunt-icon'])
+
+        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+            if refreshHeroes():
+                last["heroes"] = now
+                logger('Sending heroes to work.')
 
         if now - last["new_map"] > t['check_for_new_map_button']:
-            last["new_map"] = now
-
             if clickBtn(images['new-map']):
+                last["new_map"] = now
                 loggerMapClicked()
 
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            solveCaptcha()
-            last["refresh_heroes"] = now
-            refreshHeroesPositions()
+            if refreshHeroesPositions():
+                solveCaptcha()
+                last["refresh_heroes"] = now
 
         #clickBtn(teasureHunt)
         logger(None, progress_indicator=True)
