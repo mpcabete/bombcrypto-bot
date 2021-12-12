@@ -312,17 +312,24 @@ def clickFullBarButtons():
 
     return len(not_working_full_bars)
 
+def Captcha_Check():
+    if clickBtn(images['robot']):
+        solveCaptcha()
+        return True
+    else:
+        return False
+
+
 def goToHeroes():
     if clickBtn(images['go-back-arrow']):
         global login_attempts
         login_attempts = 0
-
-        solveCaptcha()
+        Captcha_Check()
     #TODO tirar o sleep quando colocar o pulling
         time.sleep(1)
         clickBtn(images['hero-icon'])
         time.sleep(1)
-        solveCaptcha()
+        Captcha_Check()
         return True
     else:
         return False
@@ -359,7 +366,7 @@ def login():
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         logger('😿 Checking if game has disconnected')
-        solveCaptcha()
+        Captcha_Check()
         login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
@@ -514,7 +521,7 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 20):
             last["check_for_captcha"] = now
-            solveCaptcha()
+            Captcha_Check()
             clickBtn(images['treasure-hunt-icon'])
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
@@ -530,7 +537,7 @@ def main():
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
             if refreshHeroesPositions():
-                solveCaptcha()
+                Captcha_Check()
                 last["refresh_heroes"] = now
 
         #clickBtn(teasureHunt)
