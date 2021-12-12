@@ -12,4 +12,4 @@ Fork do projeto https://github.com/mpcabete/bombcrypto-bot com minhas modificaç
 
 ** É bom gostarem de ler. tem um arquivo LEIAME dentro da pasta train_model com o que precisa fazer.**
 
-Para rodar é necessario instalar o tesseract e apontar o local de instalação, variavel acima no main(). Também pode simplesmentar apagar as referencias do tesseract, caso esteja tendo problemas, e enviar apenas uma print das coins. o tesseract está sendo usado apenas pra ler a imagem e descobrir o saldo de bcoins.
+Para rodar é necessario instalar o tesseract e apontar o local de instalação, variavel acima no main().
