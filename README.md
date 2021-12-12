@@ -3,7 +3,7 @@ Fork do projeto https://github.com/mpcabete/bombcrypto-bot com minhas modificaç
 - Alterado forma como o bot executa as ações para detectar primeiro a tela para só depois realizar as operações (evitando processamento desnecessario)
 - Corrigido bug de metamask abrir atrás do navagador
 - Adicionado interação com telegran (obg @kerferber)
-- Adicionado feature para enviar as opções do captcha para o telegram e receber a resposta para proseguir com o processamento do bot (ideia do @testaxb3)
+- ~~Adicionado feature para enviar as opções do captcha para o telegram e receber a resposta para proseguir com o processamento do bot (ideia do @testaxb3)~~
 - Adicionado função para fazer curvas aleatório no mouse para tentar não parecer um robô usando.
 - Adicionado reconhecimento de imagem para tratar do captcha. (testando ainda...) agradecimento especial ao @Nucito pela disponibilização do CaptchaSolver
 
