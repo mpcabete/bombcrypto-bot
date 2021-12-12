@@ -164,7 +164,6 @@ def solveCaptcha():
     screenshot = printSreen()
     img = screenshot.copy()
     popup_pos = positions(d['robot'],img=img)
-    print(popup_pos)
     if len(popup_pos) == 0:
         print('no captcha popup found!')
         return
@@ -185,7 +184,7 @@ def solveCaptcha():
         captcha_img = captchaImg(screenshot, popup_pos[0])
         # captcha_img = example_captcha_img
         background_digits = getBackgroundText(captcha_img,  0.7)
-        print( 'dig: {}, background_digits: {}'.format(digits, background_digits))
+        # print( 'dig: {}, background_digits: {}'.format(digits, background_digits))
         if digits == background_digits:
             print('FOUND!')
             pyautogui.mouseUp()
