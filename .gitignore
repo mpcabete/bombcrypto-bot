@@ -10,6 +10,9 @@ test.py
 
 # cache
 /src/__pycache__
+/captcha/__pycache__
+/captcha/models/__pycache__
+/captcha/utils/__pycache__
 
 # vscode plugins
 /.history
