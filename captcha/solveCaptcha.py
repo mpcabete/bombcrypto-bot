@@ -189,10 +189,10 @@ def solveCaptcha():
             print('FOUND!')
             pyautogui.mouseUp()
             return
-        print('not found... trying again!')
-        pyautogui.mouseUp()
-        solveCaptcha()
-        return
+    print('not found... trying again!')
+    pyautogui.mouseUp()
+    solveCaptcha()
+    return
 
 if __name__ == '__main__':
     solveCaptcha()
