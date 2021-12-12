@@ -345,29 +345,20 @@ def alertCaptcha():
 
     captchaValue = ocr.image_to_string(img, lang='digits1')
     captchaValue = re.sub("[^\d\.]", "", captchaValue)
+    logger(f'Valor do captcha {captchaValue}')
     
-    slider_mov = 35
-    slider_size = positions(images['slider_size_1'], threshold=0.9)
-
-    #obten o quanto de pixels o ponteiro tem que arrastar de acordo com o tamanho do slider que aparece
-    numero_sliders = 8 # o número de repetições é a quantidade de imagens do slider-size que tenho + 1
-    for i in range(1, numero_sliders): 
-        slider_size = positions(images[f'slider_size_{i}'], threshold=0.9)
-        if(len(slider_size) > 0):
-            slider_mov = slider_mov + (10 * i)
-            break
-        time.sleep(1)
+    slider_mov = 40
     
-    if(len(slider_size) == 0):
-        logger('Tamanho do slider do captcha não encontrado!')
-        return
 
     slider_positions = []
     x,y = slider_start_pos
     cp = captcha_solver.CaptchaSolver()
     cp.initModel('bomb_captcha.pt', 'CaptchaSolver')
     cord_to_move = (0,0)
-    for i in range(5):
+    i = -1
+    max_iteracoes = 4
+    while i < max_iteracoes:
+        i = i + 1
         if i == 0:
             # pyautogui.moveTo(x, y, 1)
             moveToWithRandomness(x, y, 1)
@@ -396,47 +387,24 @@ def alertCaptcha():
         img = cv2.imread(img_captcha_dir)
         time.sleep(0.5)
         resultado = cp.SolveCaptcha(img, 'bomb_captcha.pt', 0.7, dir='CaptchaSolver')
+        # caso não ache, significa que não moveu o slider suficiente
+        if len(resultado) == 0:
+            slider_mov = slider_mov + 10
+            i = -1
+            continue
 
         if(resultado['Captcha'] == captchaValue):
             pyautogui.moveTo(slider_positions[-1][0] + 4, slider_positions[-1][1] + 3, 0.5)
             pyautogui.mouseUp()
             break
 
-
         logger(f'Valor do captcha {captchaValue}, valor da imagem {resultado["Captcha"]} ')
 
+        if i == max_iteracoes:
+            pyautogui.mouseUp()
+            break
 
-        #envia a foto do captcha
-        # telegram_bot_sendtext(f'Imagem /{i + 1}')
-        # telegram_bot_sendphoto(img_captcha_dir)
-
-    #logger('Esperando pela resposta do usuário...')
-    #    qtd_messages_sended = len(bot.getUpdates())
-    #    user_response = 0
-    #    # await user to response
-    #    try:
-    #        while True:
-    #            messages_now = bot.getUpdates()
-    #            if len(messages_now) > qtd_messages_sended and messages_now[len(messages_now) -1].message.text.replace('/','').isdigit:
-    #                user_response = int(messages_now[len(messages_now) -1].message.text.replace('/',''))
-    #                break
-    #                
-    #            time.sleep(4)
-    #    except:
-    #        logger('Sem resposta do usuário!')
-    #
-    #    if(user_response == 0):
-    #        logger('Sem resposta do usuário!')
-    #        return
-    #
-    #    logger(f"usuario escolheu o numero {user_response}")
-    #
-    #    pyautogui.moveTo(slider_positions[user_response-1][0], slider_positions[user_response-1][1], 0.5)
-    #    pyautogui.moveTo(slider_positions[user_response-1][0] + 4, slider_positions[user_response-1][1] + 3, 0.5)
-    #    # time.sleep(0.5)
-    #    pyautogui.mouseUp()
-
-    #time.sleep(2)
+    time.sleep(1)
     if(len(positions(robot)) == 0):
         telegram_bot_sendtext('Resolvido')
     else:
@@ -801,12 +769,13 @@ def decobreScreen():
     # 5 pagina herois
     elif len(positions(images['go-work'], threshold=ct['default'])) > 0:
         return 5
-    # 6 pagina trabalho
-    elif len(positions(images['go-back-arrow'], threshold=ct['default'])) > 0:
-        return 6
     # 8 new map
     elif len(positions(images['new-map'], threshold=ct['default'])) > 0:
         return 8
+    # 6 pagina trabalho
+    elif len(positions(images['go-back-arrow'], threshold=ct['default'])) > 0:
+        return 6
+    
 
     # 0 sem tela definida
     return 0
@@ -918,7 +887,7 @@ def main():
 
         # se os herois tiverem trabalhando, faz um sleed pelo tempo do refresh dos herois para econimizar processamento
         if screen == 6 :
-            time.sleep(t['refresh_heroes_positions'] * 60)
+            time.sleep(60)
 
         sys.stdout.flush()
 
