@@ -20,3 +20,4 @@ telepot==12.7
 pytesseract
 python-telegram-bot
 pyclick
+imutils
