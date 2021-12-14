@@ -166,7 +166,7 @@
   #
   # [pt_BR]
   # Valor padrão : 1
-  mouse_speed: 0.5
+  mouse_speed: 1
 
   # [en_US] 
   # Default value: 3
