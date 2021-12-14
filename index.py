@@ -535,7 +535,7 @@ def main():
 
         sys.stdout.flush()
 
-        time.sleep(1)
+        time.sleep(randint(1,120))
 
 
 
