@@ -13,3 +13,9 @@ Fork do projeto https://github.com/mpcabete/bombcrypto-bot com minhas modificaç
 ** É bom gostarem de ler. tem um arquivo LEIAME dentro da pasta train_model com o que precisa fazer.**
 
 Para rodar é necessario instalar o tesseract e apontar o local de instalação, variavel acima no main().
+
+
+
+Modificações que ainda pretendo fazer, sugestões são validas:
+- [x] Informar no telegram se o novo mapa veio alguma jaula.
+- [ ] Informar no telegram quanto tempo demorou para completar o mapa.
