@@ -47,6 +47,20 @@
     # Valor padrão (em segundos): 1
     interval_between_moviments: 1
 
+    # [en_US] Time interval between random mouse moviments
+    # Default value (in minutes): 1 
+    #
+    # [pt_BR] Intervalo de tempo entre movimentos aleatórios do mouse
+    # Valor padrão (em minutos): 1
+    interval_between_random_moviments: 1 #min
+
+    # [en_US] Time interval to check the ches
+    # Default value (in minutes): 5
+    #
+    # [pt_BR] Intervalo de tempo entre movimentos
+    # Valor padrão (em minutos): 5
+    check_chest: 5 #min
+
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #
   # [pt_BR] O quão confiante o bot precisa estar para clicar nos botões (valores entre 0 e 1. 0 é o valor mínimo, 1 é o valor máximo)
@@ -146,3 +160,17 @@
   # Valor padrão : False
   # Opções disponíveis: False ou True
   save_log_to_file: True
+
+  # [en_US] 
+  # Default value: 1
+  #
+  # [pt_BR]
+  # Valor padrão : 1
+  mouse_speed: 0.5
+
+  # [en_US] 
+  # Default value: 3
+  #
+  # [pt_BR]
+  # Valor padrão : 3
+  max_login_atempts: 3
