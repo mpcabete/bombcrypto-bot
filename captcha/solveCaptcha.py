@@ -50,7 +50,8 @@ def positions(target, threshold=0.85,img = None):
 def getDigits(d,img):
     digits = []
     for i in range(10):
-        p = positions(d[str(i)],img=img,threshold=0.95)
+        template = cv2.cvtColor(d[str(i)], cv2.COLOR_BGR2GRAY)
+        p = positions(template,img=img,threshold=0.78)
         if len (p) > 0:
             digits.append({'digit':str(i),'x':p[0][0]})
 
@@ -72,12 +73,12 @@ def printSreen():
         # Grab the data
         return sct_img[:,:,:3]
 
-def captchaImg(img, pos,w = 500, h = 280):
+def captchaImg(img, pos,w = 500, h = 180):
     # path = "./captchas-saved/{}.png".format(str(time.time()))
     rx, ry, _, _ = pos
 
     x_offset = -10
-    y_offset = 89
+    y_offset = 140
 
     y = ry + y_offset
     x = rx + x_offset
@@ -138,22 +139,26 @@ def r():
     return randint(0,5)
 
 def moveToReveal(popup_pos):
+    # time.sleep(10)
+    # return
     x,y,_,_ = popup_pos
     t = 2
     offset_x = 80
-    offset_y = 180
-    w = 400
+    offset_y = 140
+    w = 430
     h = 150
-    passes = 9
+    passes = 11
     increment_x = w/passes
     increment_y = h/passes
     start_x = x + offset_x + r()
     start_y = y + offset_y + r()
-    pyautogui.moveTo(start_x,start_y,t)
+    pyautogui.moveTo(start_x,start_y+h,t)
     for i in range(passes):
-        x = start_x + i * increment_x
-        y = start_y + h * (i % 2)
+        x = start_x + i * increment_x + r()
+        y = start_y + h * (i % 2) + r()
         pyautogui.moveTo(x,y,t)
+    pyautogui.moveTo(start_x+ w + r(),start_y + h + r(),t)
+    time.sleep(1)
 
 def lookAtCaptcha():
     screenshot = printSreen()
@@ -213,16 +218,15 @@ def getBackgroundText():
     if __name__ == '__main__':
         path = "./tmp/{}.png".format(str(time.time()))
         cv2.imwrite(path,data[0])
+    digits = getDigits(d,data[0])
+    print(digits)
     # cv2.imshow('test',data[0])
     # cv2.waitKey(0)
     # img = captchaImg(screenshot, popup_pos[0])
     # cv2.imshow('img',img)
     # cv2.waitKey(0)
-    return
+    return digits
 
-def getDigits():
-    pass
-    return
 
 def solveCaptcha():
     screenshot = printSreen()
