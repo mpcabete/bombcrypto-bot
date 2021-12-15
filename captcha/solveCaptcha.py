@@ -29,7 +29,7 @@ def load_images():
 d = load_images()
 
 #TODO tirar duplicata
-def positions(target, threshold=0.85,img = None):
+def positions(target, threshold=0.80,img = None):
     if img is None:
         img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
@@ -142,17 +142,20 @@ def moveToReveal(popup_pos):
     # time.sleep(10)
     # return
     x,y,_,_ = popup_pos
-    t = 2
+    t = 1.5
     offset_x = 80
     offset_y = 140
-    w = 430
+    w = 413
     h = 150
     passes = 11
     increment_x = w/passes
     increment_y = h/passes
     start_x = x + offset_x + r()
     start_y = y + offset_y + r()
+    pyautogui.moveTo(start_x,start_y,t)
     pyautogui.moveTo(start_x,start_y+h,t)
+    pyautogui.moveTo(start_x + w,start_y + h,t)
+    pyautogui.moveTo(start_x + w,start_y,t)
     for i in range(passes):
         x = start_x + i * increment_x + r()
         y = start_y + h * (i % 2) + r()
@@ -212,7 +215,8 @@ def getBackgroundText():
     popup_pos = positions(d['robot'],img=screenshot)
     data = [None,True]
     thread = watchDiffs(data)
-    reveal_positions = moveToReveal(popup_pos[0])
+    moveToReveal(popup_pos[0])
+    # moveToReveal(popup_pos[0])
     data[1]=False
     thread.join()
     if __name__ == '__main__':
@@ -272,3 +276,4 @@ if __name__ == '__main__':
         # diff[0] = (new_diff * 255).astype("uint8")
 # arrumar o mexer das posiçoes pra ele vazer mais movimentos verticais
 # calcular n de sliders ou fazer recursivamente.
+# fazer os and so no final
