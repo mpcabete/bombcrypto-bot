@@ -73,7 +73,7 @@ def printSreen():
         # Grab the data
         return sct_img[:,:,:3]
 
-def captchaImg(img, pos,w = 500, h = 180):
+def captchaImg(img, pos,w = 520, h = 180):
     # path = "./captchas-saved/{}.png".format(str(time.time()))
     rx, ry, _, _ = pos
 
