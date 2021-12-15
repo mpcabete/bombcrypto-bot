@@ -50,7 +50,7 @@ def positions(target, threshold=0.80,img = None):
     rectangles, weights = cv2.groupRectangles(rectangles, 1, 0.2)
     return rectangles
 
-def getDigits(d,img, gray=True, threshold=0.78):
+def getDigits(d,img, gray=True, threshold=0.81):
     digits = []
     for i in range(10):
         if gray:
@@ -302,3 +302,4 @@ if __name__ == '__main__':
 # arrumar o mexer das posiçoes pra ele vazer mais movimentos verticais
 # calcular n de sliders ou fazer recursivamente.
 # fazer os and so no final
+# fazer o bot pegar as top 3 imagens no get digits.
