@@ -12,7 +12,7 @@
 ### Smart Chain Wallet:
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 
-###PIX:
+### PIX:
   6ce2b79e-97be-4881-a882-81902e29d7ce
 ![pix](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/pix.jpeg)
 
