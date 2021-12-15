@@ -4,10 +4,12 @@
 
 
 ``` 
-[xxxxxxxxxx========================================](50$)
-          |
-         10$
+[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx](50$)
+                                                   |
+                                                  60$
 ```
+### Quase pronto!
+### Almost ready!
   
 
 ### Smart Chain Wallet:

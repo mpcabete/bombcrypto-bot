@@ -4,36 +4,8 @@ import pyautogui
 import numpy as np
 import mss
 from os import listdir
-# from run import getBackgroundText
-import torch
 from random import randint
 
-# example_captcha_img = cv2.imread('images/example.png')
-
-model = torch.hub.load('./captcha', 'custom', "captcha/bomb_captcha.pt", source='local')
-
-def getBackgroundText(img, percent_required):
-    boxes = []
-    if type(img) == np.ndarray  and percent_required:
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-        results = model(img, size=416)
-        digits = []
-
-        if results.xyxy[0].shape[0] >= 1:
-            for box in results.xyxy[0]:
-                x1, _, _, _, percent, digit = box
-                if percent >= percent_required:
-                    digits.append({'x':x1.item(), 'd':digit.item()})
-
-            def getX(e):
-                return e['x']
-            digits.sort(key=getX)
-
-            def getD(e):
-                return str(int(e['d']))
-
-            return ''.join(list(map(getD, digits)))
 
 def remove_suffix(input_string, suffix):
     if suffix and input_string.endswith(suffix):
@@ -43,6 +15,8 @@ def remove_suffix(input_string, suffix):
 #TODO tirar duplicata
 def load_images():
     dir_name = './captcha/images/'
+    if __name__ == '__main__':
+        dir_name = './images/'
     file_names = listdir(dir_name)
     targets = {}
     for file in file_names:
@@ -96,7 +70,7 @@ def printSreen():
         # Grab the data
         return sct_img[:,:,:3]
 
-def captchaImg(img, pos,w = 500, h = 180):
+def captchaImg(img, pos,w = 500, h = 280):
     # path = "./captchas-saved/{}.png".format(str(time.time()))
     rx, ry, _, _ = pos
 
@@ -159,6 +133,15 @@ def getSliderPositions(screenshot, popup_pos):
         # pyautogui.mouseUp()
     return positions
 
+def getBackgroundText():
+    screenshot = printSreen()
+    popup_pos = positions(d['robot'],img=screenshot)
+    img = captchaImg(screenshot, popup_pos[0])
+    cv2.imshow('img',img)
+    cv2.waitKey(0)
+
+def getDigits():
+    pass
 
 def solveCaptcha():
     screenshot = printSreen()
@@ -168,8 +151,9 @@ def solveCaptcha():
         print('no captcha popup found!')
         return
     img = captchaImg(img, popup_pos[0])
-    digits = getDigits(d, img)
-    slider_positions = getSliderPositions(screenshot, popup_pos)
+    background_digits = getBackgroundText()
+    return
+    # slider_positions = getSliderPositions(screenshot, popup_pos)
 
     if slider_positions is None:
         return
@@ -182,8 +166,8 @@ def solveCaptcha():
         screenshot = printSreen()
         popup_pos = positions(d['robot'],img=screenshot)
         captcha_img = captchaImg(screenshot, popup_pos[0])
+        digits = getDigits()
         # captcha_img = example_captcha_img
-        background_digits = getBackgroundText(captcha_img,  0.7)
         # print( 'dig: {}, background_digits: {}'.format(digits, background_digits))
         if digits == background_digits:
             print('FOUND!')
