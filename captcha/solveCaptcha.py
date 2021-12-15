@@ -5,6 +5,8 @@ import numpy as np
 import mss
 from os import listdir
 from random import randint
+import threading
+# from skimage.metrics import structural_similarity
 
 
 def remove_suffix(input_string, suffix):
@@ -132,16 +134,95 @@ def getSliderPositions(screenshot, popup_pos):
         # time.sleep(2)
         # pyautogui.mouseUp()
     return positions
+def r():
+    return randint(0,5)
+
+def moveToReveal(popup_pos):
+    x,y,_,_ = popup_pos
+    t = 2
+    offset_x = 80
+    offset_y = 180
+    w = 400
+    h = 150
+    passes = 9
+    increment_x = w/passes
+    increment_y = h/passes
+    start_x = x + offset_x + r()
+    start_y = y + offset_y + r()
+    pyautogui.moveTo(start_x,start_y,t)
+    for i in range(passes):
+        x = start_x + i * increment_x
+        y = start_y + h * (i % 2)
+        pyautogui.moveTo(x,y,t)
+
+def lookAtCaptcha():
+    screenshot = printSreen()
+    popup_pos = positions(d['robot'],img=screenshot)
+    img = captchaImg(screenshot, popup_pos[0])
+    return img
+
+# def generateDiff(first,position):
+    # gray_first = cv2.cvtColor(first, cv2.COLOR_BGR2GRAY)
+    # screenshot = printSreen()
+    # img = screenshot.copy()
+    # second = captchaImg(img,position)
+    # gray_second = cv2.cvtColor(second, cv2.COLOR_BGR2GRAY)
+
+
+    # (_, diff) = structural_similarity(gray_first,gray_second, full=True)
+    # diff = (diff * 255).astype("uint8")
+    # cv2.imshow('img',diff)
+    # cv2.waitKey(5000)
+
+    # cv2.imshow('img',cp)
+    # return diff
+
+def preProcess(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    t,img = cv2.threshold(img,170,240,cv2.THRESH_BINARY_INV)
+    return img
+def add(img0, img1):
+    return cv2.bitwise_and(img0, img1, mask = None)
+
+def getDiff(data):
+    if data[0] is None:
+        img0 = preProcess(lookAtCaptcha())
+        img1 = preProcess(lookAtCaptcha())
+        data[0] = add(img0,img1)
+    while data[1]:
+        now = preProcess(lookAtCaptcha())
+        data[0] = add(data[0],now)
+    return
+        # time.sleep()
+
+def watchDiffs(data):
+    thread = threading.Thread(target=getDiff, args =(data,))
+    thread.start()
+    return thread
+    # thread.join()
+
 
 def getBackgroundText():
     screenshot = printSreen()
     popup_pos = positions(d['robot'],img=screenshot)
-    img = captchaImg(screenshot, popup_pos[0])
-    cv2.imshow('img',img)
-    cv2.waitKey(0)
+    data = [None,True]
+    thread = watchDiffs(data)
+    reveal_positions = moveToReveal(popup_pos[0])
+    data[1]=False
+    thread.join()
+    if __name__ == '__main__':
+        path = "./tmp/{}.png".format(str(time.time()))
+        cv2.imwrite(path,data[0])
+    # cv2.imshow('test',data[0])
+    # cv2.waitKey(0)
+    # img = captchaImg(screenshot, popup_pos[0])
+    # cv2.imshow('img',img)
+    # cv2.waitKey(0)
+    return
 
 def getDigits():
     pass
+    return
 
 def solveCaptcha():
     screenshot = printSreen()
@@ -183,3 +264,7 @@ if __name__ == '__main__':
 #TODO colocar positions em um arquivo separado e importar nos outros.
 # tirar o load digits daqui e passar como argumento na funçao
 
+        # (_, new_diff) = structural_similarity(img0,img1, full=True)
+        # diff[0] = (new_diff * 255).astype("uint8")
+# arrumar o mexer das posiçoes pra ele vazer mais movimentos verticais
+# calcular n de sliders ou fazer recursivamente.
