@@ -1,17 +1,11 @@
-# Meta novo captcha:
+# New captcha update:
 
-# New captcha milestone:
-
-
-``` 
-[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx](50$)
-                                                   |
-                                                  60$
-```
-### Quase pronto!
-### Almost ready!
+### Temos a primeira versão funcional do bot, ainda existem algumas otimizaçoes que precisam ser feitas pra ele funcionar liso, se quiser esperar, esssa atualizaçao deve sair hj ainda.
+### The first functional version is ready! There are still some optimizations that need to be implemented for it to work smoothly. If you are willing to wait for a little bit, the update should come later today.
   
 
+## Faz a boa pra nois:
+## Do the good:
 ### Smart Chain Wallet:
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 
