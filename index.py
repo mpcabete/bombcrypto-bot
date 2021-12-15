@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
 
-from captcha.solveCaptcha import solveCaptcha
+from captcha.revealNumber import solveCaptcha as _solveCaptcha
 
 from os import listdir
 from src.logger import logger, loggerMapClicked
@@ -66,7 +66,10 @@ hero_clicks = 0
 login_attempts = 0
 last_log_is_progress = False
 
-
+def solveCaptcha():
+    pyautogui.PAUSE = 0.1
+    _solveCaptcha()
+    pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
 
 def addRandomness(n, randomn_factor_size=None):
     if randomn_factor_size is None:
