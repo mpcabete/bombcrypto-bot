@@ -60,7 +60,6 @@ def getDigits(d,img, gray=True, threshold = 1):
 
         p = positions(template,img=img,threshold=threshold)
         if len (p) > 0:
-            print('digit {} found!, x: {}'.format(i, p[0][0]))
             digits.append({'digit':str(i),'x':p[0][0]})
 
     def getX(e):
@@ -260,21 +259,30 @@ def getBackgroundText():
         path = "./tmp/{}.png".format(str(time.time()))
         cv2.imwrite(path,data[0])
     digits = getDigits(d,data[0],threshold = 0.9)
-    # cv2.imshow('test',data[0])
-    # cv2.waitKey(0)
-    # img = captchaImg(screenshot, popup_pos[0])
-    # cv2.imshow('img',img)
-    # cv2.waitKey(0)
+
     return digits
 
-def getSmallDigits(img):
+def getSmallDigits(img, threshold=0.95,i=0):
     if __name__ == '__main__':
         path = "./tmp/small{}.png".format(str(time.time()))
         # cv2.imwrite(path,img)
-    digits = getDigits(s,img, gray=False, threshold=0.95)
-    print('fg = {}'.format(digits))
+    digits = getDigits(s,img, gray=False, threshold=threshold)
 
-    return digits
+    if i > 10:
+        if __name__ == '__main__':
+            path = "./tmp/small{}.png".format(str(time.time()))
+            cv2.imwrite(path,img)
+            print('too many')
+            print(digits)
+        return digits
+
+    if len(digits) == 3:
+        print('fg = {}'.format(digits))
+        return digits
+    if len(digits) < 3:
+        return getSmallDigits(img,threshold=threshold-0.3,i=i+1)
+    if len(digits) > 3:
+        return getSmallDigits(img,threshold=threshold+0.07,i=i+1)
 
 def solveCaptcha():
     screenshot = printSreen()
@@ -307,6 +315,7 @@ def solveCaptcha():
             return
     print('not found... trying again!')
     pyautogui.mouseUp()
+    time.sleep(3)
     solveCaptcha()
     return
 
