@@ -18,4 +18,4 @@ Para rodar é necessario instalar o tesseract e apontar o local de instalação,
 
 Modificações que ainda pretendo fazer, sugestões são validas:
 - [x] Informar no telegram se o novo mapa veio alguma jaula.
-- [ ] Informar no telegram quanto tempo demorou para completar o mapa.
+- [x] Informar no telegram quanto tempo demorou para completar o mapa.
