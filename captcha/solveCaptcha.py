@@ -4,7 +4,7 @@ import pyautogui
 import numpy as np
 import mss
 from os import listdir
-from random import randint
+from random import random, randint
 import threading
 # from skimage.metrics import structural_similarity
 
@@ -274,15 +274,29 @@ def getSmallDigits(img, threshold=0.95,i=0):
             cv2.imwrite(path,img)
             print('too many')
             print(digits)
-        return digits
+        return [digits, threshold]
 
     if len(digits) == 3:
-        print('fg = {}'.format(digits))
-        return digits
+        return [digits, threshold]
     if len(digits) < 3:
         return getSmallDigits(img,threshold=threshold-0.3,i=i+1)
     if len(digits) > 3:
         return getSmallDigits(img,threshold=threshold+0.07,i=i+1)
+
+def lookForMatch(background_digits,popup_pos, has_found):
+        screenshot = printSreen()
+        popup_pos = positions(d['robot'],img=screenshot)
+        threshold = 0.95
+
+        for i in range(100):
+            screenshot = printSreen()
+            captcha_img = smallDigitsImg(screenshot, popup_pos[0])
+            small_digits, threshold = getSmallDigits(captcha_img, threshold=threshold)
+            if small_digits == background_digits:
+                pyautogui.mouseUp()
+                print('FOUND!', flush=True)
+                has_found[0] = True
+                return
 
 def solveCaptcha():
     screenshot = printSreen()
@@ -294,28 +308,38 @@ def solveCaptcha():
     img = captchaImg(img, popup_pos[0])
     background_digits = getBackgroundText()
     print('background = {}'.format(background_digits))
-    slider_positions = getSliderPositions(screenshot, popup_pos)
+    x,y = position(d['slider'],img=screenshot)
 
-    if slider_positions is None:
+    pyautogui.moveTo(x+r(),y+r(),0.8)
+    has_found = [False]
+    watcher = threading.Thread(target=lookForMatch, args =(background_digits,popup_pos,has_found))
+    watcher.start()
+    pyautogui.mouseDown()
+    time.sleep(1)
+    def movePercentage(n):
+        current_x,_ = pyautogui.position()
+        speed_factor = 2
+        slider_size = 300
+        destination = x+r()+n*slider_size
+        randomness = random()/6
+        speed = (abs(current_x - destination)/slider_size)*speed_factor + randomness
+        pyautogui.moveTo(destination,y+r(),speed,pyautogui.easeOutQuad)
+
+    randomness = random()/5
+    movePercentage(.4+randomness)
+    if has_found[0]:
         return
-    # moveSlider(screenshot,3,popup_pos)
-
-
-    for position in slider_positions:
-        x, y = position
-        pyautogui.moveTo(x,y,1)
-        screenshot = printSreen()
-        popup_pos = positions(d['robot'],img=screenshot)
-        captcha_img = smallDigitsImg(screenshot, popup_pos[0])
-        small_digits = getSmallDigits(captcha_img)
-        # print( 'dig: {}, background_digits: {}'.format(digits, background_digits))
-        if small_digits == background_digits:
-            print('FOUND!')
-            pyautogui.mouseUp()
-            return
-    print('not found... trying again!')
+    randomness = random()/5
+    movePercentage(-0.1+randomness)
+    if has_found[0]:
+        return
+    randomness = random()/5
+    movePercentage(1+randomness)
+    if has_found[0]:
+        return
     pyautogui.mouseUp()
-    time.sleep(3)
+
+    time.sleep(13)
     solveCaptcha()
     return
 

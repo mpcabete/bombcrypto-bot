@@ -45,7 +45,7 @@ cat = """
 
 >>---> Press ctrl + c to kill the bot.
 
->>---> Some configs can be fount in the config.yaml file."""
+>>---> Some configs can be found in the config.yaml file."""
 
 
 print(cat)
