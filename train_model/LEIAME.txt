@@ -1,2 +1,0 @@
-Colocar o arquivo digits1.traineddata dentro da pasta tessdata da instalação do Tesseract-OCR
-link para baixar e instalar o Tesseract-OCR: https://github.com/UB-Mannheim/tesseract/wiki (não sei se é oficial e nem olhei. baixei de lá)
