@@ -32,8 +32,8 @@ pyautogui.MINIMUM_SLEEP = 0.1
 pyautogui.PAUSE = 2
 
 
-TELEGRAM_BOT_TOKEN = "5061650544:AAHZlUPBIkJe5HtKtVZHqt0njRAF2jkCsMY"
-TELEGRAM_CHAT_ID = "1970213580"
+TELEGRAM_BOT_TOKEN = "TOKEN"
+TELEGRAM_CHAT_ID = "CHAT_ID"
 
 bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
 
@@ -203,7 +203,7 @@ def clickBtn(img, name=None, timeout=3, threshold=ct["default"]):
 
 def printSreen():
     with mss.mss() as sct:
-        monitor = sct.monitors[2]
+        monitor = sct.monitors[0]
         sct_img = np.array(sct.grab(monitor))
         # The screen part to capture
         # monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
