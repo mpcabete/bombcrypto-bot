@@ -1,9 +1,7 @@
 # New captcha update:
-## Quase lá!
-## Almost there!
 
-### Temos a primeira versão "funcional" do bot, ainda existem algumas otimizaçoes que precisam ser feitas pra ele funcionar liso, infelizmente nao consegui terminar essas otimiçaçoes hj. Mas com certeza amanhã ele ja fica lisinho!
-### The first functional version is ready! There are still some optimizations that need to be implemented for it to work smoothly. If you are willing to wait for a little bit, the update should come later today.
+### Ta oficialmente terminado, ainda quero melhorar umas coisinhas, tipo os movimentos pra revelar o numero, mas ele ta funcional! E com bastante aleatoriedade, do jeitinho q vcs gostam! 😄
+### The first functional version is ready!
   
 
 ## Faz a boa pra nois
