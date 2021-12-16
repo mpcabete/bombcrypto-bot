@@ -32,7 +32,7 @@ else:
     s = load_images( './captcha/small-digits/')
 
 #TODO tirar duplicata
-def positions(target, threshold=0.80,img = None):
+def positions(target, threshold=0.88,img = None):
     if img is None:
         img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
@@ -50,7 +50,7 @@ def positions(target, threshold=0.80,img = None):
     rectangles, weights = cv2.groupRectangles(rectangles, 1, 0.2)
     return rectangles
 
-def getDigits(d,img, gray=True, threshold=0.81):
+def getDigits(d,img, gray=True, threshold = 1):
     digits = []
     for i in range(10):
         if gray:
@@ -60,6 +60,7 @@ def getDigits(d,img, gray=True, threshold=0.81):
 
         p = positions(template,img=img,threshold=threshold)
         if len (p) > 0:
+            print('digit {} found!, x: {}'.format(i, p[0][0]))
             digits.append({'digit':str(i),'x':p[0][0]})
 
     def getX(e):
@@ -158,35 +159,30 @@ def r():
     return randint(0,5)
 
 def moveToReveal(popup_pos):
-    # time.sleep(10)
+    # time.sleep(5)
     # return
     x,y,_,_ = popup_pos
-    t = 1.5
-    offset_x = 80
+    speed = 0.6
+    offset_x = 30
     offset_y = 140
-    w = 413
+    w = 465
     h = 150
-    passes = 11
+    passes = 9
+    #11
     increment_x = w/passes
     increment_y = h/passes
     start_x = x + offset_x + r()
     start_y = y + offset_y + r()
-    pyautogui.moveTo(start_x,start_y,t)
-    pyautogui.moveTo(start_x,start_y+h,t)
-    pyautogui.moveTo(start_x + w,start_y + h,t)
-    pyautogui.moveTo(start_x + w,start_y,t)
+    pyautogui.moveTo(start_x,start_y,speed)
+    pyautogui.moveTo(start_x,start_y+h,speed)
+    pyautogui.moveTo(start_x + w,start_y + h,speed)
+    pyautogui.moveTo(start_x + w,start_y,speed)
     for i in range(passes):
         x = start_x + i * increment_x + r()
         y = start_y + h * (i % 2) + r()
-        pyautogui.moveTo(x,y,t)
-    pyautogui.moveTo(start_x+ w + r(),start_y + h + r(),t)
+        pyautogui.moveTo(x,y,speed)
+    pyautogui.moveTo(start_x+ w + r(),start_y + h + r(),speed)
     time.sleep(1)
-
-def lookAtCaptcha():
-    screenshot = printSreen()
-    popup_pos = positions(d['robot'],img=screenshot)
-    img = captchaImg(screenshot, popup_pos[0])
-    return img
 
 # def generateDiff(first,position):
     # gray_first = cv2.cvtColor(first, cv2.COLOR_BGR2GRAY)
@@ -204,21 +200,43 @@ def lookAtCaptcha():
     # cv2.imshow('img',cp)
     # return diff
 
-def preProcess(img):
+def preProcess(img,popup_pos):
+    img = captchaImg(img, popup_pos[0])
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     t,img = cv2.threshold(img,170,240,cv2.THRESH_BINARY_INV)
     return img
+
 def add(img0, img1):
     return cv2.bitwise_and(img0, img1, mask = None)
 
 def getDiff(data):
-    if data[0] is None:
-        img0 = preProcess(lookAtCaptcha())
-        img1 = preProcess(lookAtCaptcha())
-        data[0] = add(img0,img1)
+    start = time.time()
+    screenshots = []
     while data[1]:
-        now = preProcess(lookAtCaptcha())
-        data[0] = add(data[0],now)
+        screenshot = printSreen()
+        screenshots.append(screenshot)
+
+    end = time.time()
+    elapsed = end-start
+    start = end
+    i = len(screenshots)
+
+    print('{} samples taken in {} seconds({}/s)'.format(i,elapsed,i/elapsed))
+    popup_pos = positions(d['robot'],img=screenshot)
+    preprocessed_data = [preProcess(s, popup_pos) for s in screenshots]
+    end = time.time()
+    elapsed = end-start
+    start = end
+    print('Processed {} images in {} seconds'.format(len(preprocessed_data),elapsed))
+    result = preprocessed_data[0]
+    for sample in preprocessed_data:
+        result = add(result, sample)
+    end = time.time()
+    elapsed = end-start
+    print('Combined {} images in {} seconds'.format(len(preprocessed_data),elapsed))
+    # cv2.imshow('result',result)
+    # cv2.waitKey(5000)
+    data[0] = result
     return
         # time.sleep()
 
@@ -241,7 +259,7 @@ def getBackgroundText():
     if __name__ == '__main__':
         path = "./tmp/{}.png".format(str(time.time()))
         cv2.imwrite(path,data[0])
-    digits = getDigits(d,data[0])
+    digits = getDigits(d,data[0],threshold = 0.9)
     # cv2.imshow('test',data[0])
     # cv2.waitKey(0)
     # img = captchaImg(screenshot, popup_pos[0])
