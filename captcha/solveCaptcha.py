@@ -4,7 +4,7 @@ import pyautogui
 import numpy as np
 import mss
 from os import listdir
-from random import randint
+from random import random, randint
 import threading
 # from skimage.metrics import structural_similarity
 
@@ -32,7 +32,7 @@ else:
     s = load_images( './captcha/small-digits/')
 
 #TODO tirar duplicata
-def positions(target, threshold=0.80,img = None):
+def positions(target, threshold=0.88,img = None):
     if img is None:
         img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
@@ -50,7 +50,7 @@ def positions(target, threshold=0.80,img = None):
     rectangles, weights = cv2.groupRectangles(rectangles, 1, 0.2)
     return rectangles
 
-def getDigits(d,img, gray=True, threshold=0.81):
+def getDigits(d,img, gray=True, threshold = 1):
     digits = []
     for i in range(10):
         if gray:
@@ -158,35 +158,30 @@ def r():
     return randint(0,5)
 
 def moveToReveal(popup_pos):
-    # time.sleep(10)
+    # time.sleep(5)
     # return
     x,y,_,_ = popup_pos
-    t = 1.5
-    offset_x = 80
+    speed = 0.6
+    offset_x = 30
     offset_y = 140
-    w = 413
+    w = 465
     h = 150
-    passes = 11
+    passes = 9
+    #11
     increment_x = w/passes
     increment_y = h/passes
     start_x = x + offset_x + r()
     start_y = y + offset_y + r()
-    pyautogui.moveTo(start_x,start_y,t)
-    pyautogui.moveTo(start_x,start_y+h,t)
-    pyautogui.moveTo(start_x + w,start_y + h,t)
-    pyautogui.moveTo(start_x + w,start_y,t)
+    pyautogui.moveTo(start_x,start_y,speed)
+    pyautogui.moveTo(start_x,start_y+h,speed)
+    pyautogui.moveTo(start_x + w,start_y + h,speed)
+    pyautogui.moveTo(start_x + w,start_y,speed)
     for i in range(passes):
         x = start_x + i * increment_x + r()
         y = start_y + h * (i % 2) + r()
-        pyautogui.moveTo(x,y,t)
-    pyautogui.moveTo(start_x+ w + r(),start_y + h + r(),t)
+        pyautogui.moveTo(x,y,speed)
+    pyautogui.moveTo(start_x+ w + r(),start_y + h + r(),speed)
     time.sleep(1)
-
-def lookAtCaptcha():
-    screenshot = printSreen()
-    popup_pos = positions(d['robot'],img=screenshot)
-    img = captchaImg(screenshot, popup_pos[0])
-    return img
 
 # def generateDiff(first,position):
     # gray_first = cv2.cvtColor(first, cv2.COLOR_BGR2GRAY)
@@ -204,21 +199,43 @@ def lookAtCaptcha():
     # cv2.imshow('img',cp)
     # return diff
 
-def preProcess(img):
+def preProcess(img,popup_pos):
+    img = captchaImg(img, popup_pos[0])
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     t,img = cv2.threshold(img,170,240,cv2.THRESH_BINARY_INV)
     return img
+
 def add(img0, img1):
     return cv2.bitwise_and(img0, img1, mask = None)
 
 def getDiff(data):
-    if data[0] is None:
-        img0 = preProcess(lookAtCaptcha())
-        img1 = preProcess(lookAtCaptcha())
-        data[0] = add(img0,img1)
+    start = time.time()
+    screenshots = []
     while data[1]:
-        now = preProcess(lookAtCaptcha())
-        data[0] = add(data[0],now)
+        screenshot = printSreen()
+        screenshots.append(screenshot)
+
+    end = time.time()
+    elapsed = end-start
+    start = end
+    i = len(screenshots)
+
+    print('{} samples taken in {} seconds({}/s)'.format(i,elapsed,i/elapsed))
+    popup_pos = positions(d['robot'],img=screenshot)
+    preprocessed_data = [preProcess(s, popup_pos) for s in screenshots]
+    end = time.time()
+    elapsed = end-start
+    start = end
+    print('Processed {} images in {} seconds'.format(len(preprocessed_data),elapsed))
+    result = preprocessed_data[0]
+    for sample in preprocessed_data:
+        result = add(result, sample)
+    end = time.time()
+    elapsed = end-start
+    print('Combined {} images in {} seconds'.format(len(preprocessed_data),elapsed))
+    # cv2.imshow('result',result)
+    # cv2.waitKey(5000)
+    data[0] = result
     return
         # time.sleep()
 
@@ -241,24 +258,46 @@ def getBackgroundText():
     if __name__ == '__main__':
         path = "./tmp/{}.png".format(str(time.time()))
         cv2.imwrite(path,data[0])
-    digits = getDigits(d,data[0])
-    # cv2.imshow('test',data[0])
-    # cv2.waitKey(0)
-    # img = captchaImg(screenshot, popup_pos[0])
-    # cv2.imshow('img',img)
-    # cv2.waitKey(0)
+    digits = getDigits(d,data[0],threshold = 0.9)
+
     return digits
 
-def getSmallDigits(img):
+def getSmallDigits(img, threshold=0.95,i=0):
     if __name__ == '__main__':
         path = "./tmp/small{}.png".format(str(time.time()))
         # cv2.imwrite(path,img)
-    digits = getDigits(s,img, gray=False, threshold=0.95)
-    print('fg = {}'.format(digits))
+    digits = getDigits(s,img, gray=False, threshold=threshold)
 
-    return digits
+    if i > 10:
+        if __name__ == '__main__':
+            path = "./tmp/small{}.png".format(str(time.time()))
+            cv2.imwrite(path,img)
+            print('too many')
+            print(digits)
+        return [digits, threshold]
 
-def solveCaptcha():
+    if len(digits) == 3:
+        return [digits, threshold]
+    if len(digits) < 3:
+        return getSmallDigits(img,threshold=threshold-0.3,i=i+1)
+    if len(digits) > 3:
+        return getSmallDigits(img,threshold=threshold+0.07,i=i+1)
+
+def lookForMatch(background_digits,popup_pos):
+        screenshot = printSreen()
+        popup_pos = positions(d['robot'],img=screenshot)
+        captcha_img = smallDigitsImg(screenshot, popup_pos[0])
+        small_digits, _ = getSmallDigits(captcha_img)
+        print('Foreground digits: {}'.format(small_digits))
+        if small_digits == background_digits:
+            print('FOUND!', flush=True)
+            return True
+        return False
+
+def solveCaptcha(pause):
+    #removes pyautogui default pause between moviments and adds again at the end
+    pyautogui.PAUSE = 0
+
     screenshot = printSreen()
     img = screenshot.copy()
     popup_pos = positions(d['robot'],img=img)
@@ -268,32 +307,37 @@ def solveCaptcha():
     img = captchaImg(img, popup_pos[0])
     background_digits = getBackgroundText()
     print('background = {}'.format(background_digits))
-    slider_positions = getSliderPositions(screenshot, popup_pos)
+    x,y = position(d['slider'],img=screenshot)
 
-    if slider_positions is None:
-        return
-    # moveSlider(screenshot,3,popup_pos)
+    # click and hold the slider
+    pyautogui.moveTo(x+r(),y+r(),0.8)
+    pyautogui.mouseDown()
+    time.sleep(1)
+    pyautogui.PAUSE = pause
 
+    def movePercentage(n):
+        current_x,_ = pyautogui.position()
+        speed_factor = 2
+        slider_size = 360
+        destination = x+r()+n*slider_size
+        randomness = random()/6
+        speed = (abs(current_x - destination)/slider_size)*speed_factor + randomness
+        pyautogui.moveTo(destination,y+r(),speed,pyautogui.easeOutQuad)
 
-    for position in slider_positions:
-        x, y = position
-        pyautogui.moveTo(x,y,1)
-        screenshot = printSreen()
-        popup_pos = positions(d['robot'],img=screenshot)
-        captcha_img = smallDigitsImg(screenshot, popup_pos[0])
-        small_digits = getSmallDigits(captcha_img)
-        # print( 'dig: {}, background_digits: {}'.format(digits, background_digits))
-        if small_digits == background_digits:
-            print('FOUND!')
+    randomness = random()/20
+
+    for i in range (11):
+        movePercentage((i%10)/10+randomness)
+        if lookForMatch(background_digits,popup_pos):
             pyautogui.mouseUp()
             return
-    print('not found... trying again!')
+    print('not found...')
     pyautogui.mouseUp()
-    solveCaptcha()
     return
 
 if __name__ == '__main__':
-    solveCaptcha()
+    pause = 1
+    solveCaptcha(pause)
 #TODO colocar positions em um arquivo separado e importar nos outros.
 # tirar o load digits daqui e passar como argumento na funçao
 
