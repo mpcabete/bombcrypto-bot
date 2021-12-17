@@ -294,7 +294,10 @@ def lookForMatch(background_digits,popup_pos):
             return True
         return False
 
-def solveCaptcha():
+def solveCaptcha(pause):
+    #removes pyautogui default pause between moviments and adds again at the end
+    pyautogui.PAUSE = 0
+
     screenshot = printSreen()
     img = screenshot.copy()
     popup_pos = positions(d['robot'],img=img)
@@ -310,6 +313,7 @@ def solveCaptcha():
     pyautogui.moveTo(x+r(),y+r(),0.8)
     pyautogui.mouseDown()
     time.sleep(1)
+    pyautogui.PAUSE = pause
 
     def movePercentage(n):
         current_x,_ = pyautogui.position()
@@ -322,8 +326,8 @@ def solveCaptcha():
 
     randomness = random()/20
 
-    for i in range (10):
-        movePercentage(i/10+randomness)
+    for i in range (11):
+        movePercentage((i%10)/10+randomness)
         if lookForMatch(background_digits,popup_pos):
             pyautogui.mouseUp()
             return
@@ -332,7 +336,8 @@ def solveCaptcha():
     return
 
 if __name__ == '__main__':
-    solveCaptcha()
+    pause = 1
+    solveCaptcha(pause)
 #TODO colocar positions em um arquivo separado e importar nos outros.
 # tirar o load digits daqui e passar como argumento na funçao
 
