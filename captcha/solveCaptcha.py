@@ -283,20 +283,16 @@ def getSmallDigits(img, threshold=0.95,i=0):
     if len(digits) > 3:
         return getSmallDigits(img,threshold=threshold+0.07,i=i+1)
 
-def lookForMatch(background_digits,popup_pos, has_found):
+def lookForMatch(background_digits,popup_pos):
         screenshot = printSreen()
         popup_pos = positions(d['robot'],img=screenshot)
-        threshold = 0.95
-
-        for i in range(100):
-            screenshot = printSreen()
-            captcha_img = smallDigitsImg(screenshot, popup_pos[0])
-            small_digits, threshold = getSmallDigits(captcha_img, threshold=threshold)
-            if small_digits == background_digits:
-                pyautogui.mouseUp()
-                print('FOUND!', flush=True)
-                has_found[0] = True
-                return
+        captcha_img = smallDigitsImg(screenshot, popup_pos[0])
+        small_digits, _ = getSmallDigits(captcha_img)
+        print('Foreground digits: {}'.format(small_digits))
+        if small_digits == background_digits:
+            print('FOUND!', flush=True)
+            return True
+        return False
 
 def solveCaptcha():
     screenshot = printSreen()
@@ -310,37 +306,29 @@ def solveCaptcha():
     print('background = {}'.format(background_digits))
     x,y = position(d['slider'],img=screenshot)
 
+    # click and hold the slider
     pyautogui.moveTo(x+r(),y+r(),0.8)
-    has_found = [False]
-    watcher = threading.Thread(target=lookForMatch, args =(background_digits,popup_pos,has_found))
-    watcher.start()
     pyautogui.mouseDown()
     time.sleep(1)
+
     def movePercentage(n):
         current_x,_ = pyautogui.position()
         speed_factor = 2
-        slider_size = 300
+        slider_size = 360
         destination = x+r()+n*slider_size
         randomness = random()/6
         speed = (abs(current_x - destination)/slider_size)*speed_factor + randomness
         pyautogui.moveTo(destination,y+r(),speed,pyautogui.easeOutQuad)
 
-    randomness = random()/5
-    movePercentage(.4+randomness)
-    if has_found[0]:
-        return
-    randomness = random()/5
-    movePercentage(-0.1+randomness)
-    if has_found[0]:
-        return
-    randomness = random()/5
-    movePercentage(1+randomness)
-    if has_found[0]:
-        return
-    pyautogui.mouseUp()
+    randomness = random()/20
 
-    time.sleep(13)
-    solveCaptcha()
+    for i in range (10):
+        movePercentage(i/10+randomness)
+        if lookForMatch(background_digits,popup_pos):
+            pyautogui.mouseUp()
+            return
+    print('not found...')
+    pyautogui.mouseUp()
     return
 
 if __name__ == '__main__':
