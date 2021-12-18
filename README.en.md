@@ -14,35 +14,6 @@ source, so as an incentive for me to spend the time and energy maintaining the
 bot, I have created some donation milestones so people can collectively fund
 the bot.
 
-Currently, I will be manually updating the donation counter daily, maybe in
-the future I can set it up, so it increments automatically.
-
-1 Spend some time in my days reviewing issues, and organizing repository.
-Review and merge pull requests.
-
-2 A step-by-step guide in how to troubleshoot and fix the most common bugs,
-maybe with some flow charts.
-
-3 A step-by-step guide in how to set up the bot in a VPS using google cloud
-free trial (3 months) 
-
-4 Implement and maintain the feature for sending selected heroes home.(a lot
-of iteration will be needed solving minor bugs, as I do not own any house).
-
-5 Insert an random value in every movement and delay in the bot to further
-prevent detection.
-
-6 Work in the bug fixes relating to the login sequence.
-
-7 Work with the people who are having this issue to solve the errors
-happening when running the bot in a windows double monitor setup.
-
-
-
-``` 
-             1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
-[x==============|===============|==========|====================|===============|==========|===============] (500$)
-```
 ### Smart Chain Wallet:
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 

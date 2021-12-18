@@ -7,9 +7,16 @@ test.py
 # log
 /logs/new-map.log
 /logs/logger.log
+logs/
 
 # cache
 /src/__pycache__
+/captcha/__pycache__
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
 # vscode plugins
 /.history

@@ -34,18 +34,22 @@ cat = """
                                                .*' /  .*' ; .*`- +'  `*'
                                                `*-*   `*-*  `*-*'
 =========================================================================
-================ Please, consider buying me an coffe :) =================
+========== 💰 Have I helped you in any way? All I ask is a tip! 🧾 ======
+========== ✨ Faça sua boa ação de hoje, manda aquela gorjeta! 😊 =======
 =========================================================================
+======================== vvv BCOIN BUSD BNB vvv =========================
 ============== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf ===============
+=========================================================================
 ===== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ ======
 =========================================================================
 
 >>---> Press ctrl + c to kill the bot.
 
->>---> Some configs can be fount in the config.yaml file."""
+>>---> Some configs can be found in the config.yaml file."""
 
 
 print(cat)
+time.sleep(4)
 
 
 if __name__ == '__main__':
@@ -59,7 +63,8 @@ if not ch['enable']:
     print('>>---> Home feature not enabled')
 print('\n')
 
-pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
+pause = c['time_intervals']['interval_between_moviments']
+pyautogui.PAUSE = pause
 
 pyautogui.FAILSAFE = False
 hero_clicks = 0
@@ -316,12 +321,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCaptcha()
+    solveCaptcha(pause)
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
     time.sleep(1)
-    solveCaptcha()
+    solveCaptcha(pause)
 
 def goToGame():
     # in case of server overload popup
@@ -351,7 +356,7 @@ def login():
         return
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
-        solveCaptcha()
+        solveCaptcha(pause)
         login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
@@ -495,7 +500,7 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
-            solveCaptcha()
+            solveCaptcha(pause)
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -514,7 +519,7 @@ def main():
 
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            solveCaptcha()
+            solveCaptcha(pause)
             last["refresh_heroes"] = now
             refreshHeroesPositions()
 

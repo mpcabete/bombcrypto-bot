@@ -1,29 +1,19 @@
-# Novo captcha implementado!!!
-Feito com a ajuda do gradissíssimo [Nucito](https://github.com/Nucito/CaptchaSolver)!
-## Não se esqueça de mandar aquele apoio, vamos continuar na luta!
+# New captcha update:
 
-Baixe novamente todos os arquivos.
-Rode novamente o comando.
-  `pip install -r requirements.txt`
+### Ta oficialmente terminado, ainda quero melhorar umas coisinhas, tipo os movimentos pra revelar o numero, mas ele ta funcional! E com bastante aleatoriedade, do jeitinho q vcs gostam! 😄
+### The first functional version is ready!
   
-Lucre!
 
-# New captcha implemented!!
-## Don't forget to send me some love 🧡
-
-Download tha files again.
-Run again the command:
-  `pip install -r requirements.txt`
-  
-Profit!
+## Faz a boa pra nois
+## Do the good
 
 ### Smart Chain Wallet:
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 
+### PIX:
+  6ce2b79e-97be-4881-a882-81902e29d7ce
+![pix](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/pix.jpeg)
 
-
-Rode novamente o comando.
-  `pip install -r requirements.txt`
   
 # Sobre:
 Este bot tem o seu código aberto, de forma que qualquer pessoa pode vê-lo, fazer uma fork, ou updates.
@@ -40,37 +30,7 @@ ser financiado coletivamente. Atualmente eu atualizarei a barra das metas
 manualmente de forma diária, talvez no futuro eu automatize o processo de
 alguma forma.
 
-- 1 - Diariamente passar um tempo respondendo os issues, organizando o
-repositório e revisando pull requests.
-
-- [x] 2 - Um tutorial de como identificar e resolver os problemas mais comuns no
-bot, talvez com um diagrama de fluxo.
-
-- [ ] 3 - Um tutorial de como hostear o bot em um computador virtual usando o plano
-de testes de 3 meses da google cloud.
-
-- [x] 4 - Terminar de implementar e fazer a manutenção e os ajustes necessários na
-função de enviar os heróis para casa.
-
-- [x] 5 - Inserir um valor aleatório em todos os movimentos e os intervalos de
-espera do bot para dificultar ainda mais sua detecção.
-
-- [ ] 6 - Arrumar e ajustar os problemas que tem ocorrido durante o processo de
-login.
-
-- [ ] 7 - Trabalhar com o pessoal para arrumar os erros que ocorrem quando o bot é
-usado em um setup windows com dois monitores.
-
-
-``` 
-             1(15%)        2,3(30%)     4(40%)               5(60%)          6(75%)     7(85%)
-[xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx|xxxxxxxxxx|xxxxxxxxxxxxxxx] (500$)
-                                                                                                           |
-                                                                                                          500$
-```
  
-### Smart Chain Wallet:
-#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 
 ### Paypal:
 [Donate:](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
