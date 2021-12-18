@@ -78,7 +78,7 @@ pip install -r requirements.txt
 ### Pronto! Agora é só iniciar o bot com o comando
 
 ```
-python index.py
+python3 index.py
 ```
 
 ![run](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/run.png)
@@ -95,7 +95,7 @@ Abra o terminal, se ainda não tiver navegado para a pasta do bot dê novamente 
 Para iniciar use o comando 
 
 ```
-python index.py
+python3 index.py
 ```
 
 Assim que ele iniciar ele vai começar mandando os bonecos trabalhar. Para que ele funcione é preciso que a janela do game esteja aparecendo na sua tela.
