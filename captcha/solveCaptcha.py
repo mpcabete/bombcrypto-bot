@@ -294,7 +294,7 @@ def lookForMatch(background_digits,popup_pos):
             return True
         return False
 
-def solveCaptcha(pause):
+def solveCaptcha(pause, attempts=0):
     #removes pyautogui default pause between moviments and adds again at the end
     pyautogui.PAUSE = 0
 
@@ -302,11 +302,18 @@ def solveCaptcha(pause):
     img = screenshot.copy()
     popup_pos = positions(d['robot'],img=img)
     if len(popup_pos) == 0:
-        print('no captcha popup found!')
-        return
+        # wait and try again
+        time.sleep(2)
+        screenshot = printSreen()
+        img = screenshot.copy()
+        popup_pos = positions(d['robot'],img=img)
+        if len(popup_pos) == 0:
+            print('\nno captcha popup found!')
+            return
+    print('\nCaptcha detected, solving it...')
     img = captchaImg(img, popup_pos[0])
     background_digits = getBackgroundText()
-    print('background = {}'.format(background_digits))
+    print('\nbackground = {}'.format(background_digits))
     x,y = position(d['slider'],img=screenshot)
 
     # click and hold the slider
@@ -333,6 +340,11 @@ def solveCaptcha(pause):
             return
     print('not found...')
     pyautogui.mouseUp()
+    time.sleep(1)
+    if attempts < 4:
+        solveCaptcha(pause, attempts=attempts+1)
+    else:
+        print('\n too many attempts, giving up to avoid detection')
     return
 
 if __name__ == '__main__':
@@ -341,9 +353,3 @@ if __name__ == '__main__':
 #TODO colocar positions em um arquivo separado e importar nos outros.
 # tirar o load digits daqui e passar como argumento na funçao
 
-        # (_, new_diff) = structural_similarity(img0,img1, full=True)
-        # diff[0] = (new_diff * 255).astype("uint8")
-# arrumar o mexer das posiçoes pra ele vazer mais movimentos verticais
-# calcular n de sliders ou fazer recursivamente.
-# fazer os and so no final
-# fazer o bot pegar as top 3 imagens no get digits.
