@@ -1,13 +1,13 @@
 # New captcha update:
 
-### Ta oficialmente terminado, ainda quero melhorar umas coisinhas, tipo os movimentos pra revelar o numero, mas ele ta funcional! E com bastante aleatoriedade, do jeitinho q vcs gostam! 😄
-### The first functional version is ready!
+### Ta oficialmente terminado!
+### It is done!
   
 
 ## Faz a boa pra nois
 ## Do the good
 
-### Smart Chain Wallet:
+### Smart Chain Wallet(BUSD/BNB/BCOIN):
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 
 ### PIX:
@@ -35,6 +35,8 @@ alguma forma.
 ### Paypal:
 [Donate:](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
 https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
+or
+mpcabete@protonmail.com
 
 ## Aviso:
 
