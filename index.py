@@ -524,7 +524,6 @@ def main():
             refreshHeroesPositions()
 
         if now - last["chest"] > t['check_chest'] * 60:
-            pyautogui.hotkey('alt','tab')
             logger("Checking chest.")
             sys.stdout.flush()
             last["chest"] = now
