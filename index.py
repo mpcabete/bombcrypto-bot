@@ -164,8 +164,7 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         pass
         # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
-    clicked = False
-    while(not clicked):
+    while(True):
         matches = positions(img, threshold=threshold)
         if(len(matches)==0):
             hast_timed_out = time.time()-start > timeout
@@ -184,6 +183,8 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
+        print("THIS SHOULD NOT PRINT")
+
 
 def printSreen():
     with mss.mss() as sct:
@@ -355,9 +356,13 @@ def login():
         return
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
+<<<<<<< HEAD
         solveCaptcha()
-        login_attempts = login_attempts + 1
+=======
         logger('🎉 Connect wallet button detected, logging in!')
+        solveCaptcha(pause)
+>>>>>>> be42acfe4c05d8c95f09235c259e1e98fdb555b1
+        login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
@@ -520,21 +525,12 @@ def main():
 
 
 main()
-# sendHeroesHome()
 
 
 #cv2.imshow('img',sct_img)
 #cv2.waitKey()
 
-# chacar se tem o sign antes de aperta o connect wallet ?
-# arrumar aquela parte do codigo copiado onde tem q checar o sign 2 vezes ?
 # colocar o botao em pt
-# melhorar o log
-# salvar timestamp dos clickes em newmap em um arquivo
 # soh resetar posiçoes se n tiver clickado em newmap em x segundos
 
-# pegar o offset dinamicamente
-# clickar so no q nao tao trabalhando pra evitar um loop infinito no final do scroll se ainda tiver um verdinho
-# pip uninstall opencv-python
 
-# pip install --upgrade opencv-python==4.5.3.56
