@@ -63,8 +63,7 @@ if not ch['enable']:
     print('>>---> Home feature not enabled')
 print('\n')
 
-pause = c['time_intervals']['interval_between_moviments']
-pyautogui.PAUSE = pause
+pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
 
 pyautogui.FAILSAFE = False
 hero_clicks = 0
@@ -321,12 +320,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCaptcha(pause)
+    solveCaptcha()
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
     time.sleep(1)
-    solveCaptcha(pause)
+    solveCaptcha()
 
 def goToGame():
     # in case of server overload popup
@@ -356,7 +355,7 @@ def login():
         return
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
-        solveCaptcha(pause)
+        solveCaptcha()
         login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
         #TODO mto ele da erro e poco o botao n abre
@@ -488,7 +487,7 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
-            solveCaptcha(pause)
+            solveCaptcha()
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -507,7 +506,7 @@ def main():
 
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            solveCaptcha(pause)
+            solveCaptcha()
             last["refresh_heroes"] = now
             refreshHeroesPositions()
 
