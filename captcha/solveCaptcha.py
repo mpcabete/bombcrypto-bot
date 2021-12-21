@@ -296,7 +296,7 @@ def lookForMatch(background_digits,popup_pos):
 
 def solveCaptcha(pause, attempts=0):
     #removes pyautogui default pause between moviments and adds again at the end
-    pyautogui.PAUSE = 0
+    pyautogui.PAUSE = pause
 
     screenshot = printSreen()
     img = screenshot.copy()
