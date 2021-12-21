@@ -39,7 +39,7 @@ login_attempts = 0
 last_log_is_progress = False
 
 if telegram_notify is True:
-    if len(c['telegram']['bot_key']) > 10 and len(c['telegram']['chat_id'] > 5):
+    if int(len(c['telegram']['bot_key'])) > 10 and int(len(c['telegram']['chat_id']) >= 5):
         bot = TeleBot(c['telegram']['bot_key'])
         telegram_chat_id = c['telegram']['chat_id']
         print('>>---> Telegram enabled.\n')
@@ -566,7 +566,7 @@ def main():
         sys.stdout.flush()
         connected = checkConnection()
         if connected:
-            logger("""Connected - {time.strftime("%H:%M:%S")}""")
+            logger(f"""Connected - {time.strftime("%H:%M:%S")}""")
             last["login"] = now
         while not connected:
             logger("Game is not running.")
