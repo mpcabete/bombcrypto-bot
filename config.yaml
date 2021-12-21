@@ -64,14 +64,16 @@
     #
     # [pt_BR]
     # Valor padrão: 0.8
-    commom: 0.8
+    common: 0.8
 
     # [en_US]
     # Default value: 0.8
     #
     # [pt_BR]
     # Valor padrão: 0.8
-    select_wallet_buttons: 0.8
+    select_wallet_buttons: 0.7
+
+    connect_Wallet_button: 0.5
 
     # [en_US]
     # Default value: 0.9
@@ -86,6 +88,8 @@
     # [pt_BR]
     # Valor padrão: 0.9
     green_bar: 0.9
+
+    #common: 0.8
 
   home:
     enable: False
@@ -107,7 +111,7 @@
   #
   # [pt_BR]
   # Valor padrão: 3
-  scroll_attemps: 3
+  scroll_attemps: 2
 
   # [en_US]
   # Default value: true
@@ -138,6 +142,24 @@
   # full  = seleciona somente os heróis com a barra de stamina cheia
   select_heroes_mode: "green"
 
+ # [en_US] Option for send a telegram message if the bot couldn't find the game window
+  # Default value: False
+  # Available options: True or False
+  # bot_key: insert the full bot api key (message @botfather to get one)
+  # chat_id: send the chatid where the bot will send the message. Please, use /start in your bot before setting this up, otherwise the bot can't send you any message. Also works in groups or channels.
+  # error_count: how many times the bot should try before sending a message. The times varies based on the interval set to check for disconnection.
+
+ # [pt_BR] Opção para mandar uma mensagem no telegram informando que o bot não conseguiu localizar a tela do jogo
+  # Valor padrão : False
+  # Opções disponíveis: True ou False
+  # bot_key: coloque a chave do bot (interaja com @botfather para conseguir uma)
+  # chat_id: endereço do chat para o qual o bot vai enviar a mensagem. Favor começar um chat com o bot usando /start antes de ativar essa opção, ou você não receberá nenhuma mensagem. Também funciona em grupos e canais.
+  # error_cound: quantas tentativas o bot deve fazer antes de te avisar. O tempo varia com base no intervalo configurado para verificar desconexões.
+  telegram:
+      notify: False
+      bot_key: "F00B4R"
+      chat_id: "000"
+      error_count: 5
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False
   # Available options: False or True
@@ -145,4 +167,5 @@
   # [pt_BR] Opção para salvar os logs em arquivo (logs.txt)
   # Valor padrão : False
   # Opções disponíveis: False ou True
+
   save_log_to_file: True
