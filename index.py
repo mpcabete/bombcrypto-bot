@@ -5,9 +5,8 @@ from captcha.solveCaptcha import solveCaptcha
 
 from os import listdir
 from src.logger import logger, loggerMapClicked
-from random import randint
 from random import random
-
+from telebot import TeleBot
 import numpy as np
 import mss
 import pyautogui
@@ -15,41 +14,6 @@ import time
 import sys
 
 import yaml
-
-
-cat = """
-                                                _
-                                                \`*-.
-                                                 )  _`-.
-                                                .  : `. .
-                                                : _   '  \\
-                                                ; *` _.   `*-._
-                                                `-.-'          `-.
-                                                  ;       `       `.
-                                                  :.       .        \\
-                                                  . \  .   :   .-'   .
-                                                  '  `+.;  ;  '      :
-                                                  :  '  |    ;       ;-.
-                                                  ; '   : :`-:     _.`* ;
-                                               .*' /  .*' ; .*`- +'  `*'
-                                               `*-*   `*-*  `*-*'
-=========================================================================
-========== 💰 Have I helped you in any way? All I ask is a tip! 🧾 ======
-========== ✨ Faça sua boa ação de hoje, manda aquela gorjeta! 😊 =======
-=========================================================================
-======================== vvv BCOIN BUSD BNB vvv =========================
-============== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf ===============
-=========================================================================
-===== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ ======
-=========================================================================
-
->>---> Press ctrl + c to kill the bot.
-
->>---> Some configs can be found in the config.yaml file."""
-
-
-print(cat)
-time.sleep(4)
 
 
 if __name__ == '__main__':
@@ -60,16 +24,29 @@ ct = c['threshold']
 ch = c['home']
 
 if not ch['enable']:
-    print('>>---> Home feature not enabled')
-print('\n')
+    print('>>---> Home feature not enabled\n')
 
 pause = c['time_intervals']['interval_between_moviments']
 pyautogui.PAUSE = pause
 
 pyautogui.FAILSAFE = False
 hero_clicks = 0
+telegram_notify = c['telegram']['notify']
 login_attempts = 0
+notify_count = 0
 last_log_is_progress = False
+
+if telegram_notify is True:
+    if int(len(c['telegram']['bot_key'])) > 10 and int(len(c['telegram']['chat_id']) >= 5):
+        bot = TeleBot(c['telegram']['bot_key'])
+        telegram_chat_id = c['telegram']['chat_id']
+        print('>>---> Telegram enabled.\n')
+    else:
+        print('>>---> Error setting telegram up. Notifications disabled. Check config.\n')
+        telegram_notify = False
+else:
+    print('>>---> Telegram disabled.\n')
+
 
 
 
@@ -87,7 +64,7 @@ def addRandomness(n, randomn_factor_size=None):
     return int(randomized_n)
 
 def moveToWithRandomness(x,y,t):
-    pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10),t+random()/2)
+    pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10),t+random()/2,pyautogui.easeOutQuad)
 
 
 def remove_suffix(input_string, suffix):
@@ -161,7 +138,7 @@ def show(rectangles, img = None):
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
-    if not name is None:
+    if name is not None:
         pass
         # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
@@ -170,7 +147,7 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         if(len(matches)==0):
             hast_timed_out = time.time()-start > timeout
             if(hast_timed_out):
-                if not name is None:
+                if name is not None:
                     pass
                     # print('timed out')
                 return False
@@ -184,7 +161,6 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
-        print("THIS SHOULD NOT PRINT")
 
 
 def printSreen():
@@ -197,6 +173,58 @@ def printSreen():
         # Grab the data
         return sct_img[:,:,:3]
 
+
+#### MINHAS ADIÇÕES
+
+def checkScreen(button, confidence=ct['common']):
+    try:
+        object = pyautogui.locateOnScreen(button,confidence)
+        result = pyautogui.center(object)
+        return result
+    except:
+        return None
+
+def matchPixel(x,y,color):
+    matchScreen = pyautogui.screenshot()
+    if matchScreen.getpixel((x, y)) == color:
+        return True
+    else:
+        return False
+
+def smartMove(image, confidence=ct['common'],justcheck=False,challenge=False):
+    screenObj = checkScreen(image,confidence)
+    if screenObj:
+        if justcheck == True:
+           return True
+        else:
+            pointx, pointy = screenObj
+            pyautogui.moveTo(pointx, pointy,1,pyautogui.easeOutQuad)
+            pyautogui.click()
+            if challenge == True:
+                return screenObj
+            else:
+                sys.stdout.write(f"\n Clicked on {image}\n")
+                time.sleep(1)
+                return True
+    else:
+        return None
+
+def get_object_by_color(minx, maxx, miny, maxy, color, object="object"):
+    telaChallenge = pyautogui.screenshot()
+    objX = []
+    objY = []
+    try:
+        for x in range(minx,maxx):
+            for y in range(miny,maxy):
+               if telaChallenge.getpixel((x, y)) == color:
+                   objX.append(x)
+                   objY.append(y)
+        return objX, objY
+    except:
+        sys.stdout.write(f"\nError finding {object}\n")
+        return False
+
+## FIM DAS ADIÇÕES
 def positions(target, threshold=ct['default'],img = None):
     if img is None:
         img = printSreen()
@@ -217,10 +245,10 @@ def positions(target, threshold=ct['default'],img = None):
 
 def scroll():
 
-    commoms = positions(images['commom-text'], threshold = ct['commom'])
-    if (len(commoms) == 0):
+    commons = positions(images['commom-text'], threshold = ct['common'])
+    if (len(commons) == 0):
         return
-    x,y,w,h = commoms[len(commoms)-1]
+    x,y,w,h = commons[len(commons)-1]
 #
     moveToWithRandomness(x,y,1)
 
@@ -354,14 +382,41 @@ def login():
         logger('🔃 Too many login attempts, refreshing')
         login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
-        return
+        time.sleep(4)
+        return False
 
-    if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
-        logger('🎉 Connect wallet button detected, logging in!')
-        solveCaptcha(pause)
-        login_attempts = login_attempts + 1
-        #TODO mto ele da erro e poco o botao n abre
-        # time.sleep(10)
+    connectWalletBtnScreen = checkScreen(images['connect-wallet'], confidence=ct['connect_Wallet_button'])
+    if connectWalletBtnScreen:
+        try:
+            login_attempts = login_attempts + 1
+            time.sleep(1)
+            walletx, wallety = connectWalletBtnScreen
+            pyautogui.moveTo(walletx, wallety, 1, pyautogui.easeOutQuad)
+            pyautogui.click()
+            logger('Connect wallet button pressed')
+            solveCaptcha(pause)
+        except:
+            logger('Error clicking on wallet button')
+            login_attempts = 4  # Probla
+            return False
+
+    if clickBtn(images['metamask_pending'], name='metamask_pending_button', timeout = 2, threshold = 1):
+        logger('Metamask peding login found')
+        try:
+            clickBtn(images['metamask_cancel'], name='metamask_cancel_button', timeout = 2)
+            clickBtn(images['bombcrypto_logo'], name='bombcrypto_blank_area', timeout = 2)
+            pyautogui.hotkey('ctrl','f5')
+            time.wait(4)
+            return False
+        except:
+            login_attempts = login_attempts + 1
+
+    elif not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
+        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
+            pass
+            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo
+            # print('sleep in case there is no metamask text removed')
+            # time.sleep(20)
 
     if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
@@ -369,36 +424,16 @@ def login():
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
-            # print('sucessfully login, treasure hunt btn clicked')
+            logger('Successfully Logged, treasure button found')
             login_attempts = 0
-        return
+            return True
         # click ok button
 
-    if not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
-        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
-            pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
-            # print('sleep in case there is no metamask text removed')
-            # time.sleep(20)
-    else:
-        pass
-        # print('sleep in case there is no metamask text removed')
-        # time.sleep(20)
-
-    if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
-        login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        # time.sleep(25)
-        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
-            # print('sucessfully login, treasure hunt btn clicked')
-            login_attempts = 0
-        # time.sleep(15)
-
     if clickBtn(images['ok'], name='okBtn', timeout=5):
-        pass
-        # time.sleep(15)
-        # print('ok button clicked')
+        logger('OK Button Clicked')
+        return False
+
+    login_attempts += 1
 
 
 
@@ -471,6 +506,49 @@ def refreshHeroes():
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
+def checkConnection():
+    global notify_count
+    expandScrx, expandScry = 0, 0
+    walletSelectionScreen = checkScreen(images['select-wallet-1-hover'],confidence=ct['select_wallet_buttons'])
+    connectWalletBtnScreen = checkScreen(images['connect-wallet'],confidence=ct['connect_Wallet_button'])
+    treasureBtnScreen = checkScreen(images['treasure-hunt-icon'])
+    okBtnScreen = checkScreen(images['ok'])
+    expandScrx, expandScry = get_object_by_color(700,1660,400,1000,(64,173,211), "expand")
+    if okBtnScreen:
+        logger('Pressing Ok')
+        clickBtn(images['ok'], name='okBtn', timeout=5)
+        time.sleep(15)
+        connected = login()
+        return connected
+    elif treasureBtnScreen:
+        logger('Treasure button found!')
+        return True
+    elif walletSelectionScreen:
+        logger('Wallet selection screen found, refreshing!')
+        pyautogui.hotkey('ctrl','f5')
+        time.sleep(5)
+        return False
+    elif connectWalletBtnScreen:
+        logger('Connect wallet button detected, logging in!')
+        connected = login()
+        return connected
+    elif len(expandScrx) < 500 and len(expandScry) < 500:
+        #Check if the screen is visible
+        notify_count += 1
+        logger('Window not found')
+        if notify_count > c['telegram']['error_count'] and telegram_notify is True:
+            logger("Sending telegram message.")
+            bot.send_message(telegram_chat_id,"Tela do Cryptobomb não encontrada. Verificar navegador.",disable_notification=True)
+            notify_count = 0
+        logger('Waiting 60 seconds to try again')
+        #50 aqui + 10 da função de conexão
+        time.sleep(50)
+        return False
+    else:
+        logger('Game seems to be running fine.')
+        notify = 0
+        return True
+
 
 def main():
     time.sleep(5)
@@ -486,40 +564,51 @@ def main():
 
     while True:
         now = time.time()
-
-        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last["check_for_captcha"] = now
-            solveCaptcha(pause)
-
-        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-            last["heroes"] = now
-            refreshHeroes()
-
-        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
-            sys.stdout.flush()
-            last["login"] = now
-            login()
-
-        if now - last["new_map"] > t['check_for_new_map_button']:
-            last["new_map"] = now
-
-            if clickBtn(images['new-map']):
-                loggerMapClicked()
-
-
-        if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            solveCaptcha(pause)
-            last["refresh_heroes"] = now
-            refreshHeroesPositions()
-
-        #clickBtn(teasureHunt)
-        logger(None, progress_indicator=True)
-
         sys.stdout.flush()
+        connected = checkConnection()
+        if connected:
+            logger(f"""Connected - {time.strftime("%H:%M:%S")}""")
+            last["login"] = now
+        while not connected:
+            logger("Game is not running.")
+            sys.stdout.flush()
+            connected = checkConnection()
+            last["login"] = now
+            if connected:
+                logger('Connected successfully.')
+            else:
+                logger("Couldn't connect. Trying again in 10 seconds.")
+                time.sleep(10)
+        while connected:
+            now = time.time()
 
+            if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+                sys.stdout.flush()
+                connected = checkConnection()
+
+            if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
+                last["check_for_captcha"] = now
+                solveCaptcha(pause)
+
+            if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+                last["heroes"] = now
+                refreshHeroes()
+
+            if now - last["new_map"] > t['check_for_new_map_button']:
+                last["new_map"] = now
+
+                if clickBtn(images['new-map']):
+                    loggerMapClicked()
+
+            if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+                solveCaptcha(pause)
+                last["refresh_heroes"] = now
+                refreshHeroesPositions()
+
+            logger(None, progress_indicator=True)
+            sys.stdout.flush()
+            time.sleep(1)
         time.sleep(1)
-
-
 
 main()
 
