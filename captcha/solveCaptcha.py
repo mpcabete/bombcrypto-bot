@@ -299,7 +299,7 @@ def solveCaptcha():
 =======
 def solveCaptcha(pause, attempts=0):
     #removes pyautogui default pause between moviments and adds again at the end
-    pyautogui.PAUSE = 0
+    pyautogui.PAUSE = pause
 
 >>>>>>> be42acfe4c05d8c95f09235c259e1e98fdb555b1
     screenshot = printSreen()
