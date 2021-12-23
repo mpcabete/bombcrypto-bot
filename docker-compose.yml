@@ -1,8 +1,10 @@
 version: "3"
 services:
-  bot:
+  bot1:
     build:
       context: .
+      shm_size: '2g'
+    shm_size: '2g'
     restart: unless-stopped
     environment:
       - VNC_PASSWORD=123mudar
@@ -11,6 +13,32 @@ services:
       - RESOLUTION=1920x1080
     volumes:
        - /dev/shm:/dev/shm
+       - bot1_data:/root/.mozilla/
     ports:
       - 5900:5900
       - 6080:80
+    mem_limit: 2048m
+    cpus: 1
+  bot2:
+    build:
+      context: .
+      shm_size: '2g'
+    shm_size: '2g'
+    restart: unless-stopped
+    environment:
+      - VNC_PASSWORD=123mudar
+      - HTTP_PASSWORD=123mudar
+      - TZ=America/Sao_Paulo
+      - RESOLUTION=1920x1080
+    volumes:
+       - /dev/shm:/dev/shm
+       - bot2_data:/root/.mozilla/
+    ports:
+      - 5901:5900
+      - 6081:80
+    mem_limit: 2048m
+    cpus: 1
+
+volumes:
+    bot1_data:
+    bot2_data:
