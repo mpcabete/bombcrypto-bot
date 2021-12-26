@@ -119,24 +119,9 @@ def loadHeroesToSendHome():
 if ch['enable']:
     home_heroes = loadHeroesToSendHome()
 
-# go_work_img = cv2.imread('targets/go-work.png')
-# commom_img = cv2.imread('targets/commom-text.png')
-# arrow_img = cv2.imread('targets/go-back-arrow.png')
-# hero_img = cv2.imread('targets/hero-icon.png')
-# x_button_img = cv2.imread('targets/x.png')
-# teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
-# ok_btn_img = cv2.imread('targets/ok.png')
-# connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
-# select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
-# select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
-# sign_btn_img = cv2.imread('targets/select-wallet-2.png')
-# new_map_btn_img = cv2.imread('targets/new-map.png')
-# green_bar = cv2.imread('targets/green-bar.png')
 full_stamina = cv2.imread('targets/full-stamina.png')
 
 robot = cv2.imread('targets/robot.png')
-# puzzle_img = cv2.imread('targets/puzzle.png')
-# piece = cv2.imread('targets/piece.png')
 slider = cv2.imread('targets/slider.png')
 
 
@@ -217,7 +202,7 @@ def positions(target, threshold=ct['default'],img = None):
 
 def scroll():
 
-    commoms = positions(images['commom-text'], threshold = ct['commom'])
+    commoms = positions(images['hero-item'], threshold = ct['commom'])
     if (len(commoms) == 0):
         return
     x,y,w,h = commoms[len(commoms)-1]
