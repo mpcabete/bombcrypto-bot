@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
-
-#from captcha.solveCaptcha import solveCaptcha
-
 from os import listdir
 from src.logger import logger, loggerMapClicked
 from random import randint
 from random import random
-
 import numpy as np
 import mss
 import pyautogui
 import time
 import sys
-
 import yaml
-
 
 cat = """
                                                 _
@@ -46,7 +40,6 @@ cat = """
 >>---> Press ctrl + c to kill the bot.
 
 >>---> Some configs can be found in the config.yaml file."""
-
 
 print(cat)
 time.sleep(4)
@@ -324,12 +317,10 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    #solveCaptcha(pause)
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
     time.sleep(randint(1,3))
-    #solveCaptcha(pause)
 
 def goToGame():
     # in case of server overload popup
@@ -360,7 +351,6 @@ def login():
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         logger('🎉 Connect wallet button detected, logging in!')
-        #solveCaptcha(pause)
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
@@ -491,7 +481,6 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
-            #solveCaptcha(pause)
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -510,7 +499,6 @@ def main():
 
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            #solveCaptcha(pause)
             last["refresh_heroes"] = now
             refreshHeroesPositions()
 
