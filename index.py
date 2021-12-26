@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-    
+from src.logger import logger, loggerMapClicked
 from cv2 import cv2
 from os import listdir
-from src.logger import logger, loggerMapClicked
 from random import randint
 from random import random
 import numpy as np
@@ -10,6 +10,14 @@ import pyautogui
 import time
 import sys
 import yaml
+
+# Load config file.
+stream = open("config.yaml", 'r')
+c = yaml.safe_load(stream)
+ct = c['threshold']
+ch = c['home']
+pause = c['time_intervals']['interval_between_moviments']
+pyautogui.PAUSE = pause
 
 cat = """
                                                 _
@@ -41,28 +49,9 @@ cat = """
 
 >>---> Some configs can be found in the config.yaml file."""
 
-print(cat)
-time.sleep(4)
 
 
-if __name__ == '__main__':
-    stream = open("config.yaml", 'r')
-    c = yaml.safe_load(stream)
 
-ct = c['threshold']
-ch = c['home']
-
-if not ch['enable']:
-    print('>>---> Home feature not enabled')
-print('\n')
-
-pause = c['time_intervals']['interval_between_moviments']
-pyautogui.PAUSE = pause
-
-pyautogui.FAILSAFE = False
-hero_clicks = 0
-login_attempts = 0
-last_log_is_progress = False
 
 
 
@@ -97,7 +86,6 @@ def load_images():
 
     return targets
 
-images = load_images()
 
 def loadHeroesToSendHome():
     file_names = listdir('./targets/heroes-to-send-home')
@@ -109,28 +97,6 @@ def loadHeroesToSendHome():
     print('>>---> %d heroes that should be sent home loaded' % len(heroes))
     return heroes
 
-if ch['enable']:
-    home_heroes = loadHeroesToSendHome()
-
-# go_work_img = cv2.imread('targets/go-work.png')
-# commom_img = cv2.imread('targets/commom-text.png')
-# arrow_img = cv2.imread('targets/go-back-arrow.png')
-# hero_img = cv2.imread('targets/hero-icon.png')
-# x_button_img = cv2.imread('targets/x.png')
-# teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
-# ok_btn_img = cv2.imread('targets/ok.png')
-# connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
-# select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
-# select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
-# sign_btn_img = cv2.imread('targets/select-wallet-2.png')
-# new_map_btn_img = cv2.imread('targets/new-map.png')
-# green_bar = cv2.imread('targets/green-bar.png')
-full_stamina = cv2.imread('targets/full-stamina.png')
-
-robot = cv2.imread('targets/robot.png')
-# puzzle_img = cv2.imread('targets/puzzle.png')
-# piece = cv2.imread('targets/piece.png')
-slider = cv2.imread('targets/slider.png')
 
 
 
@@ -465,6 +431,27 @@ def refreshHeroes():
 
 
 def main():
+    """Main execution setup and loop"""
+    # ==Setup==
+    global hero_clicks
+    global login_attempts
+    global last_log_is_progress
+    hero_clicks = 0
+    login_attempts = 0
+    last_log_is_progress = False
+
+    global images
+    images = load_images()
+
+    if ch['enable']:
+        home_heroes = loadHeroesToSendHome()
+    else:
+        print('>>---> Home feature not enabled')
+    print('\n')
+
+    print(cat)
+    time.sleep(4)
+
     time.sleep(5)
     t = c['time_intervals']
 
@@ -475,6 +462,7 @@ def main():
     "check_for_captcha" : 0,
     "refresh_heroes" : 0
     }
+    # =========
 
     while True:
         now = time.time()
@@ -511,7 +499,11 @@ def main():
 
 
 
-main()
+if __name__ == '__main__':
+
+
+
+    main()
 
 
 #cv2.imshow('img',sct_img)
