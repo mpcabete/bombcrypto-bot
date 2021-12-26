@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-    
 from cv2 import cv2
 
-from captcha.solveCaptcha import solveCaptcha
+#from captcha.solveCaptcha import solveCaptcha
 
 from os import listdir
 from src.logger import logger, loggerMapClicked
@@ -267,7 +267,7 @@ def isWorking(bar, buttons):
 
 def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
-    offset = 130
+    offset = 140
 
     green_bars = positions(images['green-bar'], threshold=ct['green_bar'])
     logger('🟩 %d green bars detected' % len(green_bars))
@@ -284,13 +284,15 @@ def clickGreenBarButtons():
         logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
+    hero_clicks_cnt = 0
     for (x, y, w, h) in not_working_green_bars:
         # isWorking(y, buttons)
         moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        if hero_clicks > 20:
+        hero_clicks_cnt = hero_clicks_cnt + 1
+        if hero_clicks_cnt > 20:
             logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
             return
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
@@ -322,12 +324,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCaptcha(pause)
+    #solveCaptcha(pause)
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
-    time.sleep(1)
-    solveCaptcha(pause)
+    time.sleep(randint(1,3))
+    #solveCaptcha(pause)
 
 def goToGame():
     # in case of server overload popup
@@ -358,7 +360,7 @@ def login():
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         logger('🎉 Connect wallet button detected, logging in!')
-        solveCaptcha(pause)
+        #solveCaptcha(pause)
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
@@ -489,7 +491,7 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
-            solveCaptcha(pause)
+            #solveCaptcha(pause)
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -508,7 +510,7 @@ def main():
 
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            solveCaptcha(pause)
+            #solveCaptcha(pause)
             last["refresh_heroes"] = now
             refreshHeroesPositions()
 
