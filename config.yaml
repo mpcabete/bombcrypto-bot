@@ -1,10 +1,10 @@
 ---
 
-# [en_US] Time intervals configuration
-#
-# [pt_BR] Configurações de intervalos de tempo
-#
-time_intervals:
+  # [en_US] Time intervals configuration
+  #
+  # [pt_BR] Configurações de intervalos de tempo
+  #
+  time_intervals:
     #[pt-br] Intervalo de tempo para mudar de página (ALT + TAB)
     # Valor padrão (em minutos): 2
     change_page: 2
