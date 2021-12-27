@@ -141,33 +141,31 @@ def show(rectangles, img = None):
 
 
 
-def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
+def clickBtn(img, timeout=3, threshold = ct['default']):
+    """Search for img in the scree, if found moves the cursor over it and clicks.
+    Parameters:
+        img: The image that will be used as an template to find where to click.
+        timeout (int): Time in seconds that it will keep looking for the img before returning with fail
+        threshold(float): How confident the bot needs to be to click the buttons (values from 0 to 1)
+    """
+
     logger(None, progress_indicator=True)
-    if not name is None:
-        pass
-        # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
-    while(True):
+    has_timed_out = False
+    while(not has_timed_out):
         matches = positions(img, threshold=threshold)
         if(len(matches)==0):
-            hast_timed_out = time.time()-start > timeout
-            if(hast_timed_out):
-                if not name is None:
-                    pass
-                    # print('timed out')
-                return False
-            # print('button not found yet')
+            has_timed_out = time.time()-start > timeout
             continue
+
+    return False
 
         x,y,w,h = matches[0]
         pos_click_x = x+w/2
         pos_click_y = y+h/2
-        # mudar moveto pra w randomness
         moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
-        print("THIS SHOULD NOT PRINT")
-
 
 def printSreen():
     with mss.mss() as sct:
