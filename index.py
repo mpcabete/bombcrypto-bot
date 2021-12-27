@@ -57,15 +57,15 @@ cat = """
 
 def addRandomness(n, randomn_factor_size=None):
     """Returns n with randomness
-        Parameters:
-            n (int): A decimal integer
-            randomn_factor_size (int): The maximum value+- of randomness that will be
-                added to n
+    Parameters:
+        n (int): A decimal integer
+        randomn_factor_size (int): The maximum value+- of randomness that will be
+            added to n
 
-        Returns:
-            int: n with randomness
-
+    Returns:
+        int: n with randomness
     """
+
     if randomn_factor_size is None:
         randomness_percentage = 0.1
         randomn_factor_size = randomness_percentage * n
@@ -83,12 +83,19 @@ def moveToWithRandomness(x,y,t):
 
 
 def remove_suffix(input_string, suffix):
+    """Returns the input_string without the suffix"""
     if suffix and input_string.endswith(suffix):
         return input_string[:-len(suffix)]
     return input_string
 
-def load_images():
-    file_names = listdir('./targets/')
+def load_images(dir_path='./targets/'):
+    """ Programatically loads all images of dir_path as a key:value where the
+        key is the file name without the .png suffix
+
+    Returns:
+        dict: dictionary containing the loaded images as key:value pairs.
+    """
+    file_names = listdir(dir_path)
     targets = {}
     for file in file_names:
         path = 'targets/' + file
