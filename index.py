@@ -200,7 +200,13 @@ def scroll():
 
     commoms = positions(images['commom-text'], threshold = ct['commom'])
     if (len(commoms) == 0):
-        return
+        commoms = positions(images['rare-text'], threshold = ct['rare'])
+        if (len(commoms) == 0):
+            commoms = positions(images['super_rare-text'], threshold = ct['super_rare'])
+            if (len(commoms) == 0):
+                commoms = positions(images['epic-text'], threshold = ct['epic'])
+                if (len(commoms) == 0):
+                    return
     x,y,w,h = commoms[len(commoms)-1]
 #
     moveToWithRandomness(x,y,1)
@@ -477,38 +483,64 @@ def main():
     t = c['time_intervals']
 
     last = {
-    "login" : 0,
-    "heroes" : 0,
-    "new_map" : 0,
-    "check_for_captcha" : 0,
-    "refresh_heroes" : 0
+        1: {
+             "login" : 0,
+             "heroes" : 0,
+             "new_map" : 0,
+             "check_for_captcha" : 0,
+             "refresh_heroes" : 0
+         },
+        2: {
+             "login" : 0,
+             "heroes" : 0,
+             "new_map" : 0,
+             "check_for_captcha" : 0,
+             "refresh_heroes" : 0
+         },
     }
     # =========
 
+    global page
+    global totalPage
+    page = 1
+    totalPage = 2
+
+    global last_change_page
+    last_change_page = 0
     while True:
         now = time.time()
 
-        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last["check_for_captcha"] = now
+        #  Aqui controla a página aberta
+        if now - last_change_page > addRandomness(t['change_page'] * 60):
+            if (page == 1):
+                page = 2
+            else:
+                page = 1
 
-        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-            last["heroes"] = now
+            last_change_page = now
+            pyautogui.hotkey('alt','tab')
+
+        if now - last[page]["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
+            last[page]["check_for_captcha"] = now
+
+        if now - last[page]["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+            last[page]["heroes"] = now
             refreshHeroes()
 
-        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+        if now - last[page]["login"] > addRandomness(t['check_for_login'] * 60):
             sys.stdout.flush()
-            last["login"] = now
+            last[page]["login"] = now
             login()
 
-        if now - last["new_map"] > t['check_for_new_map_button']:
-            last["new_map"] = now
+        if now - last[page]["new_map"] > t['check_for_new_map_button']:
+            last[page]["new_map"] = now
 
             if clickBtn(images['new-map']):
                 loggerMapClicked()
 
 
-        if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            last["refresh_heroes"] = now
+        if now - last[page]["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+            last[page]["refresh_heroes"] = now
             refreshHeroesPositions()
 
         #clickBtn(teasureHunt)
