@@ -444,7 +444,7 @@ def refreshHeroes():
 
         sendHeroesHome()
 
-        empty_scrolls_attempts = empty_scrolls_attempts - 1
+        empty_scrolls_attempts -= 1
         scroll()
         time.sleep(2)
     logger('💪 {} heroes sent to work'.format(hero_clicks))
