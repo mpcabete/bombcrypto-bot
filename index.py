@@ -337,25 +337,25 @@ def login():
         pyautogui.hotkey('ctrl','f5')
         return
 
-    if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
+    if clickBtn(images['connect-wallet'], timeout = 10):
         logger('🎉 Connect wallet button detected, logging in!')
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
-    if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
+    if clickBtn(images['select-wallet-2'], timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
-        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
+        if clickBtn(images['treasure-hunt-icon'], timeout = 15):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         return
         # click ok button
 
-    if not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
-        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
+    if not clickBtn(images['select-wallet-1-no-hover'], ):
+        if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
             pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
@@ -365,17 +365,17 @@ def login():
         # print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
-    if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
+    if clickBtn(images['select-wallet-2'], timeout = 20):
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
-        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
+        if clickBtn(images['treasure-hunt-icon'], timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
 
-    if clickBtn(images['ok'], name='okBtn', timeout=5):
+    if clickBtn(images['ok'], timeout=5):
         pass
         # time.sleep(15)
         # print('ok button clicked')
