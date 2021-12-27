@@ -56,6 +56,16 @@ cat = """
 
 
 def addRandomness(n, randomn_factor_size=None):
+    """Returns n with randomness
+        Parameters:
+            n (int): A decimal integer
+            randomn_factor_size (int): The maximum value+- of randomness that will be
+                added to n
+
+        Returns:
+            int: n with randomness
+
+    """
     if randomn_factor_size is None:
         randomness_percentage = 0.1
         randomn_factor_size = randomness_percentage * n
@@ -444,15 +454,14 @@ def main():
     images = load_images()
 
     if ch['enable']:
+        global home_heroes
         home_heroes = loadHeroesToSendHome()
     else:
         print('>>---> Home feature not enabled')
     print('\n')
 
     print(cat)
-    time.sleep(4)
-
-    time.sleep(5)
+    time.sleep(7)
     t = c['time_intervals']
 
     last = {
