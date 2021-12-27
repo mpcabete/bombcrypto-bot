@@ -84,6 +84,7 @@ def moveToWithRandomness(x,y,t):
 
 def remove_suffix(input_string, suffix):
     """Returns the input_string without the suffix"""
+
     if suffix and input_string.endswith(suffix):
         return input_string[:-len(suffix)]
     return input_string
@@ -95,6 +96,7 @@ def load_images(dir_path='./targets/'):
     Returns:
         dict: dictionary containing the loaded images as key:value pairs.
     """
+
     file_names = listdir(dir_path)
     targets = {}
     for file in file_names:
@@ -105,6 +107,7 @@ def load_images(dir_path='./targets/'):
 
 
 def loadHeroesToSendHome():
+    """Loads the images in the path and saves them as a list"""
     file_names = listdir('./targets/heroes-to-send-home')
     heroes = []
     for file in file_names:
@@ -117,7 +120,10 @@ def loadHeroesToSendHome():
 
 
 
+
 def show(rectangles, img = None):
+    """ Show an popup with rectangles showing the rectangles[(x, y, w, h),...]
+        over img or a printSreen if no img provided. Useful for debugging"""
 
     if img is None:
         with mss.mss() as sct:
