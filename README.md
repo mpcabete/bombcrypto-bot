@@ -1,9 +1,3 @@
-# New captcha update:
-
-### Ta oficialmente terminado!
-### It is done!
-  
-
 ## Faz a boa pra nois
 ## Do the good
 
