@@ -197,24 +197,23 @@ def positions(target, threshold=ct['default'],img = None):
     return rectangles
 
 def scroll():
-
-    commoms = positions(images['commom-text'], threshold = ct['commom'])
+    commoms = positions(images['commom-text'], threshold=ct['commom'])
     if (len(commoms) == 0):
-        commoms = positions(images['rare-text'], threshold = ct['rare'])
+        commoms = positions(images['rare-text'], threshold=ct['rare'])
         if (len(commoms) == 0):
-            commoms = positions(images['super_rare-text'], threshold = ct['super_rare'])
+            commoms = positions(images['super_rare-text'], threshold=ct['super_rare'])
             if (len(commoms) == 0):
-                commoms = positions(images['epic-text'], threshold = ct['epic'])
+                commoms = positions(images['epic-text'], threshold=ct['epic'])
                 if (len(commoms) == 0):
                     return
     x,y,w,h = commoms[len(commoms)-1]
-#
+
     moveToWithRandomness(x,y,1)
 
     if not c['use_click_and_drag_instead_of_scroll']:
         pyautogui.scroll(-c['scroll_size'])
     else:
-        pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1, button='left')
+        pyautogui.dragRel(0, -c['click_and_drag_amount'], duration=1, button='left')
 
 
 def clickButtons():
@@ -252,7 +251,41 @@ def isWorking(bar, buttons):
             return False
     return True
 
-def clickGreenBarButtons():
+def descobreRaridade(bar):
+    commoms = positions(images['commom-text'], threshold=ct['commom'])
+    rares = positions(images['rare-text'], threshold=ct['rare'])
+    super_rares = positions(images['super_rare-text'], threshold=ct['super_rare'])
+    epics = positions(images['epic-text'], threshold=ct['epic'])
+
+    y = bar[1]
+
+    for (_, button_y, _, button_h) in commoms:
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            return 'commom'
+
+    for (_, button_y, _, button_h) in rares:
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            return 'rare'
+
+    for (_, button_y, _, button_h) in super_rares:
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            return 'super_rare'
+
+    for (_, button_y, _, button_h) in epics:
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            return 'epic'
+
+    return 'null'
+
+def clickGreenBarButtons(baus):
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 140
 
@@ -264,7 +297,15 @@ def clickGreenBarButtons():
 
     not_working_green_bars = []
     for bar in green_bars:
-        if not isWorking(bar, buttons):
+        global deveTrabalhar
+        global raridade
+        raridade = descobreRaridade(bar)
+        deveTrabalhar = 1
+
+        if raridade != 'commom' and (baus >= 60 or baus == 0):
+            deveTrabalhar = 0
+
+        if (not isWorking(bar, buttons)) and deveTrabalhar == 1:
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
         logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
@@ -314,7 +355,7 @@ def goToHeroes():
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
-    time.sleep(randint(1,3))
+    time.sleep(randint(1, 3))
 
 def goToGame():
     # in case of server overload popup
@@ -423,12 +464,56 @@ def sendHeroesHome():
 
 
 
+def checkBaus():
+    logger('🏢 Search for baus to map')
 
+    bausRoxo = positions(images['bau-roxo'], threshold=ct['bau_roxo'])
+    bausRoxoMeio = positions(images['bau-roxo-50'], threshold=ct['bau_roxo_50'])
+
+    bausGold = positions(images['bau-gold'], threshold=ct['bau_gold'])
+    bausGoldMeio = positions(images['bau-gold-50'], threshold=ct['bau_gold_50'])
+
+    bausBlue = positions(images['bau-blue'], threshold=ct['bau_blue'])
+    bausBlueMeio = positions(images['bau-blue-50'], threshold=ct['bau_blue_50'])
+
+    logger('🆗 %d baus roxo detected' % len(bausRoxo))
+    logger('🆗 %d baus roxo meia vida detected' % len(bausRoxoMeio))
+
+    logger('🆗 %d baus gold detected' % len(bausGold))
+    logger('🆗 %d baus gold meia vida detected' % len(bausGoldMeio))
+
+    logger('🆗 %d baus blue detected' % len(bausBlue))
+    logger('🆗 %d baus blue meia vida detected' % len(bausBlueMeio))
+
+    global response
+    if (len(bausRoxoMeio) > 0 or len(bausGoldMeio) > 0 or len(bausBlueMeio) > 0):
+        response = (
+                           (len(bausRoxoMeio) + len(bausGoldMeio) + len(bausBlueMeio))
+                           * 100
+                   ) / (len(bausRoxo) + len(bausGold) + len(bausBlue))
+    else:
+        response = 0
+
+    return response
+
+def clickFullRest():
+    while (True):
+        buttons = positions(images['rest'], threshold=ct['rest'])
+        if len(buttons) > 0:
+            clickBtn(images['rest'])
+        else:
+            return
 
 def refreshHeroes():
     logger('🏢 Search for heroes to work')
 
+    global baus
+    baus = checkBaus()
+
     goToHeroes()
+
+    if c['select_heroes_mode'] != "full":
+        clickFullRest()
 
     if c['select_heroes_mode'] == "full":
         logger('⚒️ Sending heroes with full stamina bar to work', 'green')
@@ -444,7 +529,7 @@ def refreshHeroes():
         if c['select_heroes_mode'] == 'full':
             buttonsClicked = clickFullBarButtons()
         elif c['select_heroes_mode'] == 'green':
-            buttonsClicked = clickGreenBarButtons()
+            buttonsClicked = clickGreenBarButtons(baus)
         else:
             buttonsClicked = clickButtons()
 
@@ -520,8 +605,14 @@ def main():
             last_change_page = now
             pyautogui.hotkey('alt','tab')
 
-        if now - last[page]["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last[page]["check_for_captcha"] = now
+        if now - last[page]["new_map"] > t['check_for_new_map_button']:
+            last[page]["new_map"] = now
+
+            if clickBtn(images['new-map']):
+                loggerMapClicked()
+
+        # if now - last[page]["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
+        #     last[page]["check_for_captcha"] = now
 
         if now - last[page]["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last[page]["heroes"] = now
@@ -531,12 +622,6 @@ def main():
             sys.stdout.flush()
             last[page]["login"] = now
             login()
-
-        if now - last[page]["new_map"] > t['check_for_new_map_button']:
-            last[page]["new_map"] = now
-
-            if clickBtn(images['new-map']):
-                loggerMapClicked()
 
 
         if now - last[page]["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
