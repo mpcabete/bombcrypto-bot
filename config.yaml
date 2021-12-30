@@ -146,3 +146,6 @@
   # Valor padrão : False
   # Opções disponíveis: False ou True
   save_log_to_file: True
+
+  # in tests
+  multiples_accounts_same_monitor: False

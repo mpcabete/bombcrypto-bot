@@ -13,36 +13,12 @@ import mss
 import pyautogui
 import time
 import sys
+import pygetwindow
 
 import yaml
 
 
 cat = """
-                                                _
-                                                \`*-.
-                                                 )  _`-.
-                                                .  : `. .
-                                                : _   '  \\
-                                                ; *` _.   `*-._
-                                                `-.-'          `-.
-                                                  ;       `       `.
-                                                  :.       .        \\
-                                                  . \  .   :   .-'   .
-                                                  '  `+.;  ;  '      :
-                                                  :  '  |    ;       ;-.
-                                                  ; '   : :`-:     _.`* ;
-                                               .*' /  .*' ; .*`- +'  `*'
-                                               `*-*   `*-*  `*-*'
-=========================================================================
-========== 💰 Have I helped you in any way? All I ask is a tip! 🧾 ======
-========== ✨ Faça sua boa ação de hoje, manda aquela gorjeta! 😊 =======
-=========================================================================
-======================== vvv BCOIN BUSD BNB vvv =========================
-============== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf ===============
-=========================================================================
-===== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ ======
-=========================================================================
-
 >>---> Press ctrl + c to kill the bot.
 
 >>---> Some configs can be found in the config.yaml file."""
@@ -141,9 +117,6 @@ def show(rectangles, img = None):
     cv2.waitKey(0)
 
 
-
-
-
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
     if not name is None:
@@ -172,20 +145,33 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         print("THIS SHOULD NOT PRINT")
 
 
+window_object = None
+
+def printScreenForWindow(window):
+    window.activate()
+    width, height = window.size
+    left = window.left
+    top = window.top
+
+    with mss.mss() as sct:
+        monitor = sct.monitors[0]
+        monitor = {"top": top, "left": left, "width": width, "height": height}
+        sct_img = np.array(sct.grab(monitor))
+        return sct_img[:,:,:3]
+
 def printSreen():
     with mss.mss() as sct:
         monitor = sct.monitors[0]
         sct_img = np.array(sct.grab(monitor))
-        # The screen part to capture
-        # monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
-
-        # Grab the data
         return sct_img[:,:,:3]
 
 def positions(target, threshold=ct['default'],img = None):
     if img is None:
-        img = printSreen()
-    result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
+        if window_object is not None:
+            img = printScreenForWindow(window_object)
+        else:
+            img = printSreen()
+        result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
     w = target.shape[1]
     h = target.shape[0]
 
@@ -499,8 +485,64 @@ def main():
 
         time.sleep(1)
 
+def mainMultiplesWindows():
+    time.sleep(5)
+    t = c['time_intervals']
 
+    windows = []
+    logger('🆗 Start using MULTIPLES ACCOUNTS TO ONE MONITOR SUPPORT')
 
-main()
+    for w in pygetwindow.getWindowsWithTitle('bombcrypto'):
+        windows.append({
+            "window": w,
+            "login" : 0,
+            "heroes" : 0,
+            "new_map" : 0,
+            "check_for_captcha" : 0,
+            "refresh_heroes" : 0
+            })
+
+    while True:
+        now = time.time()
+        
+        for last in windows:
+            window_object = last["window"]
+            window_object.activate()
+            time.sleep(2)
+
+            # if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
+            #     last["check_for_captcha"] = now
+            #     solveCaptcha(pause)
+
+            if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+                last["heroes"] = now
+                refreshHeroes()
+
+            if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+                sys.stdout.flush()
+                last["login"] = now
+                login()
+
+            if now - last["new_map"] > t['check_for_new_map_button']:
+                last["new_map"] = now
+
+                if clickBtn(images['new-map']):
+                    loggerMapClicked()
+
+            if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+                # solveCaptcha(pause)
+                last["refresh_heroes"] = now
+                refreshHeroesPositions()
+
+            logger(None, progress_indicator=True)
+
+            sys.stdout.flush()
+
+            time.sleep(1)
+
+if c['multiples_accounts_same_monitor']:
+    mainMultiplesWindows()
+else:
+    main()
 
 
