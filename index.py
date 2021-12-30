@@ -307,12 +307,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCaptcha(pause)
+    # solveCaptcha(pause)
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
     time.sleep(1)
-    solveCaptcha(pause)
+    # solveCaptcha(pause)
 
 def goToGame():
     # in case of server overload popup
@@ -343,7 +343,7 @@ def login():
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         logger('🎉 Connect wallet button detected, logging in!')
-        solveCaptcha(pause)
+        # solveCaptcha(pause)
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
@@ -403,14 +403,14 @@ def sendHeroesHome():
         print('No heroes that should be sent home found.')
         return
     print(' %d heroes that should be sent home found' % n)
-    # if send-home button exists, the hero is not home
+
     go_home_buttons = positions(images['send-home'], threshold=ch['home_button_threshold'])
     # TODO pass it as an argument for both this and the other function that uses it
-    go_work_buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
+    go_work_buttons = positions(images['go-work-old'], threshold=ct['go_to_work_btn'])
+    # go_work_buttons_new = positions(images['go-work'], threshold=ct['go_to_work_btn'])
 
     for position in heroes_positions:
         if not isHome(position,go_home_buttons):
-            print(isWorking(position, go_work_buttons))
             if(not isWorking(position, go_work_buttons)):
                 print ('hero not working, sending him home')
                 moveToWithRandomness(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
@@ -419,9 +419,6 @@ def sendHeroesHome():
                 print ('hero working, not sending him home(no dark work button)')
         else:
             print('hero already home, or home full(no dark home button)')
-
-
-
 
 
 def refreshHeroes():
@@ -472,9 +469,9 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last["check_for_captcha"] = now
-            solveCaptcha(pause)
+        # if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
+        #     last["check_for_captcha"] = now
+        #     solveCaptcha(pause)
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -491,13 +488,11 @@ def main():
             if clickBtn(images['new-map']):
                 loggerMapClicked()
 
-
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            solveCaptcha(pause)
+            # solveCaptcha(pause)
             last["refresh_heroes"] = now
             refreshHeroesPositions()
 
-        #clickBtn(teasureHunt)
         logger(None, progress_indicator=True)
 
         sys.stdout.flush()
@@ -507,12 +502,5 @@ def main():
 
 
 main()
-
-
-#cv2.imshow('img',sct_img)
-#cv2.waitKey()
-
-# colocar o botao em pt
-# soh resetar posiçoes se n tiver clickado em newmap em x segundos
 
 
