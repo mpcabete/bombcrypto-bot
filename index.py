@@ -38,6 +38,14 @@ if __name__ == '__main__':
 ct = c['threshold']
 ch = c['home']
 
+
+scale_image_percent = c['scale_image_percent']
+scale_threshold = c['scale_threshold']
+scale_enable = c['scale_enable']
+
+if scale_enable:
+    logger('Using image scale: {}%\nScale threshold: {}'.format(scale_image_percent,scale_threshold))
+
 if not ch['enable']:
     print('>>---> Home feature not enabled')
 print('\n')
@@ -79,12 +87,28 @@ def remove_suffix(input_string, suffix):
         return input_string[:-len(suffix)]
     return input_string
 
+def cv_size(img):
+    return tuple(img.shape[1::-1])
+
+def resize_image(image, scale=67):
+    if image is not None:
+        height, width = cv_size(image)
+        resize_size = (int(height * (scale/100)), int(width * (scale/100)))
+        resized = cv2.resize(image, resize_size, interpolation= cv2.INTER_LINEAR)
+        return resized
+    return image
+
 def load_images():
     file_names = listdir('./targets/')
     targets = {}
     for file in file_names:
         path = 'targets/' + file
-        targets[remove_suffix(file, '.png')] = cv2.imread(path)
+        target_name = remove_suffix(file, '.png')
+        temp_image = cv2.imread(path)
+        if scale_enable:
+            targets[target_name] = resize_image(temp_image, scale_image_percent)
+        else:
+            targets[target_name] = temp_image
 
     return targets
 
@@ -95,7 +119,9 @@ def loadHeroesToSendHome():
     heroes = []
     for file in file_names:
         path = './targets/heroes-to-send-home/' + file
-        heroes.append(cv2.imread(path))
+        # TODO: add scale?
+        hero_image = cv2.imread(path)
+        heroes.append(hero_image)
 
     print('>>---> %d heroes that should be sent home loaded' % len(heroes))
     return heroes
@@ -129,7 +155,6 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
     if not name is None:
         pass
-        # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
     while(True):
         matches = positions(img, threshold=threshold)
@@ -138,14 +163,11 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
             if(hast_timed_out):
                 if not name is None:
                     pass
-                    # print('timed out')
                 return False
-            # print('button not found yet')
             continue
         x,y,w,h = matches[0]
         pos_click_x = x+w/2
         pos_click_y = y+h/2
-        # mudar moveto pra w randomness
         moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
@@ -205,14 +227,12 @@ def scroll():
 
 
 def clickButtons():
-    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
-    # print('buttons: {}'.format(len(buttons)))
+    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn']*scale_threshold if scale_enable else ct['go_to_work_btn'])
     for (x, y, w, h) in buttons:
         moveToWithRandomness(x+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
         if hero_clicks > 20:
             logger('too many hero clicks, try to increase the go_to_work_btn threshold')
             return
@@ -240,12 +260,11 @@ def isWorking(bar, buttons):
     return True
 
 def clickGreenBarButtons():
-    # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 130
 
-    green_bars = positions(images['green-bar'], threshold=ct['green_bar'])
+    green_bars = positions(images['green-bar'], threshold=ct['green_bar']*scale_threshold if scale_enable else ct['green_bar'])
     logger('🟩 %d green bars detected' % len(green_bars))
-    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
+    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn']*scale_threshold if scale_enable else ct['go_to_work_btn'])
     logger('🆗 %d buttons detected' % len(buttons))
 
 
@@ -275,8 +294,8 @@ def clickGreenBarButtons():
 
 def clickFullBarButtons():
     offset = 100
-    full_bars = positions(images['full-stamina'], threshold=ct['default'])
-    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
+    full_bars = positions(images['full-stamina'], threshold=ct['default']*scale_threshold if scale_enable else ct['default'])
+    buttons = positions(images['go-work'], threshold=ct['go_to_work_btn']*scale_threshold if scale_enable else ct['go_to_work_btn'])
 
     not_working_full_bars = []
     for bar in full_bars:
@@ -367,18 +386,12 @@ def login():
 
     if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        # time.sleep(25)
         if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
-            # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
 
     if clickBtn(images['ok'], name='okBtn', timeout=5):
         pass
-        # time.sleep(15)
-        # print('ok button clicked')
 
 
 
@@ -389,7 +402,6 @@ def sendHeroesHome():
     for hero in home_heroes:
         hero_positions = positions(hero, threshold=ch['hero_threshold'])
         if not len (hero_positions) == 0:
-            #TODO maybe pick up match with most wheight instead of first
             hero_position = hero_positions[0]
             heroes_positions.append(hero_position)
 
@@ -404,7 +416,6 @@ def sendHeroesHome():
     go_work_buttons = positions(images['go-work-old'], threshold=ct['go_to_work_btn'])
     # go_work_buttons_new = positions(images['go-work'], threshold=ct['go_to_work_btn'])
 
-    # show(heroes_positions)
     for position in heroes_positions:
         if not isHome(position,go_home_buttons):
             if(not isWorking(position, go_work_buttons)):
@@ -452,6 +463,11 @@ def refreshHeroes():
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
+def active_window():
+    try:
+        window_object.activate()
+    except:
+        window_object.activate()
 
 def main():
     time.sleep(5)
@@ -515,21 +531,13 @@ def mainMultiplesWindows():
             "new_map" : 0,
             "check_for_captcha" : 0,
             "refresh_heroes" : 0
-            })
+        })
 
     while True:
         now = time.time()
         
         for last in windows:
             window_object = last["window"]
-            try:
-                last["window"].activate()
-                # last["window"].minimize()
-                # last["window"].maximize()
-            except:
-                last["window"].activate()
-                # last["window"].minimize()
-                # last["window"].maximize()
 
             logger('Client activated window!\n{}'.format(last['window']))
             time.sleep(5)
@@ -539,27 +547,30 @@ def mainMultiplesWindows():
             #     solveCaptcha(pause)
 
             if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+                active_window()
                 last["heroes"] = now
                 refreshHeroes()
 
             if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+                active_window()
                 sys.stdout.flush()
                 last["login"] = now
                 login()
 
             if now - last["new_map"] > t['check_for_new_map_button']:
+                active_window()
                 last["new_map"] = now
 
                 if clickBtn(images['new-map']):
                     loggerMapClicked()
 
             if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+                active_window()
                 # solveCaptcha(pause)
                 last["refresh_heroes"] = now
                 refreshHeroesPositions()
 
             logger(None, progress_indicator=True)
-
             sys.stdout.flush()
 
             time.sleep(1)
