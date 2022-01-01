@@ -17,6 +17,8 @@ import pygetwindow
 
 import yaml
 
+global window_object
+
 
 cat = """
 >>---> Press ctrl + c to kill the bot.
@@ -27,6 +29,7 @@ cat = """
 print(cat)
 time.sleep(4)
 
+window_object = None
 
 if __name__ == '__main__':
     stream = open("config.yaml", 'r')
@@ -63,7 +66,12 @@ def addRandomness(n, randomn_factor_size=None):
     return int(randomized_n)
 
 def moveToWithRandomness(x,y,t):
-    pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10),t+random()/2)
+    pos_x = x
+    pos_y = y
+    if window_object is not None:
+        pos_x = pos_x+window_object.left
+        pos_y = pos_y+window_object.top
+    pyautogui.moveTo(addRandomness(pos_x,10),addRandomness(pos_y,10),t+random()/2)
 
 
 def remove_suffix(input_string, suffix):
@@ -134,7 +142,6 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
                 return False
             # print('button not found yet')
             continue
-
         x,y,w,h = matches[0]
         pos_click_x = x+w/2
         pos_click_y = y+h/2
@@ -143,9 +150,6 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         pyautogui.click()
         return True
         print("THIS SHOULD NOT PRINT")
-
-
-window_object = None
 
 def printScreenForWindow(window):
     window.activate()
@@ -192,7 +196,6 @@ def scroll():
     if (len(commoms) == 0):
         return
     x,y,w,h = commoms[len(commoms)-1]
-#
     moveToWithRandomness(x,y,1)
 
     if not c['use_click_and_drag_instead_of_scroll']:
@@ -257,7 +260,10 @@ def clickGreenBarButtons():
     # se tiver botao com y maior que bar y-10 e menor que y+10
     for (x, y, w, h) in not_working_green_bars:
         # isWorking(y, buttons)
-        moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
+        
+        pos_click_x = x+offset+(w/2)
+        pos_click_y = y+(h/2)
+        moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -281,7 +287,10 @@ def clickFullBarButtons():
         logger('👆 Clicking in %d heroes' % len(not_working_full_bars))
 
     for (x, y, w, h) in not_working_full_bars:
-        moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
+        
+        pos_click_x = x+offset+(w/2)
+        pos_click_y = y+(h/2)
+        moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
@@ -395,11 +404,15 @@ def sendHeroesHome():
     go_work_buttons = positions(images['go-work-old'], threshold=ct['go_to_work_btn'])
     # go_work_buttons_new = positions(images['go-work'], threshold=ct['go_to_work_btn'])
 
+    # show(heroes_positions)
     for position in heroes_positions:
         if not isHome(position,go_home_buttons):
             if(not isWorking(position, go_work_buttons)):
                 print ('hero not working, sending him home')
-                moveToWithRandomness(go_home_buttons[0][0]+go_home_buttons[0][2]/2,position[1]+position[3]/2,1)
+                
+                pos_click_x = go_home_buttons[0][0]+go_home_buttons[0][2]/2
+                pos_click_y = position[1]+position[3]/2
+                moveToWithRandomness(pos_click_x,pos_click_y,1)
                 pyautogui.click()
             else:
                 print ('hero working, not sending him home(no dark work button)')
@@ -486,6 +499,8 @@ def main():
         time.sleep(1)
 
 def mainMultiplesWindows():
+    global window_object
+    window_object = None
     time.sleep(5)
     t = c['time_intervals']
 
@@ -507,8 +522,17 @@ def mainMultiplesWindows():
         
         for last in windows:
             window_object = last["window"]
-            window_object.activate()
-            time.sleep(2)
+            try:
+                last["window"].activate()
+                # last["window"].minimize()
+                # last["window"].maximize()
+            except:
+                last["window"].activate()
+                # last["window"].minimize()
+                # last["window"].maximize()
+
+            logger('Client activated window!\n{}'.format(last['window']))
+            time.sleep(5)
 
             # if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             #     last["check_for_captcha"] = now
