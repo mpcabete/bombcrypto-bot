@@ -176,7 +176,7 @@
     #
     # [pt_BR] Quando a escala está habilitada, especificar o valor de escala utilizada em seu navegador
     # Valor padrão: 100 
-    percent: 80
+    percent: 100
 
     # [en_US] When enable scale, set what scale images threshold to compare images
     # Default value: 0.9
