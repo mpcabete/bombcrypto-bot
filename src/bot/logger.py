@@ -1,8 +1,8 @@
-from src.utils.config import load_configs_from_file
+from src.utils.config import loadConfigsFromFile
 from src.utils.date import dateFormatted
 import sys
 
-cfg = load_configs_from_file()
+cfg = loadConfigsFromFile()
 
 last_log_is_progress = False
 
@@ -52,7 +52,7 @@ def logger(message, progress_indicator = False, color = 'default'):
 
     return True
 
-def loggerMapClicked():
+def logNewMapClicked():
     logger('🗺️ New Map button clicked!')
     logger_file = open("./logs/new-map.log", "a", encoding='utf-8')
     logger_file.write(dateFormatted() + '\n')

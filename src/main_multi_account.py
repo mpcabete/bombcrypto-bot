@@ -61,7 +61,7 @@ def runMultiAccount():
                 last["new_map"] = now
 
                 if clickBtn(env.images['new-map']):
-                    log.loggerMapClicked()
+                    log.logNewMapClicked()
 
             if now - last["refresh_heroes"] > addRandomness( intervals['refresh_heroes_positions'] * 60):
                 Action.active_window()

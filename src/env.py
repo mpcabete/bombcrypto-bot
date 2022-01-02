@@ -1,5 +1,5 @@
 from src.utils.assets import loadImages, loadHeroesImagesToHome
-from src.utils.config import load_configs_from_file
+from src.utils.config import loadConfigsFromFile
 from src.bot.logger import logger
 
 logger('Setting up global variables...', color='green')
@@ -23,7 +23,7 @@ last_log_is_progress = False
 images = []
 home_heroes = []
 
-cfg = load_configs_from_file()
+cfg = loadConfigsFromFile()
 
 logger('Mapping configs...', color='green')
 threshold = cfg['threshold']

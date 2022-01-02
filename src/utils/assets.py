@@ -2,7 +2,7 @@ from cv2 import cv2
 from os import listdir
 import src.env as env
 from src.utils import string
-from src.utils.image import resize_image
+from src.utils.image import resizeImageForScale
 
 def loadHeroesImagesToHome():
     file_names = listdir('./targets/heroes-to-send-home')
@@ -21,10 +21,10 @@ def loadImages():
     targets = {}
     for file in file_names:
         path = 'targets/' + file
-        target_name = string.remove_suffix(file, '.png')
+        target_name = string.removeSuffix(file, '.png')
         temp_image = cv2.imread(path)
         if env.scale_image['enable']:
-            targets[target_name] = resize_image(temp_image, env.scale_image['percent'])
+            targets[target_name] = resizeImageForScale(temp_image, env.scale_image['percent'])
         else:
             targets[target_name] = temp_image
 

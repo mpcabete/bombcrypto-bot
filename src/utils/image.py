@@ -2,12 +2,12 @@ from cv2 import cv2
 import mss
 import numpy as np
 
-def get_image_size(img):
+def getImageSize(img):
     return tuple(img.shape[1::-1])
 
-def resize_image(image, scale=67):
+def resizeImageForScale(image, scale=67):
     if image is not None:
-        height, width = get_image_size(image)
+        height, width = getImageSize(image)
         resize_size = (int(height * (scale/100)), int(width * (scale/100)))
         resized = cv2.resize(image, resize_size, interpolation= cv2.INTER_LINEAR)
         return resized

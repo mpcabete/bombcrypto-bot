@@ -3,11 +3,11 @@ import pyautogui
 
 import src.env as env
 import src.bot.logger as Log
-from src.bot.action import goToGame, goToHeroes, moveToWithRandomness, scroll, get_positions
+from src.bot.action import goToGame, goToHeroes, moveToWithRandomness, scroll, getPositions
 from src.bot.utils import isHome, isWorking
 
 def clickButtons():
-    buttons = get_positions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
+    buttons = getPositions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
     for (x, y, w, h) in buttons:
         moveToWithRandomness(x+(w/2),y+(h/2),1)
         pyautogui.click()
@@ -20,9 +20,9 @@ def clickButtons():
 def clickGreenBarButtons():
     offset = 130
 
-    green_bars = get_positions(env.images['green-bar'], threshold=env.threshold['green_bar']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['green_bar'])
+    green_bars = getPositions(env.images['green-bar'], threshold=env.threshold['green_bar']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['green_bar'])
     Log.logger('🟩 %d green bars detected' % len(green_bars))
-    buttons = get_positions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
+    buttons = getPositions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
     Log.logger('🆗 %d buttons detected' % len(buttons))
 
 
@@ -47,8 +47,8 @@ def clickGreenBarButtons():
 
 def clickFullBarButtons():
     offset = 100
-    full_bars = get_positions(env.images['full-stamina'], threshold=env.threshold['default']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['default'])
-    buttons = get_positions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
+    full_bars = getPositions(env.images['full-stamina'], threshold=env.threshold['default']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['default'])
+    buttons = getPositions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
 
     not_working_full_bars = []
     for bar in full_bars:
@@ -73,7 +73,7 @@ def sendHeroesHome():
         return
     heroes_positions = []
     for hero in env.home_heroes:
-        hero_positions = get_positions(hero, threshold=env.home['hero_threshold'])
+        hero_positions = getPositions(hero, threshold=env.home['hero_threshold'])
         if not len (hero_positions) == 0:
             hero_position = hero_positions[0]
             heroes_positions.append(hero_position)
@@ -84,8 +84,8 @@ def sendHeroesHome():
         return
     print(' %d heroes that should be sent home found' % n)
 
-    go_home_buttons = get_positions(env.images['send-home'], threshold=env.home['home_button_threshold'])
-    go_work_buttons = get_positions(env.images['go-work-old'], threshold=env.threshold['go_to_work_btn'])
+    go_home_buttons = getPositions(env.images['send-home'], threshold=env.home['home_button_threshold'])
+    go_work_buttons = getPositions(env.images['go-work-old'], threshold=env.threshold['go_to_work_btn'])
 
     for position in heroes_positions:
         if not isHome(position,go_home_buttons):

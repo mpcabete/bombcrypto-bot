@@ -26,7 +26,7 @@ def clickBtn(img,name=None, timeout=3, threshold = env.threshold['default']):
         pass
     start = time.time()
     while(True):
-        matches = get_positions(img, threshold=threshold)
+        matches = getPositions(img, threshold=threshold)
         if(len(matches)==0):
             hast_timed_out = time.time()-start > timeout
             if(hast_timed_out):
@@ -42,7 +42,7 @@ def clickBtn(img,name=None, timeout=3, threshold = env.threshold['default']):
         return True
 
 def scroll():
-    commoms = get_positions(env.images['hero-item'], threshold = env.threshold['commom'])
+    commoms = getPositions(env.images['hero-item'], threshold = env.threshold['commom'])
     if (len(commoms) == 0):
         return
     x,y,w,h = commoms[len(commoms)-1]
@@ -53,7 +53,7 @@ def scroll():
     else:
         pyautogui.dragRel(0,-env.cfg['click_and_drag_amount'],duration=1, button='left')
 
-def get_positions(target, threshold=env.threshold['default'],img = None):
+def getPositions(target, threshold=env.threshold['default'],img = None):
     if img is None:
         if env.window_object is not None:
             img = printScreenForWindow(env.window_object)
