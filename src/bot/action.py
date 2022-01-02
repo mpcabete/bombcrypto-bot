@@ -4,7 +4,7 @@ import numpy as np
 import pyautogui
 import time
 
-from src.logger.logger import logger
+from src.logger import logger
 import src.env as env
 from src.utils.number import addRandomness
 from src.utils.image import printScreen, printScreenForWindow

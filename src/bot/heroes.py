@@ -1,8 +1,8 @@
-from time import time
+import time
 import pyautogui
 
 import src.env as env
-from src.logger.logger import logger
+from src.logger import logger
 from src.bot.action import goToGame, goToHeroes, moveToWithRandomness, scroll, get_positions
 from src.bot.utils import isHome, isWorking
 

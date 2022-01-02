@@ -152,25 +152,28 @@
   #
   # [pt_BR] Opção para usar multiplas contas no mesmo monitor
   # Valor padrão: False
-  multiples_accounts_same_monitor: False
+  multiples_accounts_same_monitor:
+    enable: False
+    window_contains_title: 'bombcrypto'
 
-  # [en_US] Enable for use different scale on your browser
-  # Default value: False
-  #
-  # [pt_BR] Habilita para usar uma escala diferente de visão em seu navegador
-  # Valor padrão: False 
-  scale_enable: False
-  
-  # [en_US] When enable scale, set what scale value used on your browser
-  # Default value: 100
-  #
-  # [pt_BR] Quando a escala está habilitada, especificar o valor de escala utilizada em seu navegador
-  # Valor padrão: 100 
-  scale_image_percent: 80
+  scale_image:
+    # [en_US] Enable for use different scale on your browser
+    # Default value: False
+    #
+    # [pt_BR] Habilita para usar uma escala diferente de visão em seu navegador
+    # Valor padrão: False 
+    enable: False
+    
+    # [en_US] When enable scale, set what scale value used on your browser
+    # Default value: 100
+    #
+    # [pt_BR] Quando a escala está habilitada, especificar o valor de escala utilizada em seu navegador
+    # Valor padrão: 100 
+    percent: 80
 
-  # [en_US] When enable scale, set what scale images threshold to compare images
-  # Default value: 0.9
-  #
-  # [pt_BR] Quando a escala está habilitada, especificar o valor de threshold para comparação de imagens
-  # Valor padrão: 0.9 
-  scale_threshold: 0.9
+    # [en_US] When enable scale, set what scale images threshold to compare images
+    # Default value: 0.9
+    #
+    # [pt_BR] Quando a escala está habilitada, especificar o valor de threshold para comparação de imagens
+    # Valor padrão: 0.9 
+    threshold: 0.9
