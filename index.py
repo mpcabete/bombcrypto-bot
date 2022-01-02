@@ -12,6 +12,7 @@ import mss
 import pyautogui
 import time
 import sys
+import pydirectinput
 
 import yaml
 
@@ -64,7 +65,10 @@ def addRandomness(n, randomn_factor_size=None):
     return int(randomized_n)
 
 def moveToWithRandomness(x,y,t):
-    pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10),t+random()/2,pyautogui.easeOutQuad)
+    randomX = addRandomness(x,10)
+    randomY = addRandomness(y,10)
+    pyautogui.moveTo(randomX,randomY,t+random()/2,pyautogui.easeOutQuad)
+    return randomX, randomY
 
 
 def remove_suffix(input_string, suffix):
@@ -155,11 +159,12 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
             continue
 
         x,y,w,h = matches[0]
-        pos_click_x = x+w/2
-        pos_click_y = y+h/2
+        #pos_click_x = x+w/2
+        #pos_click_y = y+h/2
         # mudar moveto pra w randomness
-        moveToWithRandomness(pos_click_x,pos_click_y,1)
-        pyautogui.click()
+        clickX, clickY = moveToWithRandomness(x+w/2,y+h/2,1)
+        pydirectinput.doubleClick()
+
         return True
 
 
@@ -222,7 +227,7 @@ def get_object_by_color(minx, maxx, miny, maxy, color, object="object"):
         return objX, objY
     except:
         sys.stdout.write(f"\nError finding {object}\n")
-        return False
+        return 0, 0
 
 ## FIM DAS ADIÇÕES
 def positions(target, threshold=ct['default'],img = None):
@@ -414,9 +419,6 @@ def login():
     elif not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
         if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
             pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo
-            # print('sleep in case there is no metamask text removed')
-            # time.sleep(20)
 
     if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
@@ -427,13 +429,15 @@ def login():
             logger('Successfully Logged, treasure button found')
             login_attempts = 0
             return True
-        # click ok button
 
     if clickBtn(images['ok'], name='okBtn', timeout=5):
         logger('OK Button Clicked')
+        login_attempts += 1
         return False
 
     login_attempts += 1
+    return False
+
 
 
 
@@ -531,12 +535,16 @@ def checkConnection():
     elif connectWalletBtnScreen:
         logger('Connect wallet button detected, logging in!')
         connected = login()
+        if not connected:
+            notify_count += 1
+        else:
+            notify_count = 0
         return connected
     elif len(expandScrx) < 500 and len(expandScry) < 500:
         #Check if the screen is visible
         notify_count += 1
         logger('Window not found')
-        if notify_count > c['telegram']['error_count'] and telegram_notify is True:
+        if notify_count > c['telegram']['error_count'] and telegram_notify is True and int(time.strftime("%H")) >= c['telegram']['hour_start']  and int(time.strftime("%H")) <= c['telegram']['hour_end']:
             logger("Sending telegram message.")
             bot.send_message(telegram_chat_id,"Tela do Cryptobomb não encontrada. Verificar navegador.",disable_notification=True)
             notify_count = 0

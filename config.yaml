@@ -164,7 +164,9 @@
       notify: FALSE
       bot_key: "FOOB4R"
       chat_id: "00"
-      error_count: 5
+      error_count: 50
+      hour_start: 9 # starts at 09:00 - use 0 and 23 to disable
+      hour_end: 22 # stops at 22:59
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False
   # Available options: False or True
