@@ -1,11 +1,8 @@
-from src.logger.date import dateFormatted
-
+from src.utils.config import load_configs_from_file
+from src.utils.date import dateFormatted
 import sys
-import yaml
 
-
-stream = open("./config.yaml", 'r')
-c = yaml.safe_load(stream)
+cfg = load_configs_from_file()
 
 last_log_is_progress = False
 
@@ -48,7 +45,7 @@ def logger(message, progress_indicator = False, color = 'default'):
 
     print(formatted_message_colored)
 
-    if (c['save_log_to_file'] == True):
+    if (cfg['save_log_to_file'] == True):
         logger_file = open("./logs/logger.log", "a", encoding='utf-8')
         logger_file.write(formatted_message + '\n')
         logger_file.close()

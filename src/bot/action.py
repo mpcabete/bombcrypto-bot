@@ -4,7 +4,7 @@ import numpy as np
 import pyautogui
 import time
 
-from src.logger import logger
+import src.bot.logger as Log
 import src.env as env
 from src.utils.number import addRandomness
 from src.utils.image import printScreen, printScreenForWindow
@@ -15,10 +15,13 @@ def moveToWithRandomness(x,y,t):
     if env.window_object is not None:
         pos_x = pos_x+env.window_object.left
         pos_y = pos_y+env.window_object.top
+    if env.cfg['is_retina_screen']:
+        pos_x = pos_x / 2
+        pos_y = pos_y / 2
     pyautogui.moveTo(addRandomness(pos_x,10),addRandomness(pos_y,10),t+random()/2)
 
 def clickBtn(img,name=None, timeout=3, threshold = env.threshold['default']):
-    logger(None, progress_indicator=True)
+    Log.logger(None, progress_indicator=True)
     if not name is None:
         pass
     start = time.time()
@@ -85,7 +88,7 @@ def goToGame():
     clickBtn(env.images['treasure-hunt-icon'])
 
 def refreshHeroesPositions():
-    logger('🔃 Refreshing Heroes Positions')
+    Log.logger('🔃 Refreshing Heroes Positions')
     clickBtn(env.images['go-back-arrow'])
     clickBtn(env.images['treasure-hunt-icon'])
     clickBtn(env.images['treasure-hunt-icon'])

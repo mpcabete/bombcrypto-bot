@@ -2,8 +2,9 @@ from cv2 import cv2
 from os import listdir
 import src.env as env
 from src.utils import string
+from src.utils.image import resize_image
 
-def loadHeroesToSendHome():
+def loadHeroesImagesToHome():
     file_names = listdir('./targets/heroes-to-send-home')
     heroes = []
     for file in file_names:
@@ -15,7 +16,7 @@ def loadHeroesToSendHome():
     print('>>---> %d heroes that should be sent home loaded' % len(heroes))
     return heroes
 
-def load_images():
+def loadImages():
     file_names = listdir('./targets/')
     targets = {}
     for file in file_names:

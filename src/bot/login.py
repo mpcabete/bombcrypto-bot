@@ -1,20 +1,20 @@
 import pyautogui
 
 import src.env as env
-from src.logger import logger
+import src.bot.logger as Log
 from src.bot.action import clickBtn
 
 def login():
-    logger('😿 Checking if game has disconnected')
+    Log.logger('😿 Checking if game has disconnected')
 
     if env.login_attempts > 3:
-        logger('🔃 Too many login attempts, refreshing')
+        Log.logger('🔃 Too many login attempts, refreshing')
         env.login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
         return
 
     if clickBtn(env.images['connect-wallet'], name='connectWalletBtn', timeout = 10):
-        logger('🎉 Connect wallet button detected, logging in!')
+        Log.logger('🎉 Connect wallet button detected, logging in!')
         env.login_attempts = env.login_attempts + 1
 
     if clickBtn(env.images['select-wallet-2'], name='sign button', timeout=8):

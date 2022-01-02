@@ -2,7 +2,7 @@ import time
 import pyautogui
 
 import src.env as env
-from src.logger import logger
+import src.bot.logger as Log
 from src.bot.action import goToGame, goToHeroes, moveToWithRandomness, scroll, get_positions
 from src.bot.utils import isHome, isWorking
 
@@ -13,7 +13,7 @@ def clickButtons():
         pyautogui.click()
         env.hero_clicks = env.hero_clicks + 1
         if env.hero_clicks > 20:
-            logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+            Log.logger('too many hero clicks, try to increase the go_to_work_btn threshold')
             return
     return len(buttons)
 
@@ -21,9 +21,9 @@ def clickGreenBarButtons():
     offset = 130
 
     green_bars = get_positions(env.images['green-bar'], threshold=env.threshold['green_bar']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['green_bar'])
-    logger('🟩 %d green bars detected' % len(green_bars))
+    Log.logger('🟩 %d green bars detected' % len(green_bars))
     buttons = get_positions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
-    logger('🆗 %d buttons detected' % len(buttons))
+    Log.logger('🆗 %d buttons detected' % len(buttons))
 
 
     not_working_green_bars = []
@@ -31,8 +31,8 @@ def clickGreenBarButtons():
         if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
-        logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
-        logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
+        Log.logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
+        Log.logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
 
     for (x, y, w, h) in not_working_green_bars:
         pos_click_x = x+offset+(w/2)
@@ -41,7 +41,7 @@ def clickGreenBarButtons():
         pyautogui.click()
         env.hero_clicks = env.hero_clicks + 1
         if env.hero_clicks > 20:
-            logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
+            Log.logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
             return
     return len(not_working_green_bars)
 
@@ -56,7 +56,7 @@ def clickFullBarButtons():
             not_working_full_bars.append(bar)
 
     if len(not_working_full_bars) > 0:
-        logger('👆 Clicking in %d heroes' % len(not_working_full_bars))
+        Log.logger('👆 Clicking in %d heroes' % len(not_working_full_bars))
 
     for (x, y, w, h) in not_working_full_bars:
         
@@ -102,16 +102,16 @@ def sendHeroesHome():
             print('hero already home, or home full(no dark home button)')
 
 def refreshHeroes():
-    logger('🏢 Search for heroes to work')
+    Log.logger('🏢 Search for heroes to work')
 
     goToHeroes()
 
     if env.cfg['select_heroes_mode'] == "full":
-        logger('⚒️ Sending heroes with full stamina bar to work', 'green')
+        Log.logger('⚒️ Sending heroes with full stamina bar to work', 'green')
     elif env.cfg['select_heroes_mode'] == "green":
-        logger('⚒️ Sending heroes with green stamina bar to work', 'green')
+        Log.logger('⚒️ Sending heroes with green stamina bar to work', 'green')
     else:
-        logger('⚒️ Sending all heroes to work', 'green')
+        Log.logger('⚒️ Sending all heroes to work', 'green')
 
     buttonsClicked = 1
     empty_scrolls_attempts = env.cfg['scroll_attemps']
@@ -130,5 +130,5 @@ def refreshHeroes():
             empty_scrolls_attempts = empty_scrolls_attempts - 1
         scroll()
         time.sleep(2)
-    logger('💪 {} heroes sent to work'.format(env.hero_clicks))
+    Log.logger('💪 {} heroes sent to work'.format(env.hero_clicks))
     goToGame()

@@ -1,6 +1,8 @@
-from src.utils import assets
+from src.utils.assets import loadImages, loadHeroesImagesToHome
 from src.utils.config import load_configs_from_file
+from src.bot.logger import logger
 
+logger('Setting up global variables...', color='green')
 global window_object
 global threshold
 global home
@@ -13,7 +15,7 @@ global home_heroes
 global images
 global multi_account_same_monitor
 
-# Default values for global vars
+logger('Setting up default values for variables...', color='green')
 window_object = None
 login_attempts = 0
 hero_clicks = 0
@@ -23,13 +25,14 @@ home_heroes = []
 
 cfg = load_configs_from_file()
 
-# Map configs
+logger('Mapping configs...', color='green')
 threshold = cfg['threshold']
 home = cfg['home']
 scale_image = cfg['scale_image']
 multi_account_same_monitor = cfg['multiples_accounts_same_monitor']
 
-# Load assets
-images = assets.load_images()
+logger('Loading assets...', color='green')
+images = loadImages()
 if home['enable']:
-    home_heroes = assets.loadHeroesToSendHome()
+    logger('HOME Enabled. Loading heroes assets...', color='green')
+    home_heroes = loadHeroesImagesToHome()

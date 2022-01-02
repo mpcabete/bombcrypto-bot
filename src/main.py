@@ -1,6 +1,6 @@
 import time
 from src.utils.number import addRandomness
-from src.logger import logger, loggerMapClicked
+import src.bot.logger as Log
 import src.env as env
 import src.bot.heroes as Heroes
 import src.bot.login as Auth
@@ -10,7 +10,7 @@ import sys
 
 def run():
     time.sleep(5)
-    t = env.cfg['time_intervals']
+    intervals = env.cfg['time_intervals']
 
     last = {
         "login" : 0,
@@ -23,26 +23,26 @@ def run():
     while True:
         now = time.time()
 
-        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+        if now - last["heroes"] > addRandomness(intervals['send_heroes_for_work'] * 60):
             last["heroes"] = now
             Heroes.refreshHeroes()
 
-        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+        if now - last["login"] > addRandomness(intervals['check_for_login'] * 60):
             sys.stdout.flush()
             last["login"] = now
             Auth.login()
 
-        if now - last["new_map"] > t['check_for_new_map_button']:
+        if now - last["new_map"] > intervals['check_for_new_map_button']:
             last["new_map"] = now
 
             if clickBtn(env.images['new-map']):
-                loggerMapClicked()
+                Log.loggerMapClicked()
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
             last["refresh_heroes"] = now
             Action.refreshHeroesPositions()
 
-        logger(None, progress_indicator=True)
+        Log.logger(None, progress_indicator=True)
 
         sys.stdout.flush()
 

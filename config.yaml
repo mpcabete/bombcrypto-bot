@@ -156,6 +156,13 @@
     enable: False
     window_contains_title: 'bombcrypto'
 
+  # [en_US] If you have macbook or laptop with Retina screen, enable this feature
+  # Default value: False
+  #
+  # [pt_BR] Se você tem um macbook ou notebook com tela retina, habilite essa função
+  # Valor padrão: False
+  is_retina_screen: False
+
   scale_image:
     # [en_US] Enable for use different scale on your browser
     # Default value: False
