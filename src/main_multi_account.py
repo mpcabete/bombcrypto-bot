@@ -1,6 +1,6 @@
 import time
 from src.utils.number import addRandomness
-import src.bot.logger as log
+import src.bot.logger as Log
 import src.env as env
 import src.bot.heroes as Heroes
 import src.bot.login as Auth
@@ -16,8 +16,8 @@ def runMultiAccount():
     windows = []
     title = env.multi_account_same_monitor['window_contains_title']
 
-    log.logger('🆗 Start')
-    log.logger('Searching for windows with contains title: {}'.format(title), color='yellow')
+    Log.logger('🆗 Start')
+    Log.logger('Searching for windows with contains title: {}'.format(title), color='yellow')
 
     for w in pygetwindow.getWindowsWithTitle(title):
         windows.append({
@@ -29,12 +29,12 @@ def runMultiAccount():
             "refresh_heroes" : 0
         })
 
-    log.logger('Found {} window(s):'.format(len(windows)), color='cyan')
+    Log.logger('Found {} window(s):'.format(len(windows)), color='cyan')
     for index, last in enumerate(windows):
-        log.logger('{} -> {}'.format(index+1, last['window'].title), color='cyan')
+        Log.logger('{} -> {}'.format(index+1, last['window'].title), color='cyan')
 
     if len(windows) == 0:
-        log.logger('Exiting because dont have windows contains "{}" title'.format(title), color='red')
+        Log.logger('Exiting because dont have windows contains "{}" title'.format(title), color='red')
         exit()
 
     while True:
@@ -42,7 +42,7 @@ def runMultiAccount():
         
         for last in windows:
             env.window_object = last["window"]
-            log.logger('Client active window: {}'.format(last['window'].title), color='green')
+            Log.logger('Client active window: {}'.format(last['window'].title), color='green')
             time.sleep(5)
 
             if now - last["heroes"] > addRandomness(intervals['send_heroes_for_work'] * 60):
@@ -61,14 +61,14 @@ def runMultiAccount():
                 last["new_map"] = now
 
                 if clickBtn(env.images['new-map']):
-                    log.logNewMapClicked()
+                    Log.logNewMapClicked()
 
             if now - last["refresh_heroes"] > addRandomness( intervals['refresh_heroes_positions'] * 60):
                 Action.active_window()
                 last["refresh_heroes"] = now
                 Action.refreshHeroesPositions()
 
-            log.logger(None, progress_indicator=True)
+            Log.logger(None, progress_indicator=True)
             sys.stdout.flush()
 
             time.sleep(1)
