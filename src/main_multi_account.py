@@ -1,13 +1,13 @@
 import time
+import sys
+import pygetwindow
+
 from src.utils.number import addRandomness
 import src.bot.logger as Log
 import src.env as env
 import src.bot.heroes as Heroes
 import src.bot.login as Auth
 import src.bot.action as Action
-from src.bot.action import clickBtn
-import sys
-import pygetwindow
 
 def runMultiAccount():
     time.sleep(5)
@@ -46,25 +46,23 @@ def runMultiAccount():
             time.sleep(5)
 
             if now - last["heroes"] > addRandomness(intervals['send_heroes_for_work'] * 60):
-                Action.active_window()
+                Action.activeWindow()
                 last["heroes"] = now
                 Heroes.refreshHeroes()
 
             if now - last["login"] > addRandomness(intervals['check_for_login'] * 60):
-                Action.active_window()
+                Action.activeWindow()
                 sys.stdout.flush()
                 last["login"] = now
                 Auth.login()
 
             if now - last["new_map"] > intervals['check_for_new_map_button']:
-                Action.active_window()
+                Action.activeWindow()
                 last["new_map"] = now
-
-                if clickBtn(env.images['new-map']):
-                    Log.logNewMapClicked()
+                Action.goToNextMap()
 
             if now - last["refresh_heroes"] > addRandomness( intervals['refresh_heroes_positions'] * 60):
-                Action.active_window()
+                Action.activeWindow()
                 last["refresh_heroes"] = now
                 Action.refreshHeroesPositions()
 

@@ -163,6 +163,13 @@
   # Valor padrão: False
   is_retina_screen: False
 
+  # [en_US] Speed of mouse move for automation
+  # Default value: 1
+  #
+  # [pt_BR] Velocidade do movimento do mouse para a automação
+  # Valor padrão: 1
+  mouse_move_speed: 0.6
+
   scale_image:
     # [en_US] Enable for use different scale on your browser
     # Default value: False

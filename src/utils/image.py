@@ -19,8 +19,9 @@ def printScreen():
         sct_img = np.array(sct.grab(monitor))
         return sct_img[:,:,:3]
 
-def printScreenForWindow(window):
-    window.activate()
+def printScreenForWindow(window, activate=False):
+    if activate:
+        window.activate()
     width, height = window.size
     left = window.left
     top = window.top
