@@ -112,21 +112,19 @@ def refreshHeroes():
     else:
         Log.logger('⚒️ Sending all heroes to work', 'green')
 
-    buttonsClicked = 1
     empty_scrolls_attempts = env.cfg['scroll_attemps']
 
     while(empty_scrolls_attempts >0):
         if env.cfg['select_heroes_mode'] == 'full':
-            buttonsClicked = clickFullBarButtons()
+            clickFullBarButtons()
         elif env.cfg['select_heroes_mode'] == 'green':
-            buttonsClicked = clickGreenBarButtons()
+            clickGreenBarButtons()
         else:
-            buttonsClicked = clickButtons()
+            clickButtons()
 
         sendHeroesHome()
 
-        if buttonsClicked == 0:
-            empty_scrolls_attempts = empty_scrolls_attempts - 1
+        empty_scrolls_attempts = empty_scrolls_attempts - 1
         scroll()
         time.sleep(2)
     Log.logger('💪 {} heroes sent to work'.format(env.hero_clicks))
