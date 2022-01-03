@@ -4,7 +4,7 @@
 ### Smart Chain Wallet(BUSD/BNB/BCOIN):
 #### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
 
-https://0xbd06182d8360fb7ac1b05e871e56c76372510ddf.crytip.xyz
+https://0xbd06182d8360fb7ac1b05e871e56c76372510ddf.cryptip.xyz
 
 ### PIX:
   6ce2b79e-97be-4881-a882-81902e29d7ce
