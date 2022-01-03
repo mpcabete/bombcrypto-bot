@@ -19,7 +19,8 @@ while True:
             run()
     except KeyboardInterrupt:
         break
-    except:
+    except Exception as e:
         logger('Bombcrypto BOT crashed... restarting in 5 seconds.', color='red')
+        logger("Exception: %s" % (str(e)), color='red')
         sleep(5)
         continue
