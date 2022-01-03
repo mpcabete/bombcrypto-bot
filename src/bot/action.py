@@ -117,3 +117,12 @@ def closeMetamaskWindow():
             window.close()
     except:
         print('error for close metamask window')
+
+def maximizeMetamaskNotification():
+    title = 'MetaMask Notification'
+    time.sleep(8)
+    windows = pygetwindow.getWindowsWithTitle(title)
+    if len(windows) > 0:
+        current_window = windows[0]
+        current_window.activate()
+        current_window.maximize()
