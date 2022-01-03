@@ -5,10 +5,6 @@
   # [pt_BR] Configurações de intervalos de tempo
   #
   time_intervals:
-    #[pt-br] Intervalo de tempo para mudar de página (ALT + TAB)
-    # Valor padrão (em minutos): 2
-    change_page: 2
-
     # [en_US] Time interval for check if there are available heroes to work
     # Default value (in minutes): 10
     #
