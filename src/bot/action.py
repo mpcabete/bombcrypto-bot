@@ -4,15 +4,18 @@ import numpy as np
 import pyautogui
 import time
 
+import pygetwindow
+
 import src.bot.logger as Log
 import src.env as env
 from src.utils.number import addRandomness
 from src.utils.image import printScreen, printScreenForWindow
+from src.decorators.force_full_screen import forceFullScreenForThis
 
-def moveToWithRandomness(x,y,t):
+def moveToWithRandomness(x,y,t=env.mouse_move_speed):
     pos_x = x
     pos_y = y
-    if env.window_object is not None:
+    if env.window_object is not None and (not env.force_full_screen or not env.in_login_process):
         pos_x = pos_x+env.window_object.left
         pos_y = pos_y+env.window_object.top
     if env.cfg['is_retina_screen']:
@@ -37,7 +40,7 @@ def clickBtn(img,name=None, timeout=3, threshold = env.threshold['default']):
         x,y,w,h = matches[0]
         pos_click_x = x+w/2
         pos_click_y = y+h/2
-        moveToWithRandomness(pos_click_x,pos_click_y,1)
+        moveToWithRandomness(pos_click_x,pos_click_y)
         pyautogui.click()
         return True
 
@@ -46,7 +49,7 @@ def scroll():
     if (len(commoms) == 0):
         return
     x,y,w,h = commoms[len(commoms)-1]
-    moveToWithRandomness(x,y,1)
+    moveToWithRandomness(x,y)
 
     if not env.cfg['use_click_and_drag_instead_of_scroll']:
         pyautogui.scroll(-env.cfg['scroll_size'])
@@ -55,8 +58,9 @@ def scroll():
 
 def getPositions(target, threshold=env.threshold['default'],img = None):
     if img is None:
-        if env.window_object is not None:
-            img = printScreenForWindow(env.window_object)
+        running_multi_account = env.window_object is not None
+        if running_multi_account and not env.force_full_screen:
+            img = printScreenForWindow(env.window_object, env.in_login_process == False)
         else:
             img = printScreen()
         result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
@@ -93,8 +97,32 @@ def refreshHeroesPositions():
     clickBtn(env.images['treasure-hunt-icon'])
     clickBtn(env.images['treasure-hunt-icon'])
 
-def active_window():
+def activeWindow():
     try:
         env.window_object.activate()
     except:
         env.window_object.activate()
+
+@forceFullScreenForThis
+def goToNextMap():
+    if clickBtn(env.images['new-map']):
+        Log.logNewMapClicked()
+
+def closeMetamaskWindow():
+    try:
+        title = 'MetaMask Notification'
+        time.sleep(7)
+        windows = pygetwindow.getWindowsWithTitle(title)
+        for window in windows:
+            window.close()
+    except:
+        print('error for close metamask window')
+
+def maximizeMetamaskNotification():
+    title = 'MetaMask Notification'
+    time.sleep(8)
+    windows = pygetwindow.getWindowsWithTitle(title)
+    if len(windows) > 0:
+        current_window = windows[0]
+        current_window.activate()
+        current_window.maximize()
