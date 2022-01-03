@@ -4,6 +4,8 @@ import numpy as np
 import pyautogui
 import time
 
+import pygetwindow
+
 import src.bot.logger as Log
 import src.env as env
 from src.utils.number import addRandomness
@@ -13,7 +15,7 @@ from src.decorators.force_full_screen import forceFullScreenForThis
 def moveToWithRandomness(x,y,t=env.mouse_move_speed):
     pos_x = x
     pos_y = y
-    if env.window_object is not None:
+    if env.window_object is not None and (not env.force_full_screen or not env.in_login_process):
         pos_x = pos_x+env.window_object.left
         pos_y = pos_y+env.window_object.top
     if env.cfg['is_retina_screen']:
@@ -105,3 +107,13 @@ def activeWindow():
 def goToNextMap():
     if clickBtn(env.images['new-map']):
         Log.logNewMapClicked()
+
+def closeMetamaskWindow():
+    try:
+        title = 'MetaMask Notification'
+        time.sleep(7)
+        windows = pygetwindow.getWindowsWithTitle(title)
+        for window in windows:
+            window.close()
+    except:
+        print('error for close metamask window')
