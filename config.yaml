@@ -20,7 +20,7 @@
     refresh_heroes_positions: 3
     
     # [en_US] Time interval to check for new maps
-    # Default value (in minutes): 5 
+    # Default value (in seconds): 5 
     #
     # [pt_BR] Intervalo de tempo para verificar por novos mapas
     # Valor padrão (em segundos): 5
