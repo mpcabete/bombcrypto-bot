@@ -202,7 +202,7 @@ def scroll():
     if (len(dividers) == 0):
         return
 
-    x,y = dividers[len(dividers)-1]
+    x,y,w,h = dividers[len(dividers)-1]
 
     moveToWithRandomness(x,y,1)
 
