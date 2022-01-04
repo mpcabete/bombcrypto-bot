@@ -101,6 +101,7 @@ def activeWindow():
     try:
         env.window_object.activate()
     except:
+        env.window_object.minimize()
         env.window_object.activate()
 
 @forceFullScreenForThis
