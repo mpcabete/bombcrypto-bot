@@ -10,6 +10,9 @@ import pyautogui
 import time
 import sys
 import yaml
+import os
+import discord
+import datetime
 
 # Load config file.
 stream = open("config.yaml", 'r')
@@ -118,7 +121,21 @@ def loadHeroesToSendHome():
     return heroes
 
 
+def sendStashToDiscord():
 
+    if clickBtn(images['stash']):
+        time.sleep(2)
+
+        q = datetime.datetime.now()
+        d = q.strftime("%d%m%Y%H%M")
+        image_file = os.path.join('screenshots', d +'.png')
+        pic = pyautogui.screenshot(image_file)
+
+        time.sleep(1)
+        webhook = discord.Webhook.from_url('<webhook url>', adapter=discord.RequestsWebhookAdapter())
+        webhook.send(file=discord.File(image_file))
+
+        clickBtn(images['x'])
 
 
 def show(rectangles, img = None):
@@ -317,6 +334,8 @@ def goToGame():
     clickBtn(images['x'])
 
     clickBtn(images['treasure-hunt-icon'])
+
+    sendStashToDiscord()
 
 def refreshHeroesPositions():
 
