@@ -11,27 +11,27 @@
     # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
     # Valor padrão (em minutos): 10
     send_heroes_for_work: 10
-    
+
     # [en_US] Time interval to update heroes position in the map,
     # Default value (in minutes): 3
     #
     # [pt_BR] Intervalo de tempo para atualizar a posição dos heróis no mapa
     # Valor padrão (em minutos): 3
-    refresh_heroes_positions: 3
-    
+    refresh_heroes_positions: 5
+
     # [en_US] Time interval to check for new maps
-    # Default value (in minutes): 5 
+    # Default value (in minutes): 5
     #
     # [pt_BR] Intervalo de tempo para verificar por novos mapas
     # Valor padrão (em segundos): 5
-    check_for_new_map_button: 5
-    
+    check_for_new_map_button: 2
+
     # [en_US] Time interval to check for captcha.
     # Default value (in minutes): 1
     #
     # [pt_BR] Intervalo de tempo para verificar se precisa resolver o captcha.
     # Valor padrão (em minutos): 1
-    check_for_captcha: 1
+    check_for_captcha: 360
 
     # [en_US] Time interval to check for login request
     # Default value (in minutes): 3
@@ -41,7 +41,7 @@
     check_for_login: 5
 
     # [en_US] Time interval between moviments
-    # Default value (in seconds): 1 
+    # Default value (in seconds): 1
     #
     # [pt_BR] Intervalo de tempo entre movimentos
     # Valor padrão (em segundos): 1
@@ -65,6 +65,27 @@
     # [pt_BR]
     # Valor padrão: 0.8
     commom: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    rare: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    super_rare: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    epic: 0.8
 
     # [en_US]
     # Default value: 0.8
@@ -107,7 +128,7 @@
   #
   # [pt_BR]
   # Valor padrão: 3
-  scroll_attemps: 3
+  scroll_attemps: 5
 
   # [en_US]
   # Default value: true
