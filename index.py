@@ -479,8 +479,9 @@ def send_work():
 
 
 def main():
+    global clickBtn, login_attempts
 
-    global clickBtn
+
     time.sleep(5)
     t = c['time_intervals']
 
@@ -497,7 +498,7 @@ def main():
         })
 
     while True:
-        count = total = 0
+        login_attempts = count = total = 0
         for last in windows:
             last["window"].activate()
             now = time.time()
@@ -540,34 +541,43 @@ def main():
                         pyautogui.hotkey('ctrl', 'f5')
                         time.sleep(10)
                 else:
+                    if login_attempts > 1:
+                        logger("Can't connect to this wallet, check if network is correct or metamask is logged.")
+                        logger('Jumping to another window.')
+                        break
+
                     logger('Network error found. Check if metamask is connected to Binance Smart Chain.')
+                    if login_attempts > 0:
+                        logger(f'Login Attempts: {login_attempts}')
+                        logger('Max Login Attempts allowed: 3')
                     clickBtn(images['ok'])
                     time.sleep(10)  # Wait for new wallet connect
+                    login_attempts += 1
 
             if logged:
                 logger('<Game logged sucessfully>')
+            if login_attempts == 0:
+                if last['heroes'] == 0 or now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+                    logger('💪 Sending heroes to work')
+                    send_work()
+                    last['heroes'] = now
+                    last["refresh_heroes"] = now
+                else:
+                    logger('💪 Heroes already working or resting until next reset.')
 
-            if last['heroes'] == 0 or now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-                logger('💪 Sending heroes to work')
-                send_work()
-                last['heroes'] = now
-                last["refresh_heroes"] = now
-            else:
-                logger('💪 Heroes already working or resting until next reset.')
+                # Refresh Heroes to avoid disconnects.
+                logger('Preparing Heroes Refresh.')
+                if now - last["refresh_heroes"] > addRandomness(t['refresh_heroes_positions'] * 60):
+                    last["refresh_heroes"] = now
+                    refreshHeroesPositions()
+                next_reboot = last["heroes"]+(t["send_heroes_for_work"]*60)
+                next_refresh = last["refresh_heroes"]+(t["refresh_heroes_positions"]*60)
 
-            # Refresh Heroes to avoid disconnects.
-            logger('Preparing Heroes Refresh.')
-            if now - last["refresh_heroes"] > addRandomness(t['refresh_heroes_positions'] * 60):
-                last["refresh_heroes"] = now
-                refreshHeroesPositions()
-            next_reboot = last["heroes"]+(t["send_heroes_for_work"]*60)
-            next_refresh = last["refresh_heroes"]+(t["refresh_heroes_positions"]*60)
-
-            logger(f'Time for next hero REBOOT: {datetime.fromtimestamp(next_reboot).strftime("%H:%M:%S")}. Current Set: {t["send_heroes_for_work"]} minutes.')
-            logger(f'Time for next hero REFRESH: {datetime.fromtimestamp(next_refresh).strftime("%H:%M:%S")}. Current Set: {t["refresh_heroes_positions"]} minutes.')
+                logger(f'Time for next hero REBOOT: {datetime.fromtimestamp(next_reboot).strftime("%H:%M:%S")}. Current Set: {t["send_heroes_for_work"]} minutes.')
+                logger(f'Time for next hero REFRESH: {datetime.fromtimestamp(next_refresh).strftime("%H:%M:%S")}. Current Set: {t["refresh_heroes_positions"]} minutes.')
 
             logger(None, progress_indicator=True)
-
+            login_attempts = 0
             sys.stdout.flush()
 
             time.sleep(1)
