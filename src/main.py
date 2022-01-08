@@ -37,7 +37,7 @@ def run():
             if clickBtn(env.images['new-map']):
                 Log.logNewMapClicked()
 
-        if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+        if now - last["refresh_heroes"] > addRandomness( intervals['refresh_heroes_positions'] * 60):
             last["refresh_heroes"] = now
             Action.refreshHeroesPositions()
 
