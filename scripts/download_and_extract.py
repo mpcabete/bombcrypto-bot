@@ -20,7 +20,12 @@ def unzipTo(extract_to, file_bytes=None):
   zip.extractall(path=extract_to)
 
 def main():
-  zip_content_bytes = downloadFromUrl(ZIP_REPOSITORY_MAIN_URL)
-  unzipTo(extract_to=EXTRACT_TO, file_bytes=zip_content_bytes)
+  try:
+    zip_content_bytes = downloadFromUrl(ZIP_REPOSITORY_MAIN_URL)
+    unzipTo(extract_to=EXTRACT_TO, file_bytes=zip_content_bytes)
+    print('Installed with success on folder: {}bombcrypto-bot-main/'.format(EXTRACT_TO))
+  except Exception as e:
+    print('Bombcrypto installer crashed...')
+    print("Exception: %s" % (str(e)))
 
 main()
