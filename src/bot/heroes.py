@@ -7,7 +7,18 @@ from src.bot.action import clickBtn, goToGame, goToHeroes, moveToWithRandomness,
 from src.bot.utils import isHome, isWorking
 
 def clickButtons():
-    return clickBtn(env.images['go-work-all'],'go-work-all', timeout=4, threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
+    buttons = getPositions(env.images['go-work'], threshold=env.threshold['go_to_work_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_btn'])
+    for (x, y, w, h) in buttons:
+        moveToWithRandomness(x+(w/2),y+(h/2))
+        pyautogui.click()
+        env.hero_clicks = env.hero_clicks + 1
+        if env.hero_clicks > 20:
+            Log.logger('too many hero clicks, try to increase the go_to_work_btn threshold')
+            return
+    return len(buttons)
+
+def clickWorkAllButton():
+    return clickBtn(env.images['go-work-all'],'go-work-all', timeout=4, threshold=env.threshold['go_to_work_all_btn']*env.scale_image['threshold'] if env.scale_image['enable'] else env.threshold['go_to_work_all_btn'])
 
 def clickGreenBarButtons():
     offset = 130
@@ -91,6 +102,14 @@ def sendHeroesHome():
         else:
             print('hero already home, or home full(no dark home button)')
 
+def sendHeroesToWork():
+    if env.cfg['select_heroes_mode'] == 'full':
+        return clickFullBarButtons()
+    elif env.cfg['select_heroes_mode'] == 'green':
+        return clickGreenBarButtons()
+    else:
+        return clickButtons()
+
 def refreshHeroes():
     Log.logger('🏢 Search for heroes to work')
 
@@ -104,20 +123,18 @@ def refreshHeroes():
         Log.logger('⚒️ Sending all heroes to work', 'green')
 
     empty_scrolls_attempts = env.cfg['scroll_attemps']
-
+    work_all_clicked = False
     if not env.home['enable'] and env.cfg['select_heroes_mode'] == 'all':
-        clickButtons()
-        Log.logger('💪 ALL heroes sent to work')
+        time.sleep(1)
+        work_all_clicked = clickWorkAllButton()
+        if work_all_clicked:
+            Log.logger('💪 ALL heroes sent to work')
         time.sleep(2)
-    else:
+
+    if not work_all_clicked:
         env.hero_clicks = 0
         while(empty_scrolls_attempts >0):
-            if env.cfg['select_heroes_mode'] == 'full':
-                clickFullBarButtons()
-            elif env.cfg['select_heroes_mode'] == 'green':
-                clickGreenBarButtons()
-            else:
-                clickButtons()
+            sendHeroesToWork()
             sendHeroesHome()
             empty_scrolls_attempts = empty_scrolls_attempts - 1
             scroll()
