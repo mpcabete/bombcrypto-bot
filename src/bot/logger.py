@@ -1,5 +1,6 @@
 from src.utils.config import loadConfigsFromFile
 from src.utils.date import dateFormatted
+import traceback
 import sys
 
 cfg = loadConfigsFromFile()
@@ -18,6 +19,18 @@ COLOR = {
     'white': '\033[97m',
     'red': '\033[91m'
 }
+
+def exception(error):
+    formatted_datetime = dateFormatted()
+    traceback_exception_format = traceback.format_exception(type(error), error, error.__traceback__)
+    exception_message = '[{}] ERROR: '.format(formatted_datetime).join(traceback_exception_format)
+    print(exception_message)
+
+    if (cfg['save_log_to_file'] == True):
+        logger_file = open("./logs/error.log", "a", encoding='utf-8')
+        logger_file.write(exception_message + '\n')
+        logger_file.close()
+
 
 def logger(message, progress_indicator = False, color = 'default'):
     global last_log_is_progress
