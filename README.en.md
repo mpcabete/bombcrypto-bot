@@ -11,7 +11,10 @@
 
 1- Download and install Python in version greater than 3 from [official website](https://www.python.org/downloads/) or through [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
 
-2 - After installing python, for `windows` _run as administrator_ the `install.bat` file in the bot's main folder.
+2 - After installing python:
+
+- for `windows` _run as administrator_ the `install.bat` file in the bot's main folder.
+- for `linux` execute `run.sh` file in the bot's main folder.
 
 # Settings:
 
