@@ -1,128 +1,58 @@
-  
-# About:
-  This is an open-source bot, the code is open for anyone to see, fork and
-update.
-  As the developer, I created this bot just for my personal use, I decided to
-publish to help other people and maybe get a few bucks in donation.  As the
-time went by, more and more people started opening issues, asking for help and
-suggesting changes.
-  I try to answer everyone, but lately it has been hard to keep  up. As the
-only donation I received so far amounts to only 1 BCOIN and the bot
-currently works perfectly for me. I am not feeling to motivated to spend the
-time it needs to maintain the bot. I would like to keep this bot free and open
-source, so as an incentive for me to spend the time and energy maintaining the
-bot, I have created some donation milestones so people can collectively fund
-the bot.
+# bombcrypto-bot
 
-### Smart Chain Wallet:
-#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
+## Added extra functions
 
-### Paypal:
-[Donate:](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
-https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
-
-## Disclaymer:
-  
-  The bombcrypto developers have not manifested themselves yet regarding the
-  use of bots. Do your own research and use the bot at your own risk. I am not
-  responsible for any future penalties.
-
+- Use browser with different zoom (scale)
+- Support for multiple accounts on the same monitor (use IFRAME URL to access)
+- Debug by game functions
+- Support for retina displays
 
 # Installation:
-### Download and install Phython from the [site](https://www.python.org/downloads/) or from the [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab). 
 
-If you download from the site it is important to tick the option "add python
-to path":
-![Check Add python to PATH](https://github.com/mpcabete/bombcrypto-bot/raw/ee1b3890e67bc30e372359db9ae3feebc9c928d8/readme-images/path.png)
+1- Download and install Python in version greater than 3 from [official website](https://www.python.org/downloads/) or through [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab).
 
-### Download the code as a zip file and extract it.
+2 - After installing python:
 
-### Copy the path of the bot directory:
+- for `windows` _run as administrator_ the `install.bat` file in the bot's main folder.
+- for `linux` execute `run.sh` file in the bot's main folder.
 
-![caminho](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/address.png)
+# Settings:
 
-### Open the terminal.
+You can configure some options by changing the `config.yaml` file in the bot's main folder.
 
-Press the windows key + R and type "cmd":
+## `scale_image`
 
-![launch terminal](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/cmd.png)
+- You now have support to put how many % zoom you are using in your browser.
 
-### cd into the bot directory:
-Type the command:
+  > Also pay attention to the ZOOM of the _Metamask_ notification window, it must be the same used in the browser.
 
-```
-cd <path you copied>
-```
+  - ### `enable`
 
-![cd](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/cd.png)
+    When `True`, activates the functionality to use a different scale. Otherwise, leave the value as `False`
 
-### Install the dependencies:
+    > Value must be: `True` or `False`
 
-```
-pip install -r requirements.txt
-```
+  - ### `percent`
+    The zoom percentage of your browser and the metamask notification window.
+    > Value must be from: `50` to `100`. The lower the value, the more imprecise the bot's detections will be.
 
-  
-![pip](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/pip.png)
+## `is_retina_screen`
 
-### It is finished! Now to run the bot you just need to type:
+- If your computer is a mac device with retina display, you will need to enable this option for the bot to click accurately. If your bot moves the mouse to random places, maybe this option will help you.
+  > Value must be: `True` to enable, or `False` to disable
 
-```
-python index.py
-```
+## `mouse_move_speed`
 
-![run](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/run.png)
+- You can set the speed with which the mouse moves on the screen before clicking.
+  > Value must be from: `0.1` to `1`
 
+## `multiples_accounts_same_monitor`
 
-# How to use?
+- This option enables the use of multiple accounts on the same monitor, the actions being performed synchronously, that is, one window at a time. To use this functionality we suggest using a URL from the game's IFRAME.
 
-Abra o terminal, se ainda não tiver navegado para a pasta do bot dê novamente o comando
-Open the terminal, cd into the folder if you haven't yet:
+  - ### `enable`
 
-```
-"cd" + path
-```
+    > Value must be: `True` to enable or `False` to disable
 
-To run it use the command
-
-```
-python index.py
-```
-
-As soon as you start the bot it will send the heroes to work. For it to work the game window needs to be visible.
-It will constantly check if it needs to login or press the "new map" button. 
-From 15 to 15 min it will send all heroes to work again
-
-
-# Send home feature:
-
-## How to use it:
-Save a screenshot of the heroes you want to be sent home in the directory: /targets/heroes-to-send-home
-
-
-## How it should behave:
-It will automatically  load the screenshots of the heroes when starting up.
-After it clicks in the heroes with the green bar to send them to work, it will look if there is any of the heroes that are saved in the directory in the screen.
-If tit finds one of the heroes, the bot checks if the home button is dark and the work button is not dark.
-If both these conditions are true, it clicks the home button.
-
-## Troubleshooting:
-#### I have not been able to fine adjust it, so here is some problems that may occur, and how to solve them:
-
-- The bot should distinguish between the dark, the clear and the gray home buttons.
-  - If the bot says that a hero is working or home, but he is not, that is because the bot is not detecting the dark home button, make the option "home: home_button_trashhold" smaller. You can also replace the image send-home.png in the targets folder.
-
-  - If the bot is trapped in an loop clicking in an clear home button, he thinks that the clear button is the dark button, make the option home: home_button_trashhold bigger.
-
-- The bot should detect the heroes you saved to the directory.
-  - If the bot clicks the wrong heroes, it thinks that another hero is the one you saved the screenshot. Make the option home: hero_trashhold bigger
-  - If it does not detect your heroes, make it smaller. You can also try replacing the screenshot with another part of the hero.
-
-  ----------------
-
-## Pay me a coffe :)
-
-### Wallet:
-#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
-### Paypal:
-[Donate](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
+  - ### `window_contains_title`
+    This option offers the possibility to change the text that will be used to detect as windows. This text must be in the title of the never window.

@@ -14,7 +14,6 @@ logs/
 
 # cache
 /src/__pycache__
-/captcha/__pycache__
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

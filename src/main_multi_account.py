@@ -25,7 +25,6 @@ def runMultiAccount():
             "login" : 0,
             "heroes" : 0,
             "new_map" : 0,
-            "check_for_captcha" : 0,
             "refresh_heroes" : 0
         })
 
