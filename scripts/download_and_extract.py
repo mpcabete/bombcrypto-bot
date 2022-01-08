@@ -8,6 +8,7 @@ EXTRACT_TO="C:/"
 
 if os.name != 'nt':
   EXTRACT_TO="~/"
+FINAL_EXPORTED_PATH="{}bombcrypto-bot-main/".format(EXTRACT_TO)
 
 def downloadFromUrl(url):
   print('Downloading data from URL:\n{}'.format(url))
@@ -23,9 +24,10 @@ def main():
   try:
     zip_content_bytes = downloadFromUrl(ZIP_REPOSITORY_MAIN_URL)
     unzipTo(extract_to=EXTRACT_TO, file_bytes=zip_content_bytes)
-    print('Installed with success on folder: {}bombcrypto-bot-main/'.format(EXTRACT_TO))
+    print('Installed with success on folder: {}'.format(FINAL_EXPORTED_PATH))
   except Exception as e:
     print('Bombcrypto installer crashed...')
     print("Exception: %s" % (str(e)))
+  input("Press Enter to continue...")
 
 main()
