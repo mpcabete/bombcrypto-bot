@@ -11,6 +11,7 @@ import src.env as env
 from src.utils.number import addRandomness
 from src.utils.image import printScreen, printScreenForWindow
 from src.decorators.force_full_screen import forceFullScreenForThis
+from src.utils.opencv import show
 
 def moveToWithRandomness(x,y,t=env.mouse_move_speed):
     pos_x = x
@@ -37,6 +38,8 @@ def clickBtn(img,name=None, timeout=3, threshold = env.threshold['default']):
                     pass
                 return False
             continue
+        if env.debug['clickBtn']:        
+            show(matches, None, '[clickBtn] name -> {}'.format(name))
         x,y,w,h = matches[0]
         pos_click_x = x+w/2
         pos_click_y = y+h/2
@@ -45,10 +48,12 @@ def clickBtn(img,name=None, timeout=3, threshold = env.threshold['default']):
         return True
 
 def scroll():
-    commoms = getPositions(env.images['hero-item'], threshold = env.threshold['commom'])
-    if (len(commoms) == 0):
+    hero_item_list = getPositions(env.images['hero-item'], threshold = env.threshold['commom'])
+    if env.debug['scroll']:        
+        show(hero_item_list, None, '[scroll] hero_item_list')
+    if (len(hero_item_list) == 0):
         return
-    x,y,w,h = commoms[len(commoms)-1]
+    x,y,w,h = hero_item_list[len(hero_item_list)-1]
     moveToWithRandomness(x,y)
 
     if not env.cfg['use_click_and_drag_instead_of_scroll']:

@@ -196,3 +196,26 @@ scale_image:
   # [pt_BR] Quando a escala está habilitada, especificar o valor de threshold para comparação de imagens
   # Valor padrão: 0.9
   threshold: 0.9
+
+debug:
+  # When home feature enable
+  sendHeroesHome: False
+
+  # When select_heroes_mode == 'all'
+  clickButtons: False
+
+  # When select_heroes_mode == 'all' and HOME feature is Disabled
+  clickWorkAllButton: False
+
+  # When select_heroes_mode == 'green'
+  clickGreenBarButtons: False
+
+  # When select_heroes_mode == 'full'
+  clickFullBarButtons: False
+
+  #####
+  # When call clickBtn function
+  clickBtn: False
+
+  # When use scroll function
+  scroll: False
