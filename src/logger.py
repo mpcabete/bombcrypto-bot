@@ -2,7 +2,7 @@ from src.date import dateFormatted
 
 import sys
 import yaml
-
+import requests
 
 stream = open("./config.yaml", 'r')
 c = yaml.safe_load(stream)
