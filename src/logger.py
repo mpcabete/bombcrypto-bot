@@ -1,5 +1,5 @@
 from src.date import dateFormatted
-from index import telegram_bot_sendtext
+from src.telegram import telegram_bot_sendtext
 
 import sys
 import yaml
@@ -23,7 +23,7 @@ COLOR = {
 }
 
 def logger(message, progress_indicator = False, color = 'default'):
-    if c['telegram']['level'] == 'all': telegram_bot_sendtext(message)
+    if c['telegram']['level'] == 'all' and '[telegram]' not in message: telegram_bot_sendtext(message)
     global last_log_is_progress
     color_formatted = COLOR.get(color.lower(), COLOR['default'])
 

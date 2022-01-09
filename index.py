@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-    
 from src.logger import logger, loggerMapClicked
+from src.telegram import telegram_bot_sendtext
 from cv2 import cv2
 from os import listdir
 from random import randint
@@ -53,16 +54,6 @@ cat = """
 
 
 
-
-def telegram_bot_sendtext(bot_message):
-    if c['telegram']['level'] != 'disable' and type(bot_message) == str:
-        bot_token = c['telegram']['token_api']
-        bot_chatID = c['telegram']['chat_id']
-        if bot_token != 'your_bot_token' and bot_chatID != 'yout_chat_id':
-            telegram_payload = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
-            response = requests.get(telegram_payload)
-            return response.json()
-        else: logger('💬  You need to set "token_api" and "chat_id" on config.yaml on "telegram" section.')
 
 def addRandomness(n, randomn_factor_size=None):
     """Returns n with randomness
