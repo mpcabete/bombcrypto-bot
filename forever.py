@@ -3,5 +3,5 @@ from subprocess import Popen
 
 while True:
     print("\nStarting")
-    p = Popen("python index.py", shell=True)
+    p = Popen("python3 index.py", shell=True)
     p.wait()
