@@ -10,6 +10,7 @@ import pyautogui
 import time
 import sys
 import yaml
+import requests
 
 # Load config file.
 stream = open("config.yaml", 'r')
@@ -53,7 +54,15 @@ cat = """
 
 
 
-
+def telegram_bot_sendtext(bot_message):
+    if c['telegram']['level'] != 'disable' and type(bot_message) == str:
+        bot_token = c['telegram']['token_api']
+        bot_chatID = c['telegram']['chat_id']
+        if bot_token != 'your_bot_token' and bot_chatID != 'yout_chat_id':
+            telegram_payload = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+            response = requests.get(telegram_payload)
+            return response.json()
+        else: logger('💬  You need to set "token_api" and "chat_id" on config.yaml on "telegram" section.')
 
 def addRandomness(n, randomn_factor_size=None):
     """Returns n with randomness
@@ -329,16 +338,22 @@ def refreshHeroesPositions():
 
 def login():
     global login_attempts
-    logger('😿 Checking if game has disconnected')
+    message_login = '😿 Checking if game has disconnected'
+    logger(message_login)
+    if c['telegram']['level'] == 'onlylogin': telegram_bot_sendtext(message_login)
 
     if login_attempts > 3:
-        logger('🔃 Too many login attempts, refreshing')
+        message_login_attempts = '🔃 Too many login attempts, refreshing'
+        logger(message_login_attempts)
+        if c['telegram']['level'] == 'onlylogin': telegram_bot_sendtext(message_login_attempts)
         login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
         return
 
     if clickBtn(images['connect-wallet'], timeout = 10):
-        logger('🎉 Connect wallet button detected, logging in!')
+        message_connect_wallet = '🎉 Connect wallet button detected, logging in!' 
+        logger(message_connect_wallet)
+        if c['telegram']['level'] == 'onlylogin': telegram_bot_sendtext(message_connect_wallet)
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)

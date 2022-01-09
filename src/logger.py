@@ -1,8 +1,8 @@
 from src.date import dateFormatted
+from index import telegram_bot_sendtext
 
 import sys
 import yaml
-import requests
 
 stream = open("./config.yaml", 'r')
 c = yaml.safe_load(stream)
@@ -22,16 +22,8 @@ COLOR = {
     'red': '\033[91m'
 }
 
-def telegram_bot_sendtext(bot_message):
-    if c['telegram']['token_api'] != 'disable' and c['telegram']['chat_id'] != 'disable' and type(bot_message) == str:
-        bot_token = c['telegram']['token_api']
-        bot_chatID = c['telegram']['chat_id']
-        send_text = 'https://api.telegram.org/bot' + str(bot_token) + '/sendMessage?chat_id=' + str(bot_chatID) + '&parse_mode=Markdown&text=' + str(bot_message)
-        response = requests.get(send_text)
-        return response.json()
-
 def logger(message, progress_indicator = False, color = 'default'):
-    telegram_bot_sendtext(message)
+    if c['telegram']['level'] == 'all': telegram_bot_sendtext(message)
     global last_log_is_progress
     color_formatted = COLOR.get(color.lower(), COLOR['default'])
 

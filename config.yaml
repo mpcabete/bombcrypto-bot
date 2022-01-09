@@ -147,11 +147,23 @@
   # Opções disponíveis: False ou True
   save_log_to_file: True
 
-  # [en_US] Option to send log to telegram chat, just set the token_api and chat_id, if both is equal to 'disable' then the function will be disabled
-  # Default value: 'disable'
-  #
-  # [pt_BR] Opção para enviar log para chat do telegram, apenas informe o token_api e o chat_id, se ambos forem iguais a 'disable' então a função estará desabilitada
-  # Valor padrão : 'disable'
+  # [en_US] Option to send log to telegram chat, you need to set the level, token_api, and chat_id , if u need some help to create bot check out on this WebSite below
+  # https://ichi.pro/pt/como-criar-um-bot-do-telegram-e-enviar-mensagens-com-python-84606910593598
+  # Default value: disable
+  # Available options:
+  #   disable   = disable telegram function
+  #   onlylogin = send just the info about loggin/wallet
+  #   all       = send all
+  # 
+  # [pt_BR] Opção de enviar log para telegrama de chat, você precisa definir o level, token_api e chat_id, se precisar de ajuda para criar o bot confira neste site abaixo
+  # https://ichi.pro/pt/como-criar-um-bot-do-telegram-e-enviar-mensagens-com-python-84606910593598
+  # Valor padrão : disable
+  # Opções disponíveis:
+  #   disable   = desabilitar função de telegram
+  #   onlylogin = envia apenas as informações sobre login/wallet
+  #   all       = envia tudo
+  # 
   telegram:
-    token_api: 'disable'
-    chat_id: 'disable'
+    level: 'disable'
+    token_api: 'your_bot_token'
+    chat_id: 'yout_chat_id'

@@ -23,3 +23,6 @@ __pycache__/
 
 # vscode plugins
 /.history
+
+#virtualenv
+venv/
