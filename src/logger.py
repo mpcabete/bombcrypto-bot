@@ -22,7 +22,16 @@ COLOR = {
     'red': '\033[91m'
 }
 
+def telegram_bot_sendtext(bot_message):
+    if c['telegram']['token_api'] != 'disable' and c['telegram']['chat_id'] != 'disable':
+        bot_token = c['telegram']['token_api']
+        bot_chatID = c['telegram']['chat_id']
+        send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+        response = requests.get(send_text)
+        return response.json()
+
 def logger(message, progress_indicator = False, color = 'default'):
+    telegram_bot_sendtext(message)
     global last_log_is_progress
     color_formatted = COLOR.get(color.lower(), COLOR['default'])
 
@@ -37,10 +46,9 @@ def logger(message, progress_indicator = False, color = 'default'):
             last_log_is_progress = True
             formatted_message = color_formatted + "[{}] => {}".format(formatted_datetime, '⬆️ Processing last action..')
             sys.stdout.write(formatted_message)
-            sys.stdout.flush()
         else:
             sys.stdout.write(color_formatted + '.')
-            sys.stdout.flush()
+        sys.stdout.flush()
         return
 
     if last_log_is_progress:
@@ -51,14 +59,14 @@ def logger(message, progress_indicator = False, color = 'default'):
     print(formatted_message_colored)
 
     if (c['save_log_to_file'] == True):
-        logger_file = open("./logs/logger.log", "a", encoding='utf-8')
-        logger_file.write(formatted_message + '\n')
-        logger_file.close()
+        with open("./logs/logger.log", "a", encoding='utf-8') as logger_file:
+            logger_file.write(formatted_message + '\n')
+            logger_file.close()
 
     return True
 
 def loggerMapClicked():
-  logger('🗺️ New Map button clicked!')
-  logger_file = open("./logs/new-map.log", "a", encoding='utf-8')
-  logger_file.write(dateFormatted() + '\n')
-  logger_file.close()
+    logger('🗺️ New Map button clicked!')
+    with open("./logs/new-map.log", "a", encoding='utf-8') as logger_file:
+        logger_file.write(dateFormatted() + '\n')
+        logger_file.close()

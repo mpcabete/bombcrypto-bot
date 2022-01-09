@@ -146,3 +146,12 @@
   # Valor padrão : False
   # Opções disponíveis: False ou True
   save_log_to_file: True
+
+  # [en_US] Option to send log to telegram chat, just set the token_api and chat_id, if both is equal to 'disable' then the function will be disabled
+  # Default value: 'disable'
+  #
+  # [pt_BR] Opção para enviar log para chat do telegram, apenas informe o token_api e o chat_id, se ambos forem iguais a 'disable' então a função estará desabilitada
+  # Valor padrão : 'disable'
+  telegram:
+    token_api: 'disable'
+    chat_id: 'disable'
