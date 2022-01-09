@@ -330,7 +330,6 @@ def login():
     global login_attempts
     message_login = '😿 Checking if game has disconnected'
     logger(message_login)
-    if c['telegram']['level'] == 'onlylogin': telegram_bot_sendtext(message_login)
 
     if login_attempts > 3:
         message_login_attempts = '🔃 Too many login attempts, refreshing'
