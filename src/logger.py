@@ -23,10 +23,10 @@ COLOR = {
 }
 
 def telegram_bot_sendtext(bot_message):
-    if c['telegram']['token_api'] != 'disable' and c['telegram']['chat_id'] != 'disable':
+    if c['telegram']['token_api'] != 'disable' and c['telegram']['chat_id'] != 'disable' and type(bot_message) == str:
         bot_token = c['telegram']['token_api']
         bot_chatID = c['telegram']['chat_id']
-        send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+        send_text = 'https://api.telegram.org/bot' + str(bot_token) + '/sendMessage?chat_id=' + str(bot_chatID) + '&parse_mode=Markdown&text=' + str(bot_message)
         response = requests.get(send_text)
         return response.json()
 
