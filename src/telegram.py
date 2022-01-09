@@ -1,5 +1,4 @@
 
-from src.logger import logger
 import sys
 import yaml
 import requests
@@ -16,4 +15,3 @@ def telegram_bot_sendtext(bot_message):
             telegram_payload = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
             response = requests.get(telegram_payload)
             return response.json()
-        else: logger('💬  [telegram] You need to set "token_api" and "chat_id" on config.yaml on "telegram" section.')
