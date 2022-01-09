@@ -11,7 +11,6 @@ import pyautogui
 import time
 import sys
 import yaml
-import requests
 
 # Load config file.
 stream = open("config.yaml", 'r')
