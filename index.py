@@ -427,7 +427,7 @@ def refreshHeroes():
     if c['select_heroes_mode'] == "full":
         logger('⚒️ Sending heroes with full stamina bar to work')
     elif c['select_heroes_mode'] == "green":
-        logger('⚒️ Sending heroes with green stamina bar to work)
+        logger('⚒️ Sending heroes with green stamina bar to work')
     else:
         logger('⚒️ Sending all heroes to work')
 
