@@ -27,3 +27,4 @@ __pycache__/
 # Jetbrains IDE
 /.idea
 main.py
+*.log
