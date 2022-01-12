@@ -118,6 +118,15 @@ If both these conditions are true, it clicks the home button.
   - If the bot clicks the wrong heroes, it thinks that another hero is the one you saved the screenshot. Make the option home: hero_trashhold bigger
   - If it does not detect your heroes, make it smaller. You can also try replacing the screenshot with another part of the hero.
 
+# Multiaccount
+multiaccount works depending on your operational system - so change it in config.yaml, 
+or DE (Desktop Enviroment. ex: Gnome, KDE, Qtile) in case you use Linux.
+
+### Qtile
+for Qtile, what may work for other window managers even though I have not tested yet,
+keep all the accounts opened in the same group, with the layout "max" activated and move focus hotkey being  "alt" + "down". 
+
+
   ----------------
 
 ## Pay me a coffe :)
