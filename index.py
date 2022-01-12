@@ -16,6 +16,8 @@ stream = open("config.yaml", 'r')
 c = yaml.safe_load(stream)
 ct = c['threshold']
 ch = c['home']
+operational_system = c["multiaccount"]["operational_system"]
+accounts_number = c["multiaccount"]["accounts_number"]
 pause = c['time_intervals']['interval_between_moviments']
 pyautogui.PAUSE = pause
 
@@ -53,7 +55,15 @@ cat = """
 
 
 
+def nextAccountQtile():
+  pyautogui.hotkey("alt", "down")
+  time.sleep(0.5)
+  return True
 
+def nextAccount():
+  if operational_system == "qtile":
+    return nextAccountQtile()
+  return False
 
 def addRandomness(n, randomn_factor_size=None):
     """Returns n with randomness
@@ -320,66 +330,82 @@ def goToGame():
 
 def refreshHeroesPositions():
 
-    logger('🔃 Refreshing Heroes Positions')
-    clickBtn(images['go-back-arrow'])
-    clickBtn(images['treasure-hunt-icon'])
+    for i in range(accounts_number):
+        logger('🔃 Refreshing Heroes Positions')
+        logger('account: {}'.format(i+1))
+        clickBtn(images['go-back-arrow'])
+        clickBtn(images['treasure-hunt-icon'])
 
-    # time.sleep(3)
-    clickBtn(images['treasure-hunt-icon'])
+        # time.sleep(3)
+        clickBtn(images['treasure-hunt-icon'])
+            
+        if i < accounts_number - 1:
+            if not nextAccount():
+                break
+            time.sleep(1)
 
 def login():
-    global login_attempts
-    logger('😿 Checking if game has disconnected')
+      
+    for i in range(accounts_number):
 
-    if login_attempts > 3:
-        logger('🔃 Too many login attempts, refreshing')
-        login_attempts = 0
-        pyautogui.hotkey('ctrl','f5')
-        return
+        global login_attempts
+        logger('😿 Checking if game has disconnected')
+        logger('account: {}'.format(i+1))
 
-    if clickBtn(images['connect-wallet'], timeout = 10):
-        logger('🎉 Connect wallet button detected, logging in!')
-        login_attempts = login_attempts + 1
-        #TODO mto ele da erro e poco o botao n abre
-        # time.sleep(10)
-
-    if clickBtn(images['select-wallet-2'], timeout=8):
-        # sometimes the sign popup appears imediately
-        login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        if clickBtn(images['treasure-hunt-icon'], timeout = 15):
-            # print('sucessfully login, treasure hunt btn clicked')
+        if login_attempts > 3:
+            logger('🔃 Too many login attempts, refreshing')
             login_attempts = 0
-        return
-        # click ok button
+            pyautogui.hotkey('ctrl','f5')
+            continue
 
-    if not clickBtn(images['select-wallet-1-no-hover'], ):
-        if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
+        if clickBtn(images['connect-wallet'], timeout = 10):
+            logger('🎉 Connect wallet button detected, logging in!')
+            login_attempts = login_attempts + 1
+            #TODO mto ele da erro e poco o botao n abre
+            # time.sleep(10)
+
+        if clickBtn(images['select-wallet-2'], timeout=8):
+            # sometimes the sign popup appears imediately
+            login_attempts = login_attempts + 1
+            # print('sign button clicked')
+            # print('{} login attempt'.format(login_attempts))
+            if clickBtn(images['treasure-hunt-icon'], timeout = 15):
+                # print('sucessfully login, treasure hunt btn clicked')
+                login_attempts = 0
+            continue
+            # click ok button
+
+        if not clickBtn(images['select-wallet-1-no-hover'], ):
+            if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
+                pass
+                # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
+                # print('sleep in case there is no metamask text removed')
+                # time.sleep(20)
+        else:
             pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
             # time.sleep(20)
-    else:
-        pass
-        # print('sleep in case there is no metamask text removed')
-        # time.sleep(20)
 
-    if clickBtn(images['select-wallet-2'], timeout = 20):
-        login_attempts = login_attempts + 1
-        # print('sign button clicked')
-        # print('{} login attempt'.format(login_attempts))
-        # time.sleep(25)
-        if clickBtn(images['treasure-hunt-icon'], timeout=25):
-            # print('sucessfully login, treasure hunt btn clicked')
-            login_attempts = 0
-        # time.sleep(15)
+        if clickBtn(images['select-wallet-2'], timeout = 20):
+            login_attempts = login_attempts + 1
+            # print('sign button clicked')
+            # print('{} login attempt'.format(login_attempts))
+            # time.sleep(25)
+            if clickBtn(images['treasure-hunt-icon'], timeout=25):
+                # print('sucessfully login, treasure hunt btn clicked')
+                login_attempts = 0
+            # time.sleep(15)
 
-    if clickBtn(images['ok'], timeout=5):
-        pass
-        # time.sleep(15)
-        # print('ok button clicked')
+        if clickBtn(images['ok'], timeout=5):
+            pass
+            # time.sleep(15)
+            # print('ok button clicked')
 
+        
+        if i < accounts_number - 1:
+            if not nextAccount():
+                break
+            time.sleep(1)
 
 
 def sendHeroesHome():
@@ -420,36 +446,43 @@ def sendHeroesHome():
 
 
 def refreshHeroes():
-    logger('🏢 Search for heroes to work')
+    for i in range(accounts_number):
+        logger('🏢 Search for heroes to work')
+        logger('account: {}'.format(i+1))
 
-    goToHeroes()
+        goToHeroes()
 
-    if c['select_heroes_mode'] == "full":
-        logger('⚒️ Sending heroes with full stamina bar to work', 'green')
-    elif c['select_heroes_mode'] == "green":
-        logger('⚒️ Sending heroes with green stamina bar to work', 'green')
-    else:
-        logger('⚒️ Sending all heroes to work', 'green')
-
-    buttonsClicked = 1
-    empty_scrolls_attempts = c['scroll_attemps']
-
-    while(empty_scrolls_attempts >0):
-        if c['select_heroes_mode'] == 'full':
-            buttonsClicked = clickFullBarButtons()
-        elif c['select_heroes_mode'] == 'green':
-            buttonsClicked = clickGreenBarButtons()
+        if c['select_heroes_mode'] == "full":
+            logger('⚒️ Sending heroes with full stamina bar to work', 'green')
+        elif c['select_heroes_mode'] == "green":
+            logger('⚒️ Sending heroes with green stamina bar to work', 'green')
         else:
-            buttonsClicked = clickButtons()
+            logger('⚒️ Sending all heroes to work', 'green')
 
-        sendHeroesHome()
+        buttonsClicked = 1
+        empty_scrolls_attempts = c['scroll_attemps']
 
-        if buttonsClicked == 0:
-            empty_scrolls_attempts = empty_scrolls_attempts - 1
-        scroll()
-        time.sleep(2)
-    logger('💪 {} heroes sent to work'.format(hero_clicks))
-    goToGame()
+        while(empty_scrolls_attempts >0):
+            if c['select_heroes_mode'] == 'full':
+                buttonsClicked = clickFullBarButtons()
+            elif c['select_heroes_mode'] == 'green':
+                buttonsClicked = clickGreenBarButtons()
+            else:
+                buttonsClicked = clickButtons()
+
+            sendHeroesHome()
+
+            if buttonsClicked == 0:
+                empty_scrolls_attempts = empty_scrolls_attempts - 1
+            scroll()
+            time.sleep(2)
+        logger('💪 {} heroes sent to work'.format(hero_clicks))
+        goToGame()
+
+        if i < accounts_number - 1:
+            if not nextAccount():
+                break
+            time.sleep(1)
 
 
 def main():

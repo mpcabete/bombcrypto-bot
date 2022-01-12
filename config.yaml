@@ -94,6 +94,21 @@
     hero_threshold: 0.8
     home_button_threshold: 0.9
 
+  multiaccount: 
+    # [en_US]
+    # specify your operational system, or DE in case you are using linux
+    # ie. windows, macOS, ubuntu, kde, plasma, qtile, ...
+    # [pt_Br]
+    # especifique seu sistema operacional, ou DE caso utilize linux
+    # ex. windows, macOS, gnome, kde, plasma, qtile, ...
+    operational_system: "qtile" 
+    # [en_US]
+    # number of accounts that you want the bot to manage
+    # Default value: 1
+    # [pt_Br]
+    # numero de contas que você deseja que o bot gerencie
+    # Valor padrão: 1
+    accounts_number: 1
 
   # [en_US]
   # Default value: 60
