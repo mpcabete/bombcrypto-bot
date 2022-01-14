@@ -47,6 +47,13 @@
     # Valor padrão (em segundos): 1
     interval_between_moviments: 1
 
+    # [en_US] Time interval between print coins
+    # Default value (in minutes): 60
+    #
+    # [pt_BR] Intervalo de tempo entre a print das coins
+    # Valor padrão (em segundos): 60
+    interval_print_coins: 60
+
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #
   # [pt_BR] O quão confiante o bot precisa estar para clicar nos botões (valores entre 0 e 1. 0 é o valor mínimo, 1 é o valor máximo)

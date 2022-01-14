@@ -504,7 +504,6 @@ def main():
                 
             time.sleep(2)
 
-
             if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
                 last["heroes"] = now
                 refreshHeroes()
@@ -524,7 +523,7 @@ def main():
                 last["refresh_heroes"] = now
                 refreshHeroesPositions()                
             
-            if now - last["print_coins"] > addRandomness( t['check_for_new_map_button'] * 60):
+            if now - last["print_coins"] > addRandomness( t['interval_print_coins'] * 60):
                 last["print_coins"] = now                
                 printChest(last)
 
