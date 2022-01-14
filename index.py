@@ -147,10 +147,8 @@ def show(rectangles, img = None):
     cv2.waitKey(0)
 
 
-def printChest(last):    
+def printChest(last):
     time.sleep(1)
-    clickBtn(images['go-back-arrow'])
-    time.sleep(2)
     clickBtn(images['chest'])
     time.sleep(1)
 
@@ -490,6 +488,7 @@ def main():
             "login" : 0,
             "heroes" : 0,
             "new_map" : 0,
+            "print_coins": 0,
             "refresh_heroes" : 0
             })
 
@@ -517,10 +516,13 @@ def main():
 
             if now - last["new_map"] > t['check_for_new_map_button']:
                 last["new_map"] = now
-                printChest(last)
 
                 if clickBtn(images['new-map']):
                     loggerMapClicked()
+            
+            if now - last["print_coins"] > addRandomness(t['default'] * 60):
+                last["print_coins"] = now                
+                printChest(last)
 
 
             if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
