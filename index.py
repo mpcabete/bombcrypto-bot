@@ -147,7 +147,10 @@ def show(rectangles, img = None):
     cv2.waitKey(0)
 
 
-def printChest(last):
+def printChest(last):    
+    time.sleep(1)
+    clickBtn(images['go-back-arrow'])
+    time.sleep(2)
     clickBtn(images['chest'])
     time.sleep(1)
 
@@ -161,6 +164,7 @@ def printChest(last):
 
     bot.send_photo(chat_id=ctel['chat-id'], photo=open('screenshot.png', 'rb'))
     time.sleep(1)
+    clickBtn(images['treasure-hunt-icon'])
 
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
@@ -501,7 +505,6 @@ def main():
                 
             time.sleep(2)
 
-            printChest(last)
 
             if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
                 last["heroes"] = now
@@ -514,6 +517,7 @@ def main():
 
             if now - last["new_map"] > t['check_for_new_map_button']:
                 last["new_map"] = now
+                printChest(last)
 
                 if clickBtn(images['new-map']):
                     loggerMapClicked()
