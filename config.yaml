@@ -78,7 +78,7 @@
     #
     # [pt_BR]
     # Valor padrão: 0.9
-    go_to_work_btn: 0.9
+    go_to_work_btn: 0.8
 
     # [en_US]
     # Default value: 0.9
@@ -93,6 +93,15 @@
     # if bot is not sending any hero home make this number smaller.
     hero_threshold: 0.8
     home_button_threshold: 0.9
+
+# [pt-BR]
+# Configuração do Telegram
+# BOTNAME = bcryptojowbot
+# TODO : Criar um grupo, incluir o bot acima e pegar o id da conversa na URL do chat
+  telegram:
+    chat-id: -642878394
+    token: "5001617128:AAESdQINYVw_InsvRRCS9SLkbPE0mEDWiw4"
+
 
 
   # [en_US]
@@ -137,7 +146,7 @@
   # green     = seleciona os heróis com a barra de stamina verde (metade ou cheia)
   # full      = seleciona somente os heróis com a barra de stamina cheia
   # allButton = utiliza o botão all
-  select_heroes_mode: "green"
+  select_heroes_mode: "allButton"
 
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False

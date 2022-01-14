@@ -13,7 +13,7 @@ import time
 import sys
 import subprocess
 import yaml
-
+import telegram
 
 if sys.platform != 'linux' and sys.platform != 'linux2':
     import pygetwindow
@@ -37,6 +37,10 @@ if __name__ == '__main__':
 
 ct = c['threshold']
 ch = c['home']
+ctel = c['telegram']
+
+
+bot = telegram.Bot(token=ctel['token'])
 
 if not ch['enable']:
     print('>>---> xii, não tenho casa! :(  ')
@@ -143,7 +147,20 @@ def show(rectangles, img = None):
     cv2.waitKey(0)
 
 
+def printChest(last):
+    clickBtn(images['chest'])
+    time.sleep(1)
 
+    bbox = (last["window"].left, last["window"].top, last["window"].left + last["window"].width, last["window"].top + last["window"].height)
+    print(bbox)
+    with mss.mss() as sct:
+        im = sct.grab(bbox)
+        mss.tools.to_png(im.rgb, im.size, output="screenshot.png")
+    
+    clickBtn(images['x'])
+
+    bot.send_photo(chat_id=ctel['chat-id'], photo=open('screenshot.png', 'rb'))
+    time.sleep(1)
 
 
 def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
@@ -483,6 +500,8 @@ def main():
                 last["window"].activate()
                 
             time.sleep(2)
+
+            printChest(last)
 
             if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
                 last["heroes"] = now
