@@ -519,15 +519,14 @@ def main():
 
                 if clickBtn(images['new-map']):
                     loggerMapClicked()
-            
-            if now - last["print_coins"] > addRandomness(t['default'] * 60):
-                last["print_coins"] = now                
-                printChest(last)
-
 
             if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
                 last["refresh_heroes"] = now
-                refreshHeroesPositions()
+                refreshHeroesPositions()                
+            
+            if now - last["print_coins"] > addRandomness( t['check_for_new_map_button'] * 60):
+                last["print_coins"] = now                
+                printChest(last)
 
             #clickBtn(teasureHunt)
             logger(None, progress_indicator=True)
