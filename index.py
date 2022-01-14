@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-    
-from src.logger import logger, loggerMapClicked
 from cv2 import cv2
+
+import os
 from os import listdir
+from src.logger import logger, loggerMapClicked
 from random import randint
 from random import random
 import numpy as np
@@ -12,49 +14,41 @@ import sys
 import subprocess
 import yaml
 
+
 if sys.platform != 'linux' and sys.platform != 'linux2':
     import pygetwindow
 
-# Load config file.
-stream = open("config.yaml", 'r')
-c = yaml.safe_load(stream)
+cat = """
+                                                _
+>>---> Bot começou a rodar! Sente e tome um cafézinho enquanto eu farmo pra vc! ;)
+Não se esqueça de se inscrever no canal MeMComputer and games 
+https://www.youtube.com/c/MeMComputerandGames?sub_confirmation=1
+>>---> Pressione ctrl + c para parar o bot.
+"""
+
+
+print(cat)
+time.sleep(2)
+
+
+if __name__ == '__main__':
+    stream = open("config.yaml", 'r')
+    c = yaml.safe_load(stream)
+
 ct = c['threshold']
 ch = c['home']
+
+if not ch['enable']:
+    print('>>---> xii, não tenho casa! :(  ')
+print('\n')
+
 pause = c['time_intervals']['interval_between_moviments']
 pyautogui.PAUSE = pause
 
-cat = """
-                                                _
-                                                \`*-.
-                                                 )  _`-.
-                                                .  : `. .
-                                                : _   '  \\
-                                                ; *` _.   `*-._
-                                                `-.-'          `-.
-                                                  ;       `       `.
-                                                  :.       .        \\
-                                                  . \  .   :   .-'   .
-                                                  '  `+.;  ;  '      :
-                                                  :  '  |    ;       ;-.
-                                                  ; '   : :`-:     _.`* ;
-                                               .*' /  .*' ; .*`- +'  `*'
-                                               `*-*   `*-*  `*-*'
-=========================================================================
-========== 💰 Have I helped you in any way? All I ask is a tip! 🧾 ======
-========== ✨ Faça sua boa ação de hoje, manda aquela gorjeta! 😊 =======
-=========================================================================
-======================== vvv BCOIN BUSD BNB vvv =========================
-============== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf ===============
-=========================================================================
-===== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ ======
-=========================================================================
-
->>---> Press ctrl + c to kill the bot.
-
->>---> Some configs can be found in the config.yaml file."""
-
-
-
+pyautogui.FAILSAFE = False
+hero_clicks = 0
+login_attempts = 0
+last_log_is_progress = False
 
 
 def get_linux_bombcrypto_windows():
@@ -64,18 +58,9 @@ def get_linux_bombcrypto_windows():
 
 def activate_linux_window(window_id):
     subprocess.Popen(f"xdotool windowactivate {window_id}", shell=True)
+    
 
 def addRandomness(n, randomn_factor_size=None):
-    """Returns n with randomness
-    Parameters:
-        n (int): A decimal integer
-        randomn_factor_size (int): The maximum value+- of randomness that will be
-            added to n
-
-    Returns:
-        int: n with randomness
-    """
-
     if randomn_factor_size is None:
         randomness_percentage = 0.1
         randomn_factor_size = randomness_percentage * n
@@ -93,21 +78,12 @@ def moveToWithRandomness(x,y,t):
 
 
 def remove_suffix(input_string, suffix):
-    """Returns the input_string without the suffix"""
-
     if suffix and input_string.endswith(suffix):
         return input_string[:-len(suffix)]
     return input_string
 
-def load_images(dir_path='./targets/'):
-    """ Programatically loads all images of dir_path as a key:value where the
-        key is the file name without the .png suffix
-
-    Returns:
-        dict: dictionary containing the loaded images as key:value pairs.
-    """
-
-    file_names = listdir(dir_path)
+def load_images():
+    file_names = listdir('./targets/')
     targets = {}
     for file in file_names:
         path = 'targets/' + file
@@ -115,9 +91,9 @@ def load_images(dir_path='./targets/'):
 
     return targets
 
+images = load_images()
 
 def loadHeroesToSendHome():
-    """Loads the images in the path and saves them as a list"""
     file_names = listdir('./targets/heroes-to-send-home')
     heroes = []
     for file in file_names:
@@ -127,13 +103,32 @@ def loadHeroesToSendHome():
     print('>>---> %d heroes that should be sent home loaded' % len(heroes))
     return heroes
 
+if ch['enable']:
+    home_heroes = loadHeroesToSendHome()
 
+# go_work_img = cv2.imread('targets/go-work.png')
+# commom_img = cv2.imread('targets/commom-text.png')
+# arrow_img = cv2.imread('targets/go-back-arrow.png')
+# hero_img = cv2.imread('targets/hero-icon.png')
+# x_button_img = cv2.imread('targets/x.png')
+# teasureHunt_icon_img = cv2.imread('targets/treasure-hunt-icon.png')
+# ok_btn_img = cv2.imread('targets/ok.png')
+# connect_wallet_btn_img = cv2.imread('targets/connect-wallet.png')
+# select_wallet_hover_img = cv2.imread('targets/select-wallet-1-hover.png')
+# select_metamask_no_hover_img = cv2.imread('targets/select-wallet-1-no-hover.png')
+# sign_btn_img = cv2.imread('targets/select-wallet-2.png')
+# new_map_btn_img = cv2.imread('targets/new-map.png')
+# green_bar = cv2.imread('targets/green-bar.png')
+full_stamina = cv2.imread('targets/full-stamina.png')
+
+robot = cv2.imread('targets/robot.png')
+# puzzle_img = cv2.imread('targets/puzzle.png')
+# piece = cv2.imread('targets/piece.png')
+slider = cv2.imread('targets/slider.png')
 
 
 
 def show(rectangles, img = None):
-    """ Show an popup with rectangles showing the rectangles[(x, y, w, h),...]
-        over img or a printSreen if no img provided. Useful for debugging"""
 
     if img is None:
         with mss.mss() as sct:
@@ -151,32 +146,33 @@ def show(rectangles, img = None):
 
 
 
-def clickBtn(img, timeout=3, threshold = ct['default']):
-    """Search for img in the scree, if found moves the cursor over it and clicks.
-    Parameters:
-        img: The image that will be used as an template to find where to click.
-        timeout (int): Time in seconds that it will keep looking for the img before returning with fail
-        threshold(float): How confident the bot needs to be to click the buttons (values from 0 to 1)
-    """
-
+def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
     logger(None, progress_indicator=True)
+    if not name is None:
+        pass
+        # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
-    has_timed_out = False
-    while(not has_timed_out):
+    while(True):
         matches = positions(img, threshold=threshold)
-
         if(len(matches)==0):
-            has_timed_out = time.time()-start > timeout
+            hast_timed_out = time.time()-start > timeout
+            if(hast_timed_out):
+                if not name is None:
+                    pass
+                    # print('timed out')
+                return False
+            # print('button not found yet')
             continue
 
         x,y,w,h = matches[0]
         pos_click_x = x+w/2
         pos_click_y = y+h/2
+        # mudar moveto pra w randomness
         moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
+        print("THIS SHOULD NOT PRINT")
 
-    return False
 
 def printSreen():
     with mss.mss() as sct:
@@ -256,37 +252,31 @@ def isWorking(bar, buttons):
             return False
     return True
 
+def clickAllButton():
+    buttons = positions(images['go-work-all'], threshold=ct['go_to_work_btn'])
+    logger('🆗 %d button detected' % len(buttons))
+
+    for (x, y, w, h) in buttons:
+        moveToWithRandomness(x+(w/2),y+(h/2),1)
+        pyautogui.click()
+
+    return 1
+
 def clickGreenBarButtons():
-    offset = 140
+    # ele clicka nos q tao trabaiano mas axo q n importa
+    offset = 130
 
     green_bars = positions(images['green-bar'], threshold=ct['green_bar'])
     logger('🟩 %d green bars detected' % len(green_bars))
     buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
     logger('🆗 %d buttons detected' % len(buttons))
-
-
-    not_working_green_bars = []
-    for bar in green_bars:
-        if not isWorking(bar, buttons):
-            not_working_green_bars.append(bar)
-    if len(not_working_green_bars) > 0:
-        logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
-        logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
-
-    # se tiver botao com y maior que bar y-10 e menor que y+10
-    hero_clicks_cnt = 0
-    for (x, y, w, h) in not_working_green_bars:
-        # isWorking(y, buttons)
-        moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
+    
+    for (x, y, w, h) in buttons:
+        logger('**********CLICANDO**************')
+        moveToWithRandomness(x+(w/2),y+(h/2),1);
         pyautogui.click()
-        global hero_clicks
-        hero_clicks = hero_clicks + 1
-        hero_clicks_cnt = hero_clicks_cnt + 1
-        if hero_clicks_cnt > 20:
-            logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
-            return
-        #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
-    return len(not_working_green_bars)
+        
+    return 1
 
 def clickFullBarButtons():
     offset = 100
@@ -309,19 +299,6 @@ def clickFullBarButtons():
 
     return len(not_working_full_bars)
 
-def clickAllButton():
-    offset = 130
-
-    buttons = positions(images['go-work-all'], threshold=ct['go_to_work_btn'])
-    logger('🆗 %d button detected' % len(buttons))
-
-    for (x, y, w, h) in buttons:
-        logger('**********click all button**************')
-        moveToWithRandomness(x+(w/2),y+(h/2),1);
-        pyautogui.click()
-
-    return 1
-
 def goToHeroes():
     if clickBtn(images['go-back-arrow']):
         global login_attempts
@@ -330,7 +307,7 @@ def goToHeroes():
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
-    time.sleep(randint(1,3))
+    time.sleep(1)
 
 def goToGame():
     # in case of server overload popup
@@ -359,25 +336,25 @@ def login():
         pyautogui.hotkey('ctrl','f5')
         return
 
-    if clickBtn(images['connect-wallet'], timeout = 10):
+    if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
         logger('🎉 Connect wallet button detected, logging in!')
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
-    if clickBtn(images['select-wallet-2'], timeout=8):
+    if clickBtn(images['select-wallet-2'], name='sign button', timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
-        if clickBtn(images['treasure-hunt-icon'], timeout = 15):
+        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         return
         # click ok button
 
-    if not clickBtn(images['select-wallet-1-no-hover'], ):
-        if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
+    if not clickBtn(images['select-wallet-1-no-hover'], name='selectMetamaskBtn'):
+        if clickBtn(images['select-wallet-1-hover'], name='selectMetamaskHoverBtn', threshold  = ct['select_wallet_buttons'] ):
             pass
             # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
             # print('sleep in case there is no metamask text removed')
@@ -387,17 +364,17 @@ def login():
         # print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
-    if clickBtn(images['select-wallet-2'], timeout = 20):
+    if clickBtn(images['select-wallet-2'], name='signBtn', timeout = 20):
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
         # time.sleep(25)
-        if clickBtn(images['treasure-hunt-icon'], timeout=25):
+        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
 
-    if clickBtn(images['ok'], timeout=5):
+    if clickBtn(images['ok'], name='okBtn', timeout=5):
         pass
         # time.sleep(15)
         # print('ok button clicked')
@@ -437,6 +414,10 @@ def sendHeroesHome():
         else:
             print('hero already home, or home full(no dark home button)')
 
+
+
+
+
 def refreshHeroes():
     logger('🏢 Search for heroes to work')
 
@@ -463,45 +444,24 @@ def refreshHeroes():
             buttonsClicked = clickButtons()
 
         sendHeroesHome()
-
-        if buttonsClicked == 0:
-            empty_scrolls_attempts = empty_scrolls_attempts - 1
-        scroll()
-        time.sleep(2)
+        empty_scrolls_attempts = 0
+        
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
 
 def main():
-    """Main execution setup and loop"""
-    # ==Setup==
-    global hero_clicks
-    global login_attempts
-    global last_log_is_progress
-    hero_clicks = 0
-    login_attempts = 0
-    last_log_is_progress = False
-
-    global images
-    images = load_images()
-
-    if ch['enable']:
-        global home_heroes
-        home_heroes = loadHeroesToSendHome()
-    else:
-        print('>>---> Home feature not enabled')
-    print('\n')
-
-    print(cat)
-    time.sleep(7)
+    time.sleep(5)
     t = c['time_intervals']
-
+    
     windows = []
 
     if sys.platform == 'linux' or sys.platform == 'linux2':
         bombcryptoWindows = get_linux_bombcrypto_windows()
     else:
         bombcryptoWindows = pygetwindow.getWindowsWithTitle('bombcrypto')
+
+    
 
     for w in bombcryptoWindows:
         windows.append({
@@ -511,16 +471,17 @@ def main():
             "new_map" : 0,
             "refresh_heroes" : 0
             })
-    # =========
 
     while True:
         now = time.time()
+
         for last in windows:
+            logger(last)
             if sys.platform == 'linux' or sys.platform == 'linux2':
                 activate_linux_window(last["window"])
             else:
                 last["window"].activate()
-            
+                
             time.sleep(2)
 
             if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
@@ -549,14 +510,8 @@ def main():
             sys.stdout.flush()
 
             time.sleep(1)
-
-
-
-if __name__ == '__main__':
-
-
-
-    main()
+            
+main()
 
 
 #cv2.imshow('img',sct_img)
@@ -564,5 +519,4 @@ if __name__ == '__main__':
 
 # colocar o botao em pt
 # soh resetar posiçoes se n tiver clickado em newmap em x segundos
-
 
