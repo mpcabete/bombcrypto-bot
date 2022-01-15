@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-    
+from src.logger import logger, loggerMapClicked
 from cv2 import cv2
 from os import listdir
-from src.logger import logger, loggerMapClicked
 from random import randint
 from random import random
-import pygetwindow
 import numpy as np
 import mss
 import pyautogui
@@ -118,11 +117,7 @@ def loadHeroesToSendHome():
     print('>>---> %d heroes that should be sent home loaded' % len(heroes))
     return heroes
 
-if ch['enable']:
-    home_heroes = loadHeroesToSendHome()
-full_stamina = cv2.imread('targets/full-stamina.png')
-robot = cv2.imread('targets/robot.png')
-slider = cv2.imread('targets/slider.png')
+
 
 
 
@@ -144,19 +139,7 @@ def show(rectangles, img = None):
 
 
 
-def FindImageAndBtn(img,name=None, timeout=3, threshold = ct['default']):
-    logger(None, progress_indicator=True)
-    start = time.time()
-    matches = positions(img, threshold=threshold)
-    if(len(matches)==0):
-        hast_timed_out = time.time()-start > timeout
-        if(hast_timed_out):
-            if not name is None:
-                pass
-            return False
-        return False
-    else:
-        return True
+
 
 def clickBtn(img, timeout=3, threshold = ct['default']):
     """Search for img in the scree, if found moves the cursor over it and clicks.
@@ -174,7 +157,6 @@ def clickBtn(img, timeout=3, threshold = ct['default']):
 
         if(len(matches)==0):
             has_timed_out = time.time()-start > timeout
-            return False
             continue
 
         x,y,w,h = matches[0]
@@ -183,7 +165,7 @@ def clickBtn(img, timeout=3, threshold = ct['default']):
         moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
-        print("THIS SHOULD NOT PRINT")
+
     return False
 
 def printSreen():
@@ -215,23 +197,18 @@ def positions(target, threshold=ct['default'],img = None):
     return rectangles
 
 def scroll():
-    commoms = positions(images['commom-text'], threshold=ct['commom'])
-    if (len(commoms) == 0):
-        commoms = positions(images['rare-text'], threshold=ct['rare'])
-        if (len(commoms) == 0):
-            commoms = positions(images['super_rare-text'], threshold=ct['super_rare'])
-            if (len(commoms) == 0):
-                commoms = positions(images['epic-text'], threshold=ct['epic'])
-                if (len(commoms) == 0):
-                    return
-    x,y,w,h = commoms[len(commoms)-1]
 
+    commoms = positions(images['commom-text'], threshold = ct['commom'])
+    if (len(commoms) == 0):
+        return
+    x,y,w,h = commoms[len(commoms)-1]
+#
     moveToWithRandomness(x,y,1)
 
     if not c['use_click_and_drag_instead_of_scroll']:
         pyautogui.scroll(-c['scroll_size'])
     else:
-        pyautogui.dragRel(0, -c['click_and_drag_amount'], duration=1, button='left')
+        pyautogui.dragRel(0,-c['click_and_drag_amount'],duration=1, button='left')
 
 
 def clickButtons():
@@ -269,41 +246,7 @@ def isWorking(bar, buttons):
             return False
     return True
 
-def descobreRaridade(bar):
-    commoms = positions(images['commom-text'], threshold=ct['commom'])
-    rares = positions(images['rare-text'], threshold=ct['rare'])
-    super_rares = positions(images['super_rare-text'], threshold=ct['super_rare'])
-    epics = positions(images['epic-text'], threshold=ct['epic'])
-
-    y = bar[1]
-
-    for (_, button_y, _, button_h) in commoms:
-        isBelow = y < (button_y + button_h)
-        isAbove = y > (button_y - button_h)
-        if isBelow and isAbove:
-            return 'commom'
-
-    for (_, button_y, _, button_h) in rares:
-        isBelow = y < (button_y + button_h)
-        isAbove = y > (button_y - button_h)
-        if isBelow and isAbove:
-            return 'rare'
-
-    for (_, button_y, _, button_h) in super_rares:
-        isBelow = y < (button_y + button_h)
-        isAbove = y > (button_y - button_h)
-        if isBelow and isAbove:
-            return 'super_rare'
-
-    for (_, button_y, _, button_h) in epics:
-        isBelow = y < (button_y + button_h)
-        isAbove = y > (button_y - button_h)
-        if isBelow and isAbove:
-            return 'epic'
-
-    return 'null'
-
-def clickGreenBarButtons(baus):
+def clickGreenBarButtons():
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 140
 
@@ -315,15 +258,7 @@ def clickGreenBarButtons(baus):
 
     not_working_green_bars = []
     for bar in green_bars:
-        global deveTrabalhar
-        global raridade
-        raridade = descobreRaridade(bar)
-        deveTrabalhar = 1
-
-        if raridade != 'commom' and (baus >= 60 or baus == 0):
-            deveTrabalhar = 0
-
-        if (not isWorking(bar, buttons)) and deveTrabalhar == 1:
+        if not isWorking(bar, buttons):
             not_working_green_bars.append(bar)
     if len(not_working_green_bars) > 0:
         logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
@@ -373,31 +308,24 @@ def goToHeroes():
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
-    time.sleep(1)
+    time.sleep(randint(1,3))
 
 def goToGame():
     # in case of server overload popup
-    if FindImageAndBtn(images['x']): 
-        clickBtn(images['x'])
+    clickBtn(images['x'])
     # time.sleep(3)
-    if FindImageAndBtn(images['x']): 
-        clickBtn(images['x'])
-    if FindImageAndBtn(images['treasure-hunt-icon']): 
-        clickBtn(images['treasure-hunt-icon'])
+    clickBtn(images['x'])
+
+    clickBtn(images['treasure-hunt-icon'])
 
 def refreshHeroesPositions():
 
-    if clickBtn(images['go-back-arrow']):
-        logger('Refreshing Heroes Positions')
-        clickBtn(images['treasure-hunt-icon'])
+    logger('🔃 Refreshing Heroes Positions')
+    clickBtn(images['go-back-arrow'])
+    clickBtn(images['treasure-hunt-icon'])
 
-
-        # time.sleep(3)
-        clickBtn(images['treasure-hunt-icon'])
-
-        return True
-    else:
-        return False
+    # time.sleep(3)
+    clickBtn(images['treasure-hunt-icon'])
 
 def login():
     global login_attempts
@@ -413,19 +341,16 @@ def login():
         logger('🎉 Connect wallet button detected, logging in!')
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
-        time.sleep(7)
+        # time.sleep(10)
 
     if clickBtn(images['select-wallet-2'], timeout=8):
         # sometimes the sign popup appears imediately
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
-        time.sleep(10)
-        if clickBtn(images['treasure-hunt-icon'], name='teasureHunt', timeout = 15):
+        if clickBtn(images['treasure-hunt-icon'], timeout = 15):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-            time.sleep(2)
-            refreshHeroes()
         return
         # click ok button
 
@@ -444,12 +369,10 @@ def login():
         login_attempts = login_attempts + 1
         # print('sign button clicked')
         # print('{} login attempt'.format(login_attempts))
-        time.sleep(10)
+        # time.sleep(25)
         if clickBtn(images['treasure-hunt-icon'], timeout=25):
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
-            time.sleep(2)
-            refreshHeroes()
         # time.sleep(15)
 
     if clickBtn(images['ok'], timeout=5):
@@ -494,90 +417,39 @@ def sendHeroesHome():
 
 
 
-def checkBaus():
-    logger('🏢 Search for baus to map')
-    bonecozzz = positions(images['zzz'], threshold=ct['zzz'])
 
-    bausRoxo = positions(images['bau-roxo'], threshold=ct['bau_roxo'])
-    bausRoxoMeio = positions(images['bau-roxo-50'], threshold=ct['bau_roxo_50'])
-
-    bausGold = positions(images['bau-gold'], threshold=ct['bau_gold'])
-    bausGoldMeio = positions(images['bau-gold-50'], threshold=ct['bau_gold_50'])
-
-    bausBlue = positions(images['bau-blue'], threshold=ct['bau_blue'])
-    bausBlueMeio = positions(images['bau-blue-50'], threshold=ct['bau_blue_50'])
-
-    logger('🆗 %d dormindo detected' % len(bonecozzz))
-
-    logger('🆗 %d baus roxo detected' % len(bausRoxo))
-    logger('🆗 %d baus roxo meia vida detected' % len(bausRoxoMeio))
-
-    logger('🆗 %d baus gold detected' % len(bausGold))
-    logger('🆗 %d baus gold meia vida detected' % len(bausGoldMeio))
-
-    logger('🆗 %d baus blue detected' % len(bausBlue))
-    logger('🆗 %d baus blue meia vida detected' % len(bausBlueMeio))
-
-    global response
-    if (len(bausRoxoMeio) > 0 or len(bausGoldMeio) > 0 or len(bausBlueMeio) > 0):
-        response = (
-                           (len(bausRoxoMeio) + len(bausGoldMeio) + len(bausBlueMeio))
-                           * 100
-                   ) / (len(bausRoxo) + len(bausGold) + len(bausBlue))
-    else:
-        response = 0
-
-    return response
-
-def clickFullRest():
-    while (True):
-        buttons = positions(images['rest'], threshold=ct['rest'])
-        if len(buttons) > 0:
-            clickBtn(images['alldesc'])
-           # clickBtn(images['rest'])
-        else:
-            return
 
 def refreshHeroes():
     logger('🏢 Search for heroes to work')
 
-    global baus
-    baus = checkBaus()
     goToHeroes()
-    if FindImageAndBtn(images['select-character-heroes']):
-        if c['select_heroes_mode'] != "full":
-            clickFullRest()
-        if c['select_heroes_mode'] == "full":
-            logger('Sending heroes with full stamina bar to work', 'green')
-        elif c['select_heroes_mode'] == "green":
-            logger('Sending heroes with green stamina bar to work', 'green')
+
+    if c['select_heroes_mode'] == "full":
+        logger('⚒️ Sending heroes with full stamina bar to work', 'green')
+    elif c['select_heroes_mode'] == "green":
+        logger('⚒️ Sending heroes with green stamina bar to work', 'green')
+    else:
+        logger('⚒️ Sending all heroes to work', 'green')
+
+    buttonsClicked = 1
+    empty_scrolls_attempts = c['scroll_attemps']
+
+    while(empty_scrolls_attempts >0):
+        if c['select_heroes_mode'] == 'full':
+            buttonsClicked = clickFullBarButtons()
+        elif c['select_heroes_mode'] == 'green':
+            buttonsClicked = clickGreenBarButtons()
         else:
-            logger('Sending all heroes to work', 'green')
-    
+            buttonsClicked = clickButtons()
 
-        buttonsClicked = 1
-        empty_scrolls_attempts = c['scroll_attemps']
-        while(empty_scrolls_attempts >0):
-            if FindImageAndBtn(images['full-stamina']):
-                clickBtn(images['all'])
-                logger('full ponto') 
-                goToGame()
-                return
-            if c['select_heroes_mode'] == 'full':
-                clickBtn(images['all'])
-                buttonsClicked = clickFullBarButtons()
-            elif c['select_heroes_mode'] == 'green':
-                buttonsClicked = clickGreenBarButtons(baus)
-            else:
-                buttonsClicked = clickButtons()
-            sendHeroesHome()
+        sendHeroesHome()
 
-            if buttonsClicked == 0:
-                empty_scrolls_attempts = empty_scrolls_attempts - 1
-
-            scroll()
-        logger('💪 {} heroes sent to work'.format(hero_clicks))
-        goToGame()
+        if buttonsClicked == 0:
+            empty_scrolls_attempts = empty_scrolls_attempts - 1
+        scroll()
+        time.sleep(2)
+    logger('💪 {} heroes sent to work'.format(hero_clicks))
+    goToGame()
 
 
 def main():
@@ -604,111 +476,49 @@ def main():
     time.sleep(7)
     t = c['time_intervals']
 
-
-
-    windows = []
-    for w in pygetwindow.getWindowsWithTitle('bombcrypto'):
-        windows.append({
-            "window": w,
-            "login" : 0,
-            "heroes" : 0,
-            "new_map" : 0,
-            "check_for_captcha" : 0,
-            "refresh_heroes" : 0
-            })
+    last = {
+    "login" : 0,
+    "heroes" : 0,
+    "new_map" : 0,
+    "check_for_captcha" : 0,
+    "refresh_heroes" : 0
+    }
+    # =========
 
     while True:
-        for last in windows:
-            last["window"].activate()
-            if last["window"].isMaximized == False:
-                last["window"].maximize()
-               
+        now = time.time()
 
-            logger('>>---> window: %s' % last["window"].title)
+        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
+            last["check_for_captcha"] = now
 
-            time.sleep(1)
-              
-            now = time.time()
-            if clickBtn(images['ok'], timeout=5):
-                login_attempts = 0
-                time.sleep(12)
-               # pyautogui.hotkey('ctrl','f5')
-                sys.stdout.flush()
-                last["login"] = now
-                login()
+        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+            last["heroes"] = now
+            refreshHeroes()
 
-
-            bonecozzzc = positions(images['zzz'], threshold=ct['zzz'])
-            if len(bonecozzzc) == 0:
-                time.sleep(1)
-                bonecozzzc = positions(images['zzz'], threshold=ct['zzz']) 
-            logger('🆗 %d dormindo detected' % len(bonecozzzc)) 
-            if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-                last["heroes"] = now  
-                if len(bonecozzzc) > 9:         
-                    refreshHeroes()
-            else:
-                if len(bonecozzzc) > 9: 
-                    logger('🆗 %d dormindo > 9 detected' % len(bonecozzzc))   
-                    refreshHeroes()
-
-    
-            if FindImageAndBtn(images['select-wallet-2']):
-                sys.stdout.flush()
-                last["login"] = now
-                login()
-
- 
-            if now - last["login"] > addRandomness(t['check_for_login'] * 60):
-                sys.stdout.flush()
-                last["login"] = now
-                login()
-
-       
-
-            if FindImageAndBtn(images['select-character-heroes']):
-                logger('Wait select heroes to work Manual.')    
-                time.sleep(5)
-                if FindImageAndBtn(images['select-character-heroes']):  
-                    refreshHeroes()
-                    clickBtn(images['select-bcoin'])  
-               # if FindImageAndBtn(images['all']):
-                   # clickBtn(images['all'])
-                   # goToGame() 
-                   # clickBtn(images['select-bcoin']) 
-
-      
-            if now - last["new_map"] > t['check_for_new_map_button']:
-                last["new_map"] = now
-
-                if clickBtn(images['new-map']):
-                    loggerMapClicked()
-                    time.sleep(2)
-                    if len(bonecozzzc) > 9: 
-                        refreshHeroes()
-
-         
-
-            if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-                last["refresh_heroes"] = now
-                refreshHeroesPositions()
-
-           
-            if FindImageAndBtn(images['treasure-hunt-icon']):
-                if clickBtn(images['treasure-hunt-icon'], timeout=25):
-                    # print('sucessfully login, treasure hunt btn clicked')
-                    login_attempts = 0
-                    time.sleep(2)
-                    refreshHeroes()
-
-          
-            
-            #clickBtn(teasureHunt)
-            logger(None, progress_indicator=True)
-
+        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
             sys.stdout.flush()
+            last["login"] = now
+            login()
 
-            time.sleep(1)
+        if now - last["new_map"] > t['check_for_new_map_button']:
+            last["new_map"] = now
+
+            if clickBtn(images['new-map']):
+                loggerMapClicked()
+
+
+        if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+            last["refresh_heroes"] = now
+            refreshHeroesPositions()
+
+        #clickBtn(teasureHunt)
+        logger(None, progress_indicator=True)
+
+        sys.stdout.flush()
+
+        time.sleep(1)
+
+
 
 if __name__ == '__main__':
 
