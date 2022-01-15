@@ -37,10 +37,10 @@ if __name__ == '__main__':
 
 ct = c['threshold']
 ch = c['home']
-ctel = c['telegram']
+cTelegram = c['telegram']
 
 
-bot = telegram.Bot(token=ctel['token'])
+bot = telegram.Bot(token=cTelegram['token'])
 
 if not ch['enable']:
     print('>>---> xii, não tenho casa! :(  ')
@@ -160,7 +160,7 @@ def printChest(last):
     
     clickBtn(images['x'])
 
-    bot.send_photo(chat_id=ctel['chat-id'], photo=open('screenshot.png', 'rb'))
+    bot.send_photo(chat_id=cTelegram['chat-id'], photo=open('screenshot.png', 'rb'))
     time.sleep(1)
     clickBtn(images['treasure-hunt-icon'])
 
@@ -497,6 +497,7 @@ def main():
 
         for last in windows:
             logger(last)
+            printChest(last)
             if sys.platform == 'linux' or sys.platform == 'linux2':
                 activate_linux_window(last["window"])
             else:
@@ -523,9 +524,10 @@ def main():
                 last["refresh_heroes"] = now
                 refreshHeroesPositions()                
             
-            if now - last["print_coins"] > addRandomness( t['interval_print_coins'] * 60):
-                last["print_coins"] = now                
-                printChest(last)
+            if cTelegram['active']:
+                if now - last["print_coins"] > addRandomness( t['interval_print_coins'] * 60):
+                    last["print_coins"] = now                
+                    printChest(last)
 
             #clickBtn(teasureHunt)
             logger(None, progress_indicator=True)

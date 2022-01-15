@@ -106,8 +106,9 @@
 # BOTNAME = bcryptojowbot
 # TODO : Criar um grupo, incluir o bot acima e pegar o id da conversa na URL do chat
   telegram:
-    chat-id: CHATID
-    token: "TOKEN"
+    active: false
+    chat-id: 0
+    token: ""
 
 
 

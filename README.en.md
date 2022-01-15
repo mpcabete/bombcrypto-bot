@@ -14,20 +14,6 @@ source, so as an incentive for me to spend the time and energy maintaining the
 bot, I have created some donation milestones so people can collectively fund
 the bot.
 
-### Smart Chain Wallet:
-#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
-
-### Paypal:
-[Donate:](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
-https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ
-
-## Disclaymer:
-  
-  The bombcrypto developers have not manifested themselves yet regarding the
-  use of bots. Do your own research and use the bot at your own risk. I am not
-  responsible for any future penalties.
-
-
 # Installation:
 ### Download and install Phython from the [site](https://www.python.org/downloads/) or from the [windows store](https://www.microsoft.com/p/python-37/9nj46sx7x90p?activetab=pivot:overviewtab). 
 
@@ -119,10 +105,3 @@ If both these conditions are true, it clicks the home button.
   - If it does not detect your heroes, make it smaller. You can also try replacing the screenshot with another part of the hero.
 
   ----------------
-
-## Pay me a coffe :)
-
-### Wallet:
-#### 0xbd06182D8360FB7AC1B05e871e56c76372510dDf
-### Paypal:
-[Donate](https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ)
