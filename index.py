@@ -525,8 +525,7 @@ def main():
                 time.sleep(2)
                 now = time.time()
 
-                if clickBtn(images['ok_team_viewer'], timeout=5):
-                    pass
+    
 
                 if now - currentWindow["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
                     currentWindow["check_for_captcha"] = now
