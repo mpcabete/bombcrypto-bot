@@ -373,7 +373,7 @@ def goToHeroes():
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
-    time.sleep(1)
+    time.sleep(randint(1,3))
 
 def goToGame():
     # in case of server overload popup
