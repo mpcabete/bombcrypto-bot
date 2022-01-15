@@ -497,7 +497,7 @@ def main():
 
         for last in windows:
             logger(last)
-            printChest(last)
+            
             if sys.platform == 'linux' or sys.platform == 'linux2':
                 activate_linux_window(last["window"])
             else:
