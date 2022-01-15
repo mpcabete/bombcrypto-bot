@@ -47,6 +47,13 @@
     # Valor padrão (em segundos): 1
     interval_between_moviments: 1
 
+    # [en_US] Time interval between print coins
+    # Default value (in minutes): 60
+    #
+    # [pt_BR] Intervalo de tempo entre a print das coins
+    # Valor padrão (em segundos): 60
+    interval_print_coins: 60
+
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #
   # [pt_BR] O quão confiante o bot precisa estar para clicar nos botões (valores entre 0 e 1. 0 é o valor mínimo, 1 é o valor máximo)
@@ -78,7 +85,7 @@
     #
     # [pt_BR]
     # Valor padrão: 0.9
-    go_to_work_btn: 0.9
+    go_to_work_btn: 0.8
 
     # [en_US]
     # Default value: 0.9
@@ -93,6 +100,16 @@
     # if bot is not sending any hero home make this number smaller.
     hero_threshold: 0.8
     home_button_threshold: 0.9
+
+# [pt-BR]
+# Configuração do Telegram
+# BOTNAME = bcryptojowbot
+# TODO : Criar um grupo, incluir o bot acima e pegar o id da conversa na URL do chat
+  telegram:
+    active: false
+    chat-id: 0
+    token: ""
+
 
 
   # [en_US]
@@ -133,11 +150,11 @@
   # [pt_BR]
   # Valor padrão: green
   # Opções disponíveis:
-  # all   = seleciona todos os heróis (independente da barra de stamina)
-  # green = seleciona os heróis com a barra de stamina verde (metade ou cheia)
-  # full  = seleciona somente os heróis com a barra de stamina cheia
-  # all  = utiliza o botão all, colocando todo mundo para trabalhar
-  select_heroes_mode: "green"
+  # all       = seleciona todos os heróis (independente da barra de stamina, um por vez)
+  # green     = seleciona os heróis com a barra de stamina verde (metade ou cheia)
+  # full      = seleciona somente os heróis com a barra de stamina cheia
+  # allButton = utiliza o botão all
+  select_heroes_mode: "allButton"
 
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False

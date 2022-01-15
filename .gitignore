@@ -24,3 +24,4 @@ __pycache__/
 # vscode plugins
 /.history
 .vscode/launch.json
+screenshot.png
