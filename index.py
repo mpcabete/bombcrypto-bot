@@ -454,10 +454,10 @@ def login():
             refreshHeroes()
         # time.sleep(15)
 
-    if clickBtn(images['ok'], timeout=5):
-        pass
-        # time.sleep(15)
-        # print('ok button clicked')
+    if FindImageAndBtn(images['ok']):
+        login_attempts = 0
+        pyautogui.hotkey('ctrl','f5')
+        time.sleep(15)
 
 
 
@@ -544,41 +544,49 @@ def refreshHeroes():
     logger('🏢 Search for heroes to work')
 
     global baus
-    baus = checkBaus()
+
+    if c['mandar_todos_trabalhar'] == False:
+        baus = checkBaus()
     goToHeroes()
     if FindImageAndBtn(images['select-character-heroes']):
-        if c['select_heroes_mode'] != "full":
+        if c['mandar_todos_trabalhar'] == True:
             clickFullRest()
-        if c['select_heroes_mode'] == "full":
-            logger('Sending heroes with full stamina bar to work', 'green')
-        elif c['select_heroes_mode'] == "green":
-            logger('Sending heroes with green stamina bar to work', 'green')
+            if FindImageAndBtn(images['all']):
+                clickBtn(images['all'])
+                logger('heroes sent to work')
         else:
-            logger('Sending all heroes to work', 'green')
+            if c['select_heroes_mode'] != "full":
+                clickFullRest()
+            if c['select_heroes_mode'] == "full":
+                logger('Sending heroes with full stamina bar to work', 'green')
+            elif c['select_heroes_mode'] == "green":
+                logger('Sending heroes with green stamina bar to work', 'green')
+            else:
+                logger('Sending all heroes to work', 'green')
     
 
-        buttonsClicked = 1
-        empty_scrolls_attempts = c['scroll_attemps']
-        while(empty_scrolls_attempts >0):
-            if FindImageAndBtn(images['full-stamina']):
-                clickBtn(images['all'])
-                logger('full ponto') 
-                goToGame()
-                return
-            if c['select_heroes_mode'] == 'full':
-                clickBtn(images['all'])
-                buttonsClicked = clickFullBarButtons()
-            elif c['select_heroes_mode'] == 'green':
-                buttonsClicked = clickGreenBarButtons(baus)
-            else:
-                buttonsClicked = clickButtons()
-            sendHeroesHome()
+            buttonsClicked = 1
+            empty_scrolls_attempts = c['scroll_attemps']
+            while(empty_scrolls_attempts >0):
+                if FindImageAndBtn(images['full-stamina']):
+                    clickBtn(images['all'])
+                    logger('full ponto') 
+                    goToGame()
+                    return
+                if c['select_heroes_mode'] == 'full':
+                    clickBtn(images['all'])
+                    buttonsClicked = clickFullBarButtons()
+                elif c['select_heroes_mode'] == 'green':
+                    buttonsClicked = clickGreenBarButtons(baus)
+                else:
+                    buttonsClicked = clickButtons()
+                sendHeroesHome()
 
-            if buttonsClicked == 0:
-                empty_scrolls_attempts = empty_scrolls_attempts - 1
+                if buttonsClicked == 0:
+                    empty_scrolls_attempts = empty_scrolls_attempts - 1
 
-            scroll()
-        logger('💪 {} heroes sent to work'.format(hero_clicks))
+                scroll()
+            logger('💪 {} heroes sent to work'.format(hero_clicks))
         goToGame()
 
 

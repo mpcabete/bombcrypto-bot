@@ -655,6 +655,7 @@ def main():
             else:
                 if len(bonecozzzc) > 9 and last["n9_heroes"] == False:
                     logger('🆗 %d dormindo > 9 detected' % len(bonecozzzc))   
+                    last["heroes"] = now  
                     last["n9_heroes"] = True
                     refreshHeroes()
                     last["refresh_heroes"] = now 
@@ -676,7 +677,8 @@ def main():
             if FindImageAndBtn(images['select-character-heroes']):
                 logger('Wait select heroes to work Manual.')    
                 time.sleep(5)
-                if FindImageAndBtn(images['select-character-heroes']):  
+                if FindImageAndBtn(images['select-character-heroes']): 
+                    last["heroes"] = now   
                     refreshHeroes()
                     last["refresh_heroes"] = now 
                     clickBtn(images['select-bcoin'])  
@@ -689,6 +691,7 @@ def main():
                     loggerMapClicked()
                     time.sleep(2)
                     if len(bonecozzzc) > 9: 
+                        last["heroes"] = now   
                         refreshHeroes()
                         last["refresh_heroes"] = now  
          
@@ -703,9 +706,9 @@ def main():
                     # print('sucessfully login, treasure hunt btn clicked')
                     login_attempts = 0
                     time.sleep(2)
+                    last["heroes"] = now 
                     refreshHeroes()
                     last["refresh_heroes"] = now 
-          
             
             logger(None, progress_indicator=True)
 

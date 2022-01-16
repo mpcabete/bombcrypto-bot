@@ -10,42 +10,56 @@
     #
     # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
     # Valor padrão (em minutos): 10
-    send_heroes_for_work: 10
+    send_heroes_for_work: 15
     
     # [en_US] Time interval to update heroes position in the map,
     # Default value (in minutes): 3
     #
     # [pt_BR] Intervalo de tempo para atualizar a posição dos heróis no mapa
     # Valor padrão (em minutos): 3
-    refresh_heroes_positions: 3
+    refresh_heroes_positions: 7
     
     # [en_US] Time interval to check for new maps
     # Default value (in minutes): 5 
     #
     # [pt_BR] Intervalo de tempo para verificar por novos mapas
     # Valor padrão (em segundos): 5
-    check_for_new_map_button: 5
+    check_for_new_map_button: 1
     
     # [en_US] Time interval to check for captcha.
     # Default value (in minutes): 1
     #
     # [pt_BR] Intervalo de tempo para verificar se precisa resolver o captcha.
     # Valor padrão (em minutos): 1
-    check_for_captcha: 1
+    check_for_captcha: 1000
 
     # [en_US] Time interval to check for login request
     # Default value (in minutes): 3
     #
     # [pt_BR] Intervalo de tempo para verificar se existe solicitação de login
     # Valor padrão (em minutos): 5
-    check_for_login: 5
+    check_for_login: 1
 
     # [en_US] Time interval between moviments
     # Default value (in seconds): 1 
     #
     # [pt_BR] Intervalo de tempo entre movimentos
     # Valor padrão (em segundos): 1
-    interval_between_moviments: 1
+    interval_between_moviments: 0.7
+
+    # [en_US] Time interval between random mouse moviments
+    # Default value (in minutes): 1 
+    #
+    # [pt_BR] Intervalo de tempo entre movimentos aleatórios do mouse
+    # Valor padrão (em minutos): 1
+    interval_between_random_moviments: 1 #min
+
+    # [en_US] Time interval to check the ches
+    # Default value (in minutes): 5
+    #
+    # [pt_BR] Intervalo de tempo entre movimentos
+    # Valor padrão (em minutos): 5
+    check_chest: 5 #min
 
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #
@@ -60,11 +74,39 @@
     default: 0.7
 
     # [en_US]
+    # Default value: 0.7
+    #
+    # [pt_BR]
+    # Valor padrão: 0.7
+    rest: 0.9
+
+    # [en_US]
     # Default value: 0.8
     #
     # [pt_BR]
     # Valor padrão: 0.8
     commom: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    rare: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    super_rare: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    epic: 0.8
 
     # [en_US]
     # Default value: 0.8
@@ -79,6 +121,62 @@
     # [pt_BR]
     # Valor padrão: 0.9
     go_to_work_btn: 0.9
+
+    # Total baus roxo
+    # [en_US]
+    # Default value: 0.7
+    #
+    # [pt_BR]
+    # Valor padrão: 0.7
+    bau_roxo: 0.7
+
+    # Total zzz
+    # [en_US]
+    # Default value: 0.7
+    #
+    # [pt_BR]
+    # Valor padrão: 0.7
+    zzz: 0.7
+
+    # Total baus roxo pouca vida
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_roxo_50: 0.8
+
+    # Total baus roxo
+    # [en_US]
+    # Default value: 0.7
+    #
+    # [pt_BR]
+    # Valor padrão: 0.7
+    bau_gold: 0.7
+
+    # Total baus roxo pouca vida
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_gold_50: 0.8
+
+    # Total baus roxo
+    # [en_US]
+    # Default value: 0.7
+    #
+    # [pt_BR]
+    # Valor padrão: 0.7
+    bau_blue: 0.7
+
+    # Total baus roxo pouca vida
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_blue_50: 0.8
 
     # [en_US]
     # Default value: 0.9
@@ -146,3 +244,17 @@
   # Valor padrão : False
   # Opções disponíveis: False ou True
   save_log_to_file: True
+
+  # [en_US] 
+  # Default value: 1
+  #
+  # [pt_BR]
+  # Valor padrão : 1
+  mouse_speed: 1
+
+  # [en_US] 
+  # Default value: 3
+  #
+  # [pt_BR]
+  # Valor padrão : 3
+  max_login_atempts: 3
