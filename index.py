@@ -615,6 +615,7 @@ def main():
             "login" : 0,
             "heroes" : 0,
             "new_map" : 0,
+            "n9_heroes" : False,
             "check_for_captcha" : 0,
             "refresh_heroes" : 0
             })
@@ -631,10 +632,10 @@ def main():
             time.sleep(1)
               
             now = time.time()
-            if clickBtn(images['ok'], timeout=5):
+            if FindImageAndBtn(images['ok']):
                 login_attempts = 0
-                time.sleep(12)
-               # pyautogui.hotkey('ctrl','f5')
+                pyautogui.hotkey('ctrl','f5')
+                time.sleep(15)
                 sys.stdout.flush()
                 last["login"] = now
                 login()
@@ -645,14 +646,19 @@ def main():
                 time.sleep(1)
                 bonecozzzc = positions(images['zzz'], threshold=ct['zzz']) 
             logger('🆗 %d dormindo detected' % len(bonecozzzc)) 
-            if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-                last["heroes"] = now  
-                if len(bonecozzzc) > 9:         
-                    refreshHeroes()
-            else:
+            if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60): 
                 if len(bonecozzzc) > 9: 
-                    logger('🆗 %d dormindo > 9 detected' % len(bonecozzzc))   
+                    last["heroes"] = now  
+                    last["n9_heroes"] = False         
                     refreshHeroes()
+                    last["refresh_heroes"] = now 
+            else:
+                if len(bonecozzzc) > 9 and last["n9_heroes"] == False:
+                    logger('🆗 %d dormindo > 9 detected' % len(bonecozzzc))   
+                    last["heroes"] = now  
+                    last["n9_heroes"] = True
+                    refreshHeroes()
+                    last["refresh_heroes"] = now 
 
     
             if FindImageAndBtn(images['select-wallet-2']):
@@ -671,13 +677,11 @@ def main():
             if FindImageAndBtn(images['select-character-heroes']):
                 logger('Wait select heroes to work Manual.')    
                 time.sleep(5)
-                if FindImageAndBtn(images['select-character-heroes']):  
+                if FindImageAndBtn(images['select-character-heroes']): 
+                    last["heroes"] = now   
                     refreshHeroes()
+                    last["refresh_heroes"] = now 
                     clickBtn(images['select-bcoin'])  
-               # if FindImageAndBtn(images['all']):
-                   # clickBtn(images['all'])
-                   # goToGame() 
-                   # clickBtn(images['select-bcoin']) 
 
       
             if now - last["new_map"] > t['check_for_new_map_button']:
@@ -687,8 +691,9 @@ def main():
                     loggerMapClicked()
                     time.sleep(2)
                     if len(bonecozzzc) > 9: 
+                        last["heroes"] = now   
                         refreshHeroes()
-
+                        last["refresh_heroes"] = now  
          
 
             if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
@@ -701,11 +706,10 @@ def main():
                     # print('sucessfully login, treasure hunt btn clicked')
                     login_attempts = 0
                     time.sleep(2)
+                    last["heroes"] = now 
                     refreshHeroes()
-
-          
+                    last["refresh_heroes"] = now 
             
-            #clickBtn(teasureHunt)
             logger(None, progress_indicator=True)
 
             sys.stdout.flush()
