@@ -10,6 +10,10 @@ import pyautogui
 import time
 import sys
 import yaml
+import os
+import easyocr
+from matplotlib import pyplot as plt
+import telegram_send
 
 # Load config file.
 stream = open("config.yaml", 'r')
@@ -170,7 +174,7 @@ def clickBtn(img, timeout=3, threshold = ct['default']):
 
 def printSreen():
     with mss.mss() as sct:
-        monitor = sct.monitors[0]
+        monitor = sct.monitors[1]
         sct_img = np.array(sct.grab(monitor))
         # The screen part to capture
         # monitor = {"top": 160, "left": 160, "width": 1000, "height": 135}
@@ -317,6 +321,22 @@ def goToGame():
     clickBtn(images['x'])
 
     clickBtn(images['treasure-hunt-icon'])
+         
+    clickBtn(images['chest-icon'])
+
+    bcoins_value_rect = positions(images['bcoins-value'])
+    
+    myScreenshot = pyautogui.screenshot(region=tuple(bcoins_value_rect[0]))
+    myScreenshot.save(r'bcoins_value.png')
+    
+    reader = easyocr.Reader(['en'], gpu=False)
+    result = reader.readtext('bcoins_value.png', paragraph="False") 
+    os.remove('bcoins_value.png')
+
+    print("🪙 Total de BCOINS no baú: ", result[1][1])
+    telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
+
+    clickBtn(images['x'])
 
 def refreshHeroesPositions():
 

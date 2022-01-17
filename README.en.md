@@ -62,8 +62,13 @@ cd <path you copied>
 pip install -r requirements.txt
 ```
 
-  
 ![pip](https://github.com/mpcabete/bombcrypto-bot/raw/main/readme-images/pip.png)
+
+### Configure telegram-send bot:
+
+```
+telegram-send --configure
+```  
 
 ### It is finished! Now to run the bot you just need to type:
 
