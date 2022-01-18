@@ -325,16 +325,16 @@ def goToGame():
     clickBtn(images['chest-icon'])
 
     bcoins_value_rect = positions(images['bcoins-value'])
-    
-    myScreenshot = pyautogui.screenshot(region=tuple(bcoins_value_rect[0]))
-    myScreenshot.save(r'bcoins_value.png')
-    
-    reader = easyocr.Reader(['en'], gpu=False)
-    result = reader.readtext('bcoins_value.png', paragraph="False") 
-    os.remove('bcoins_value.png')
+    if(bcoins_value_rect):    
+        myScreenshot = pyautogui.screenshot(region=tuple(bcoins_value_rect[0]))
+        myScreenshot.save(r'bcoins_value.png')
+        
+        reader = easyocr.Reader(['en'], gpu=False)
+        result = reader.readtext('bcoins_value.png', paragraph="False") 
+        os.remove('bcoins_value.png')
 
-    print("🪙 Total de BCOINS no baú: ", result[1][1])
-    telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
+        print("🪙 Total de BCOINS no baú: ", result[1][1])
+        telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
 
     clickBtn(images['x'])
 
