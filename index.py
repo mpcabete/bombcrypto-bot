@@ -337,8 +337,6 @@ def goToGame():
             if(len(result[1])>1):
                 print("🪙 Total de BCOINS no baú: ", result[1][1])
                 telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
-                chest_image = open('bcoins_value.png', 'rb')
-                telegram_send.send(images=[chest_image])
         os.remove('bcoins_value.png')
                 
 
@@ -530,6 +528,13 @@ def main():
             last["new_map"] = now
 
             if clickBtn(images['new-map']):
+                myScreenshot = pyautogui.screenshot())
+                myScreenshot.save(r'map_image.png')
+                map_image = open('map_image.png', 'rb')
+                telegram_send.send(images=[map_image])
+                telegram_send.send(messages=['🗺️ Um novo mapa apareceu!'])
+                os.remove('map_image.png')
+
                 loggerMapClicked()
 
 
