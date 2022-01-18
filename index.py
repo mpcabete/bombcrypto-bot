@@ -528,7 +528,7 @@ def main():
             last["new_map"] = now
 
             if clickBtn(images['new-map']):
-                myScreenshot = pyautogui.screenshot())
+                myScreenshot = pyautogui.screenshot()
                 myScreenshot.save(r'map_image.png')
                 map_image = open('map_image.png', 'rb')
                 telegram_send.send(images=[map_image])
