@@ -6,7 +6,12 @@
   #
   time_intervals:
     
-    check_bcoins: 5
+    # [en_US] Time interval for check te=he quantity of BCOINS are in the chest
+    # Default value (in minutes): 60
+    #
+    # [pt_BR] Intervalo de tempo para verificar a quantidade de BCOINS no baú
+    # Valor padrão (em minutos): 60
+    check_bcoins: 60
 
     # [en_US] Time interval for check if there are available heroes to work
     # Default value (in minutes): 10

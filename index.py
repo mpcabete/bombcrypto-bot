@@ -424,7 +424,7 @@ def sendHeroesHome():
 
 
 def refreshHeroes():
-    logger('🪙 Checking bcoins value on chest')
+    logger('🏢 Search for heroes to work')
 
     goToHeroes()
 
@@ -456,7 +456,7 @@ def refreshHeroes():
     goToGame()
 
 def checkBcoins():
-    logger(' Search for heroes to work')
+    logger('🪙 Checking bcoins value on chest')
 
     clickBtn(images['chest-icon'])
 
@@ -473,11 +473,24 @@ def checkBcoins():
 
         if(len(result)>1):
             if(len(result[1])>1):
-                logger('✉️ Sending the BCOINS quantity to the telegram: ', result[1][1])
+                logger('✉️ Sending the BCOINS quantity to telegram: ')
                 telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
         os.remove('bcoins_value.png')  
 
     clickBtn(images['x'])
+
+def sendMapImageToTelegram():
+    logger('📸 Taking a screenshot of the map')  
+    myScreenshot = pyautogui.screenshot()
+    myScreenshot.save(r'map_image.png')
+    map_image = open('map_image.png', 'rb')
+
+    logger('🗺️ Sending map image to telegram: ')
+    telegram_send.send(images=[map_image])
+    telegram_send.send(messages=['🗺️ Um novo mapa apareceu!'])
+    
+    os.remove('map_image.png')
+
 
 def main():
     """Main execution setup and loop"""
@@ -521,7 +534,7 @@ def main():
 
         if now - last["check_bcoins"] > addRandomness(t['check_bcoins'] * 60):
             last["check_bcoins"] = now
-            refreshHeroes()
+            checkBcoins()
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -536,13 +549,7 @@ def main():
             last["new_map"] = now
 
             if clickBtn(images['new-map']):
-                myScreenshot = pyautogui.screenshot()
-                myScreenshot.save(r'map_image.png')
-                map_image = open('map_image.png', 'rb')
-                telegram_send.send(images=[map_image])
-                telegram_send.send(messages=['🗺️ Um novo mapa apareceu!'])
-                os.remove('map_image.png')
-
+                sendMapImageToTelegram()
                 loggerMapClicked()
 
 
