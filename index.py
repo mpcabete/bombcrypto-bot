@@ -463,6 +463,7 @@ def checkBcoins():
     bcoins_value_rect = positions(images['bcoins-value'])
      
     if (len(bcoins_value_rect) != 0): 
+        time.sleep(1)
         logger('📸 Taking a screenshot of the chest')    
         myScreenshot = pyautogui.screenshot(region=tuple(bcoins_value_rect[0]))
         myScreenshot.save(r'bcoins_value.png')
