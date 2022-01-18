@@ -333,9 +333,11 @@ def goToGame():
         reader = easyocr.Reader(['en'], gpu=False)
         result = reader.readtext('bcoins_value.png', paragraph="False") 
         os.remove('bcoins_value.png')
-
-        print("🪙 Total de BCOINS no baú: ", result[1][1])
-        telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
+        print(result)
+        if(len(result)>1):
+            if(len(result[1])>1):
+                print("🪙 Total de BCOINS no baú: ", result[1][1])
+                telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
 
     clickBtn(images['x'])
 
