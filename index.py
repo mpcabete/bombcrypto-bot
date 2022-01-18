@@ -336,7 +336,7 @@ def goToGame():
         if(len(result)>1):
             if(len(result[1])>1):
                 print("🪙 Total de BCOINS no baú: ", result[1][1])
-                telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]], files='bcoins_value.png')
+                telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]], images=['bcoins_value.png'])
         os.remove('bcoins_value.png')
                 
 
