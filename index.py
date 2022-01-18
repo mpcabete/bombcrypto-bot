@@ -325,7 +325,8 @@ def goToGame():
     clickBtn(images['chest-icon'])
 
     bcoins_value_rect = positions(images['bcoins-value'])
-    if(bcoins_value_rect):    
+     
+    if (len(bcoins_value_rect) != 0):     
         myScreenshot = pyautogui.screenshot(region=tuple(bcoins_value_rect[0]))
         myScreenshot.save(r'bcoins_value.png')
         
