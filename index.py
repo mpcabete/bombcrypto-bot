@@ -479,6 +479,7 @@ def checkBcoins():
         os.remove('bcoins_value.png')  
 
     clickBtn(images['x'])
+    sendMapImageToTelegram()
 
 def sendMapImageToTelegram():
     logger('📸 Taking a screenshot of the map')  
@@ -488,7 +489,7 @@ def sendMapImageToTelegram():
 
     logger('🗺️ Sending map image to telegram: ')
     telegram_send.send(images=[map_image])
-    telegram_send.send(messages=['🗺️ Um novo mapa apareceu!'])
+    #telegram_send.send(messages=['🗺️ Um novo mapa apareceu!'])
     
     os.remove('map_image.png')
 
