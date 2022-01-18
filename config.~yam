@@ -245,6 +245,11 @@
   # Opções disponíveis: False ou True
   save_log_to_file: True
 
+  # [pt_BR] Opção para mandar todos trabalhar
+  # Valor padrão : False
+  # Opções disponíveis: False ou True
+  mandar_todos_trabalhar: False 
+
   # [en_US] 
   # Default value: 1
   #

@@ -225,7 +225,11 @@ def scroll():
             if (len(commoms) == 0):
                 commoms = positions(images['epic-text'], threshold=ct['epic'])
                 if (len(commoms) == 0):
-                    return
+                    commoms = positions(images['legend-text'], threshold=ct['legend'])
+                    if (len(commoms) == 0):  
+                       # commoms = positions(images['super_legend-text'], threshold=ct['super_legend']) 
+                        if (len(commoms) == 0):  
+                           return
     x,y,w,h = commoms[len(commoms)-1]
 
     moveToWithRandomness(x,y,1)
@@ -276,6 +280,8 @@ def descobreRaridade(bar):
     rares = positions(images['rare-text'], threshold=ct['rare'])
     super_rares = positions(images['super_rare-text'], threshold=ct['super_rare'])
     epics = positions(images['epic-text'], threshold=ct['epic'])
+    legends = positions(images['legend-text'], threshold=ct['legend'])
+   # super_legends = positions(images['super_legend-text'], threshold=ct['super_legend'])
 
     y = bar[1]
 
@@ -303,9 +309,21 @@ def descobreRaridade(bar):
         if isBelow and isAbove:
             return 'epic'
 
+    for (_, button_y, _, button_h) in legends:
+        isBelow = y < (button_y + button_h)
+        isAbove = y > (button_y - button_h)
+        if isBelow and isAbove:
+            return 'legend'
+
+   # for (_, button_y, _, button_h) in super_legends:
+       # isBelow = y < (button_y + button_h)
+       # isAbove = y > (button_y - button_h)
+       # if isBelow and isAbove:
+           # return 'super_legend'
+
     return 'null'
 
-def clickGreenBarButtons(baus):
+def clickGreenBarButtons(baus=0):
     # ele clicka nos q tao trabaiano mas axo q n importa
     offset = 140
 
@@ -319,11 +337,13 @@ def clickGreenBarButtons(baus):
     for bar in green_bars:
         global deveTrabalhar
         global raridade
-        raridade = descobreRaridade(bar)
+        
         deveTrabalhar = 1
-
-        if raridade != 'commom' and (baus >= 60 or baus == 0):
-            deveTrabalhar = 0
+  
+        if c['escolher_baus_heroes'] == True:
+            raridade = descobreRaridade(bar) 
+            if raridade != 'commom' and (baus >= 60 or baus == 0):
+                deveTrabalhar = 0
 
         if (not isWorking(bar, buttons)) and deveTrabalhar == 1:
             not_working_green_bars.append(bar)
@@ -545,48 +565,79 @@ def refreshHeroes():
 
     global baus
 
-    if c['mandar_todos_trabalhar'] == False:
+    if c['mandar_todos_trabalhar'] == False and c['escolher_baus_heroes'] == True:
         baus = checkBaus()
     goToHeroes()
     if FindImageAndBtn(images['select-character-heroes']):
-        if c['mandar_todos_trabalhar'] == True:
-            clickFullRest()
-            if FindImageAndBtn(images['all']):
-                clickBtn(images['all'])
-                logger('heroes sent to work')
-        else:
-            if c['select_heroes_mode'] != "full":
+        if c['escolher_baus_heroes'] == True:
+            if c['mandar_todos_trabalhar'] == True:
                 clickFullRest()
-            if c['select_heroes_mode'] == "full":
-                logger('Sending heroes with full stamina bar to work', 'green')
-            elif c['select_heroes_mode'] == "green":
-                logger('Sending heroes with green stamina bar to work', 'green')
+                if FindImageAndBtn(images['all']):
+                    clickBtn(images['all'])
+                    logger('heroes sent to work')
             else:
-                logger('Sending all heroes to work', 'green')
-    
-
-            buttonsClicked = 1
-            empty_scrolls_attempts = c['scroll_attemps']
-            while(empty_scrolls_attempts >0):
-                if FindImageAndBtn(images['full-stamina']):
-                    clickBtn(images['all'])
-                    logger('full ponto') 
-                    goToGame()
-                    return
-                if c['select_heroes_mode'] == 'full':
-                    clickBtn(images['all'])
-                    buttonsClicked = clickFullBarButtons()
-                elif c['select_heroes_mode'] == 'green':
-                    buttonsClicked = clickGreenBarButtons(baus)
+                if c['select_heroes_mode'] != "full":
+                    clickFullRest()
+                if c['select_heroes_mode'] == "full":
+                    logger('Sending heroes with full stamina bar to work', 'green')
+                elif c['select_heroes_mode'] == "green":
+                    logger('Sending heroes with green stamina bar to work', 'green')
                 else:
-                    buttonsClicked = clickButtons()
-                sendHeroesHome()
+                    logger('Sending all heroes to work', 'green')
 
-                if buttonsClicked == 0:
-                    empty_scrolls_attempts = empty_scrolls_attempts - 1
+                buttonsClicked = 1
+                empty_scrolls_attempts = c['scroll_attemps']
+                while(empty_scrolls_attempts >0):
+                    if FindImageAndBtn(images['full-stamina']):
+                        clickBtn(images['all'])
+                        logger('full ponto') 
+                        goToGame()
+                        return
+                    if c['select_heroes_mode'] == 'full':
+                        clickBtn(images['all'])
+                        buttonsClicked = clickFullBarButtons()
+                    elif c['select_heroes_mode'] == 'green':
+                        buttonsClicked = clickGreenBarButtons(baus)
+                    else:
+                        buttonsClicked = clickButtons()
+                    sendHeroesHome()
 
-                scroll()
-            logger('💪 {} heroes sent to work'.format(hero_clicks))
+                    if buttonsClicked == 0:
+                        empty_scrolls_attempts = empty_scrolls_attempts - 1
+
+                    scroll()
+        else:
+            if c['mandar_todos_trabalhar'] == True:
+                clickFullRest()
+                if FindImageAndBtn(images['all']):
+                    clickBtn(images['all'])
+                    logger('heroes sent to work')
+            else:
+                if c['select_heroes_mode'] == "full":
+                    logger('⚒️ Sending heroes with full stamina bar to work', 'green')
+                elif c['select_heroes_mode'] == "green":
+                   logger('⚒️ Sending heroes with green stamina bar to work', 'green')
+                else:
+                    logger('⚒️ Sending all heroes to work', 'green')
+
+                buttonsClicked = 1
+                empty_scrolls_attempts = c['scroll_attemps']
+
+                while(empty_scrolls_attempts >0):
+                    if c['select_heroes_mode'] == 'full':
+                        buttonsClicked = clickFullBarButtons()
+                    elif c['select_heroes_mode'] == 'green':
+                        buttonsClicked = clickGreenBarButtons()
+                    else:
+                        buttonsClicked = clickButtons()
+
+                    sendHeroesHome()
+
+                    if buttonsClicked == 0:
+                        empty_scrolls_attempts = empty_scrolls_attempts - 1
+                    scroll()
+                    time.sleep(2)
+        logger('💪 {} heroes sent to work'.format(hero_clicks))
         goToGame()
 
 
@@ -648,26 +699,31 @@ def main():
                 last["login"] = now
                 login()
 
-
-            bonecozzzc = positions(images['zzz'], threshold=ct['zzz'])
-            if len(bonecozzzc) == 0:
-                time.sleep(1)
-                bonecozzzc = positions(images['zzz'], threshold=ct['zzz']) 
-            logger('🆗 %d dormindo detected' % len(bonecozzzc)) 
-            if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60): 
-                if len(bonecozzzc) > 9: 
-                    last["heroes"] = now  
-                    last["n9_heroes"] = False         
+            bonecozzzc = 0 
+            if c['escolher_baus_heroes'] == True:
+                bonecozzzc = positions(images['zzz'], threshold=ct['zzz'])
+                if len(bonecozzzc) == 0:
+                    time.sleep(1)
+                    bonecozzzc = positions(images['zzz'], threshold=ct['zzz']) 
+                logger('🆗 %d dormindo detected' % len(bonecozzzc)) 
+                if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60): 
+                    if len(bonecozzzc) > 9: 
+                        last["heroes"] = now  
+                        last["n9_heroes"] = False         
+                        refreshHeroes()
+                        last["refresh_heroes"] = now 
+                else:
+                    if len(bonecozzzc) > 9 and last["n9_heroes"] == False:
+                        logger('🆗 %d dormindo > 9 detected' % len(bonecozzzc))   
+                        last["heroes"] = now  
+                        last["n9_heroes"] = True
+                        refreshHeroes()
+                        last["refresh_heroes"] = now 
+            else:         
+                if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+                    last["heroes"] = now
                     refreshHeroes()
                     last["refresh_heroes"] = now 
-            else:
-                if len(bonecozzzc) > 9 and last["n9_heroes"] == False:
-                    logger('🆗 %d dormindo > 9 detected' % len(bonecozzzc))   
-                    last["heroes"] = now  
-                    last["n9_heroes"] = True
-                    refreshHeroes()
-                    last["refresh_heroes"] = now 
-
     
             if FindImageAndBtn(images['select-wallet-2']):
                 sys.stdout.flush()
@@ -698,7 +754,7 @@ def main():
                 if clickBtn(images['new-map']):
                     loggerMapClicked()
                     time.sleep(2)
-                    if len(bonecozzzc) > 9: 
+                    if len(bonecozzzc) > 9 or c['escolher_baus_heroes'] == False:
                         last["heroes"] = now   
                         refreshHeroes()
                         last["refresh_heroes"] = now  
