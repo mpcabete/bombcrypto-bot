@@ -321,26 +321,6 @@ def goToGame():
     clickBtn(images['x'])
 
     clickBtn(images['treasure-hunt-icon'])
-         
-    clickBtn(images['chest-icon'])
-
-    bcoins_value_rect = positions(images['bcoins-value'])
-     
-    if (len(bcoins_value_rect) != 0):     
-        myScreenshot = pyautogui.screenshot(region=tuple(bcoins_value_rect[0]))
-        myScreenshot.save(r'bcoins_value.png')
-        
-        reader = easyocr.Reader(['en'], gpu=False)
-        result = reader.readtext('bcoins_value.png', paragraph="False") 
-        print(result)
-        if(len(result)>1):
-            if(len(result[1])>1):
-                print("🪙 Total de BCOINS no baú: ", result[1][1])
-                telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
-        os.remove('bcoins_value.png')
-                
-
-    clickBtn(images['x'])
 
 def refreshHeroesPositions():
 
@@ -444,7 +424,7 @@ def sendHeroesHome():
 
 
 def refreshHeroes():
-    logger('🏢 Search for heroes to work')
+    logger('🪙 Checking bcoins value on chest')
 
     goToHeroes()
 
@@ -475,6 +455,29 @@ def refreshHeroes():
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
+def checkBcoins():
+    logger(' Search for heroes to work')
+
+    clickBtn(images['chest-icon'])
+
+    bcoins_value_rect = positions(images['bcoins-value'])
+     
+    if (len(bcoins_value_rect) != 0): 
+        logger('📸 Taking a screenshot of the chest')    
+        myScreenshot = pyautogui.screenshot(region=tuple(bcoins_value_rect[0]))
+        myScreenshot.save(r'bcoins_value.png')
+        
+        logger('🔎 Reading the value of BCOINS in the chest')
+        reader = easyocr.Reader(['en'], gpu=False)
+        result = reader.readtext('bcoins_value.png', paragraph="False") 
+
+        if(len(result)>1):
+            if(len(result[1])>1):
+                logger('✉️ Sending the BCOINS quantity to the telegram: ', result[1][1])
+                telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
+        os.remove('bcoins_value.png')  
+
+    clickBtn(images['x'])
 
 def main():
     """Main execution setup and loop"""
@@ -502,6 +505,7 @@ def main():
 
     last = {
     "login" : 0,
+    "check_bcoins": 0,
     "heroes" : 0,
     "new_map" : 0,
     "check_for_captcha" : 0,
@@ -514,6 +518,10 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
+
+        if now - last["check_bcoins"] > addRandomness(t['check_bcoins'] * 60):
+            last["check_bcoins"] = now
+            refreshHeroes()
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
