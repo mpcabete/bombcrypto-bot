@@ -4,6 +4,7 @@ from cv2 import cv2
 from os import listdir
 from random import randint
 from random import random
+from datetime import datetime
 import numpy as np
 import mss
 import pyautogui
@@ -12,6 +13,7 @@ import sys
 import yaml
 import os
 import easyocr
+import pandas as pd
 from matplotlib import pyplot as plt
 import telegram_send
 
@@ -471,11 +473,18 @@ def checkBcoins():
         logger('🔎 Reading the value of BCOINS in the chest')
         reader = easyocr.Reader(['en'], gpu=False)
         result = reader.readtext('bcoins_value.png', paragraph="False") 
+        
+        bcoins_value = result[1][1]
+        bcoin_record = {'date': str(datetime.now()), 'value': bcoins_value}
+        bcoin_database = pd.read_csv('database/bcoin.csv')
+        bcoin_database = bcoin_database.append(bcoin_record, ignore_index=True)
+        bcoin_database.to_csv('database/bcoin.csv', index=False)
+
 
         if(len(result)>1):
             if(len(result[1])>1):
                 logger('✉️ Sending the BCOINS quantity to telegram: ')
-                telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + result[1][1]])
+                telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + bcoins_value])
         os.remove('bcoins_value.png')  
 
     clickBtn(images['x'])
@@ -491,7 +500,7 @@ def sendMapImageToTelegram():
     telegram_send.send(images=[map_image])
     #telegram_send.send(messages=['🗺️ Um novo mapa apareceu!'])
     
-    os.remove('map_image.png')
+    #os.remove('map_image.png')
 
 
 def main():

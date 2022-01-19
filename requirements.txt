@@ -4,6 +4,7 @@ MouseInfo==0.1.3
 mss==6.1.0
 numpy==1.21.4
 opencv-python==4.5.4.60
+pandas==1.3.5
 PyAutoGUI==0.9.53
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
