@@ -469,10 +469,13 @@ def refreshGame():
     keyboard = Controller()
     keyboard.press(Key.f5)
     keyboard.release(Key.f5)
+    time.sleep(1)
+    login()
 
 def checkChests(newMap=False):
     if(mapIsActive()):
         logger('🔎 Checking chests quantity')
+        #TODO: Diminuir treshold para 0.5 e testar
         wood_chest_closed = positions(images['wood_chest_closed'])
         wood_chest_hit = positions(images['wood_chest_hited_top'])
         steel_chest_closed = positions(images['steel_chest_closed'])
