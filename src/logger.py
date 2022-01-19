@@ -28,18 +28,18 @@ def logger(message, progress_indicator = False, color = 'default'):
 
     formatted_datetime = dateFormatted()
     formatted_message = "[{}] => {}".format(formatted_datetime, message)
-    formatted_message_colored  = color_formatted + formatted_message + '\033[0m'
+    formatted_message_colored  =  formatted_message 
 
     
     # Start progress indicator and append dots to in subsequent progress calls
     if progress_indicator:
         if not last_log_is_progress:
             last_log_is_progress = True
-            formatted_message = color_formatted + "[{}] => {}".format(formatted_datetime, '⬆️ Processing last action..')
+            formatted_message =  "[{}] => {}".format(formatted_datetime, ' Processing last action..')
             sys.stdout.write(formatted_message)
             sys.stdout.flush()
         else:
-            sys.stdout.write(color_formatted + '.')
+            sys.stdout.write( '.')
             sys.stdout.flush()
         return
 

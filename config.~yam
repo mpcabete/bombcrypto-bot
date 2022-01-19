@@ -113,6 +113,20 @@
     #
     # [pt_BR]
     # Valor padrão: 0.8
+    legend: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    super_legend: 0.8
+
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
     select_wallet_buttons: 0.8
 
     # [en_US]
@@ -248,7 +262,12 @@
   # [pt_BR] Opção para mandar todos trabalhar
   # Valor padrão : False
   # Opções disponíveis: False ou True
-  mandar_todos_trabalhar: False 
+  mandar_todos_trabalhar: False
+
+  # [pt_BR] Opção para Escolher Baus e Heroes
+  # Valor padrão : True
+  # Opções disponíveis: False ou True
+  escolher_baus_heroes: True
 
   # [en_US] 
   # Default value: 1

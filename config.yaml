@@ -136,6 +136,39 @@
     # Valor padrão: 0.9
     go_to_work_btn: 0.9
 
+    # Total 
+
+    # [en_US]
+    # Default value: 0.7
+    #
+    # [pt_BR]
+    # Valor padrão: 0.7
+    zzz: 0.5
+
+    # Total baus wood
+    # [en_US]
+    # Default value: 0.7
+    #
+    # [pt_BR]
+    # Valor padrão: 0.7
+    bau_wood: 0.7
+
+    # Total baus wood pouca vida
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_wood_50: 0.7
+
+    # Total baus wood Fechado
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_wood_100: 0.7
+
     # Total baus roxo
     # [en_US]
     # Default value: 0.7
@@ -144,23 +177,23 @@
     # Valor padrão: 0.7
     bau_roxo: 0.7
 
-    # Total zzz
-    # [en_US]
-    # Default value: 0.7
-    #
-    # [pt_BR]
-    # Valor padrão: 0.7
-    zzz: 0.7
-
     # Total baus roxo pouca vida
     # [en_US]
     # Default value: 0.8
     #
     # [pt_BR]
     # Valor padrão: 0.8
-    bau_roxo_50: 0.8
+    bau_roxo_50: 0.7
 
-    # Total baus roxo
+    # Total baus roxo Fechado
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_roxo_100: 0.7
+
+    # Total baus gold
     # [en_US]
     # Default value: 0.7
     #
@@ -168,15 +201,23 @@
     # Valor padrão: 0.7
     bau_gold: 0.7
 
-    # Total baus roxo pouca vida
+    # Total baus gold pouca vida
     # [en_US]
     # Default value: 0.8
     #
     # [pt_BR]
     # Valor padrão: 0.8
-    bau_gold_50: 0.8
+    bau_gold_50: 0.7
 
-    # Total baus roxo
+    # Total baus gold Fechado
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_gold_100: 0.7
+
+    # Total baus blue
     # [en_US]
     # Default value: 0.7
     #
@@ -184,20 +225,28 @@
     # Valor padrão: 0.7
     bau_blue: 0.7
 
-    # Total baus roxo pouca vida
+    # Total baus blue pouca vida
     # [en_US]
     # Default value: 0.8
     #
     # [pt_BR]
     # Valor padrão: 0.8
-    bau_blue_50: 0.8
+    bau_blue_50: 0.7
+
+    # Total baus blue Fechado
+    # [en_US]
+    # Default value: 0.8
+    #
+    # [pt_BR]
+    # Valor padrão: 0.8
+    bau_blue_100: 0.7
 
     # [en_US]
     # Default value: 0.9
     #
     # [pt_BR]
     # Valor padrão: 0.9
-    green_bar: 0.9
+    green_bar: 0.8
 
   home:
     enable: False
@@ -268,6 +317,11 @@
   # Valor padrão : True
   # Opções disponíveis: False ou True
   escolher_baus_heroes: True
+
+  # [pt_BR] Opção para Maximizar Janela Nevegador
+  # Valor padrão : True
+  # Opções disponíveis: False ou True
+  windows_maximize: False
 
   # [en_US] 
   # Default value: 1
