@@ -474,15 +474,16 @@ def checkBcoins():
         reader = easyocr.Reader(['en'], gpu=False)
         result = reader.readtext('bcoins_value.png', paragraph="False") 
         
-        bcoins_value = result[1][1]
-        bcoin_record = {'date': str(datetime.now()), 'value': bcoins_value}
-        bcoin_database = pd.read_csv('database/bcoin.csv')
-        bcoin_database = bcoin_database.append(bcoin_record, ignore_index=True)
-        bcoin_database.to_csv('database/bcoin.csv', index=False)
+        
 
 
         if(len(result)>1):
             if(len(result[1])>1):
+                bcoins_value = result[1][1]
+                bcoin_record = {'date': str(datetime.now()), 'value': bcoins_value}
+                bcoin_database = pd.read_csv('database/bcoin.csv')
+                bcoin_database = bcoin_database.append(bcoin_record, ignore_index=True)
+                bcoin_database.to_csv('database/bcoin.csv', index=False)
                 logger('✉️ Sending the BCOINS quantity to telegram: ')
                 telegram_send.send(messages=["🪙 Total de BCOINS no baú: " + bcoins_value])
         os.remove('bcoins_value.png')  
