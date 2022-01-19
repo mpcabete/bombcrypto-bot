@@ -470,7 +470,7 @@ def refreshGame():
     keyboard.press(Key.f5)
 
 def checkChests(newMap=False):
-    if(mapIsActive):
+    if(mapIsActive()):
         logger('🔎 Checking chests quantity')
         wood_chest_closed = positions(images['wood_chest_closed'])
         wood_chest_hit = positions(images['wood_chest_hited_top'])
