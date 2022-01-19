@@ -468,6 +468,7 @@ def mapIsActive():
 def refreshGame():
     keyboard = Controller()
     keyboard.press(Key.f5)
+    keyboard.release(Key.f5)
 
 def checkChests(newMap=False):
     if(mapIsActive()):
