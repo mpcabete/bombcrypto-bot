@@ -6,7 +6,15 @@
   #
   time_intervals:
     
-    # [en_US] Time interval for check te=he quantity of BCOINS are in the chest
+    # [en_US] Time interval for check the quantity of chests are in the map
+    # Default value (in minutes): 10
+    #
+    # [pt_BR] Intervalo de tempo para verificar a quantidade de baús no mapa
+    # Valor padrão (em minutos): 10
+    check_chests: 10
+
+
+    # [en_US] Time interval for check the quantity of BCOINS are in the chest
     # Default value (in minutes): 60
     #
     # [pt_BR] Intervalo de tempo para verificar a quantidade de BCOINS no baú

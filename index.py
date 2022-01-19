@@ -16,6 +16,7 @@ import easyocr
 import pandas as pd
 from matplotlib import pyplot as plt
 import telegram_send
+from pynput.keyboard import Key, Controller
 
 # Load config file.
 stream = open("config.yaml", 'r')
@@ -457,6 +458,48 @@ def refreshHeroes():
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
+def mapIsActive():
+    go_back_arrow = positions(images['go-back-arrow'])
+    if(len(go_back_arrow)>0):
+        return True
+    else:
+        return False
+
+def refreshGame():
+    keyboard = Controller()
+    keyboard.press(Key.f5)
+
+def checkChests(newMap=False):
+    if(mapIsActive):
+        logger('🔎 Checking chests quantity')
+        wood_chest_closed = positions(images['wood_chest_closed'])
+        wood_chest_hit = positions(images['wood_chest_hited_top'])
+        steel_chest_closed = positions(images['steel_chest_closed'])
+        steel_chest_hit = positions(images['steel_chest_hited_top'])
+        gold_chest_closed = positions(images['gold_chest_closed'])
+        gold_chest_hit = positions(images['gold_chest_hited'])
+        diamond_chest_closed = positions(images['diamond_chest_closed'])
+        diamond_chest_hit = positions(images['diamond_chest_hited'])
+        jail_closed = positions(images['jail_closed'])
+        jail_hit = positions(images['jail_hited'])
+        #TODO: colocar sprites do baú da chave
+
+        wood_qtd = len(wood_chest_hit)+len(wood_chest_closed)
+        steel_qtd = len(steel_chest_hit)+len(steel_chest_closed)
+        gold_qtd = len(gold_chest_hit)+len(gold_chest_closed)
+        diamond_qtd = len(diamond_chest_hit)+len(diamond_chest_closed)
+        jail_qtd = len(jail_hit)+len(jail_closed)
+        all_chests = wood_qtd+steel_qtd+gold_qtd+diamond_qtd+jail_qtd
+
+        result = "🟫 Baús de madeira: {}\n🟪 Baús de ferro: {}\n🟨 Baús de ouro: {}\n🟦 Baús de diamante: {}\n🏛️ Jaulas: {}".format(wood_qtd, steel_qtd, gold_qtd, diamond_qtd, jail_qtd) 
+        print(result)
+
+        if(newMap):
+            telegram_send.send(messages=[result])
+        
+        if(all_chests==0):
+            refreshGame()
+        
 def checkBcoins():
     logger('🪙 Checking bcoins value on chest')
 
@@ -531,6 +574,7 @@ def main():
     last = {
     "login" : 0,
     "check_bcoins": 0,
+    "check_chests": 0,
     "heroes" : 0,
     "new_map" : 0,
     "check_for_captcha" : 0,
@@ -543,6 +587,10 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
+
+        if now - last["check_chests"] > addRandomness(t['check_chests'] * 60):
+            last["check_chests"] = now
+            checkChests()
 
         if now - last["check_bcoins"] > addRandomness(t['check_bcoins'] * 60):
             last["check_bcoins"] = now
@@ -559,9 +607,10 @@ def main():
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
-
+            #TODO: pegar sprite novo do botão new-map
             if clickBtn(images['new-map']):
                 sendMapImageToTelegram()
+                checkChests(newMap=True)
                 loggerMapClicked()
 
 
