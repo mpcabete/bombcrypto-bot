@@ -345,8 +345,8 @@ def clickGreenBarButtons(baus=0, max_herois = 0):
         if (not isWorking(bar, buttons)) and deveTrabalhar == 1:
             not_working_green_bars.append(bar)
    # if len(not_working_green_bars) > 0 and ClickGreenAndShowLog == True:
-        logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
-        logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
+       # logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
+       # logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
 
     # se tiver botao com y maior que bar y-10 e menor que y+10
     hero_clicks_cnt = 0

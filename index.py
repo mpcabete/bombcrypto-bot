@@ -790,18 +790,8 @@ def main():
                 last["login"] = now
                 login()
 
-       
 
-            if FindImageAndBtn(images['select-character-heroes']):
-                logger('Wait select heroes to work Manual.')    
-                time.sleep(5)
-                if FindImageAndBtn(images['select-character-heroes']): 
-                    last["heroes"] = now   
-                    refreshHeroes()
-                    last["refresh_heroes"] = now 
-                    clickBtn(images['select-bcoin'])  
-
-      
+  
             if now - last["new_map"] > t['check_for_new_map_button']:
                 last["new_map"] = now
 
