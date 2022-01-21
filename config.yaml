@@ -51,7 +51,7 @@
     # Default value (in seconds): 1 
     #
     # [pt_BR] Intervalo de tempo para atualizar a página
-    # Valor padrão (em minutos): 1
+    # Valor padrão (em minutos): 30
     check_for_refresh_page: 30
 
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
