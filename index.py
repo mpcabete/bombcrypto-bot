@@ -481,12 +481,18 @@ def main():
     "heroes" : 0,
     "new_map" : 0,
     "check_for_captcha" : 0,
-    "refresh_heroes" : 0
+    "refresh_heroes" : 0,
+    "refresh_page" : 0
     }
     # =========
 
     while True:
         now = time.time()
+
+        if now - last["refresh_page"] > t['check_for_refresh_page'] * 60:
+            logger('Refreshing Page')
+            last["refresh_page"] = now
+            pyautogui.hotkey('ctrl','f5')
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
@@ -510,6 +516,7 @@ def main():
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
             last["refresh_heroes"] = now
             refreshHeroesPositions()
+
 
         #clickBtn(teasureHunt)
         logger(None, progress_indicator=True)
