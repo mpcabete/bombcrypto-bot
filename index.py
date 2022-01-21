@@ -482,7 +482,7 @@ def main():
     "new_map" : 0,
     "check_for_captcha" : 0,
     "refresh_heroes" : 0,
-    "refresh_page" : 0
+    "refresh_page" : time.time()
     }
     # =========
 
