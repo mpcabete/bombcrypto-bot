@@ -457,14 +457,13 @@ def altTab(tab_quantity):
     ctypes.windll.user32.keybd_event(0x12, 0, 0, 0)  # Alt
     for x in range(tab_quantity):
         ctypes.windll.user32.keybd_event(0x09, 0, 0, 0)  # Tab
-
-    time.sleep(0.5)
-
-    for x in range(tab_quantity):
+        time.sleep(0.4)
         ctypes.windll.user32.keybd_event(0x09, 0, 2, 0)  # ~Tab
+        time.sleep(0.4)
+
     ctypes.windll.user32.keybd_event(0x12, 0, 2, 0)  # ~Alt
 
-    time.sleep(0.5)
+    time.sleep(0.4)
 
 
 def main():
