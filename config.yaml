@@ -10,14 +10,14 @@
     #
     # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
     # Valor padrão (em minutos): 10
-    send_heroes_for_work: 10
+    send_heroes_for_work: 24
     
     # [en_US] Time interval to update heroes position in the map,
     # Default value (in minutes): 3
     #
     # [pt_BR] Intervalo de tempo para atualizar a posição dos heróis no mapa
     # Valor padrão (em minutos): 3
-    refresh_heroes_positions: 3
+    refresh_heroes_positions: 12
     
     # [en_US] Time interval to check for new maps
     # Default value (in minutes): 5 
@@ -31,10 +31,10 @@
     #
     # [pt_BR] Intervalo de tempo para verificar se precisa resolver o captcha.
     # Valor padrão (em minutos): 1
-    check_for_captcha: 1
+    check_for_captcha: 3
 
     # [en_US] Time interval to check for login request
-    # Default value (in minutes): 3
+    # Default value (in minutes): 5
     #
     # [pt_BR] Intervalo de tempo para verificar se existe solicitação de login
     # Valor padrão (em minutos): 5
@@ -46,6 +46,13 @@
     # [pt_BR] Intervalo de tempo entre movimentos
     # Valor padrão (em segundos): 1
     interval_between_moviments: 1
+
+    # [en_US] Number of open windows running the game.
+    # Default value: 1 
+    #
+    # [pt_BR] Quantidade de janelas abertas rodando o jogo.
+    # Valor padrão: 1
+    number_opened_windows: 2
 
   # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
   #

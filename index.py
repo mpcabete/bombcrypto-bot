@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-    
+# -*- coding: utf-8 -*-
 from src.logger import logger, loggerMapClicked
 from cv2 import cv2
 from os import listdir
@@ -8,6 +8,7 @@ import numpy as np
 import mss
 import pyautogui
 import time
+import ctypes
 import sys
 import yaml
 
@@ -357,7 +358,7 @@ def login():
     if not clickBtn(images['select-wallet-1-no-hover'], ):
         if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
             pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
+            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo
             # print('sleep in case there is no metamask text removed')
             # time.sleep(20)
     else:
@@ -452,6 +453,20 @@ def refreshHeroes():
     goToGame()
 
 
+def altTab(tab_quantity):
+    ctypes.windll.user32.keybd_event(0x12, 0, 0, 0)  # Alt
+    for x in range(tab_quantity):
+        ctypes.windll.user32.keybd_event(0x09, 0, 0, 0)  # Tab
+
+    time.sleep(0.5)
+
+    for x in range(tab_quantity):
+        ctypes.windll.user32.keybd_event(0x09, 0, 2, 0)  # ~Tab
+    ctypes.windll.user32.keybd_event(0x12, 0, 2, 0)  # ~Alt
+
+    time.sleep(0.5)
+
+
 def main():
     """Main execution setup and loop"""
     # ==Setup==
@@ -481,7 +496,8 @@ def main():
     "heroes" : 0,
     "new_map" : 0,
     "check_for_captcha" : 0,
-    "refresh_heroes" : 0
+    "refresh_heroes" : 0,
+    "number_opened_windows" : t['number_opened_windows']
     }
     # =========
 
@@ -494,11 +510,17 @@ def main():
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
             refreshHeroes()
+            for windowNumber in range(t['number_opened_windows']-1):
+                altTab(t['number_opened_windows']-1)
+                refreshHeroes()
 
         if now - last["login"] > addRandomness(t['check_for_login'] * 60):
             sys.stdout.flush()
             last["login"] = now
             login()
+            for windowNumber in range(t['number_opened_windows']-1):
+                altTab(t['number_opened_windows']-1)
+                login()
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
@@ -506,10 +528,18 @@ def main():
             if clickBtn(images['new-map']):
                 loggerMapClicked()
 
+            for windowNumber in range(t['number_opened_windows'] - 1):
+                altTab(t['number_opened_windows'] - 1)
+                if clickBtn(images['new-map']):
+                    loggerMapClicked()
+
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
             last["refresh_heroes"] = now
             refreshHeroesPositions()
+            for windowNumber in range(t['number_opened_windows']-1):
+                altTab(t['number_opened_windows']-1)
+                refreshHeroesPositions()
 
         #clickBtn(teasureHunt)
         logger(None, progress_indicator=True)
