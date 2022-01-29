@@ -57,12 +57,12 @@ cat = """
 
 
 def get_linux_bombcrypto_windows():
-    stdout = (subprocess.Popen("xdotool search --name bombcrypto", shell=True,stdout=subprocess.PIPE).communicate()[0].decode('utf-8').strip())
+    stdout = (subprocess.Popen("wmctrl -l | grep -i bombcrypto | awk '{print $1}'", shell=True,stdout=subprocess.PIPE).communicate()[0].decode('utf-8').strip())
     windows = stdout.split('\n')
     return windows
 
 def activate_linux_window(window_id):
-    subprocess.Popen(f"xdotool windowactivate {window_id}", shell=True)
+    subprocess.Popen(f"wmctrl -i -R {window_id}", shell=True)
 
 
 def addRandomness(n, randomn_factor_size=None):

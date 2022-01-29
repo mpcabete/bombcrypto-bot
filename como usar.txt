@@ -1,4 +1,8 @@
->>>>> Se estiver no Linux instale o pacote xdotool -----> sudo apt-get install xdotool -y
+RENOMEIE ESSA PASTA PARA "BOMB"
+
+>>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
+>>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
+>>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
 	
 
 Abre o navegador onde ta suas metamask
