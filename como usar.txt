@@ -1,9 +1,9 @@
-RENOMEIE ESSA PASTA PARA "BOMB"
+>>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
+>>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
+>>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
 
->>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
->>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
->>>>> Se estiver no Linux instale o pacote wmctrl -----> sudo apt install wmctrl -y
-	
+* A resolução ideal no LINUX é 1280 x 720.
+* Se a pasta do script estiver com o nome bombcrypto, renomeiem para bomb.
 
 Abre o navegador onde ta suas metamask
 
@@ -19,4 +19,14 @@ https://app.bombcrypto.io/webgl/index.html
 
 
 
-clica conect wallet, faz o captcha , aperta pra logar no game, dps de logar abre o bot
+
+obs: Se estiverem encontrando erros ao rodar o BOT em uma VPS, usem os seguintes comandos:
+
+sudo apt-get install lxde -y
+sudo apt-get install --no-install-recommends ubuntu-mate-core ubuntu-mate-desktop -y
+sudo apt-get install mate-core mate-desktop-environment mate-notification-daemon xrdp -y
+su - "seu usuario"
+echo mate-session> ~/.xsession
+sudo cp /home/"seu usuario"/.xsession /etc/skel
+sudo service xrdp restart
+sudo reboot now
