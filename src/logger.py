@@ -23,7 +23,7 @@ COLOR = {
 }
 
 def logger(message, progress_indicator = False, color = 'default'):
-    if c['telegram']['level'] == 'all' and '[telegram]' not in message: telegram_bot_sendtext(message)
+    if c['telegram']['level'] == 'all' and message is not None and '[telegram]' not in message: telegram_bot_sendtext(message)
     global last_log_is_progress
     color_formatted = COLOR.get(color.lower(), COLOR['default'])
 
@@ -58,7 +58,9 @@ def logger(message, progress_indicator = False, color = 'default'):
     return True
 
 def loggerMapClicked():
-    logger('🗺️ New Map button clicked!')
+    message_map_clicked = '🗺️ New Map button clicked!'
+    if c['telegram']['level'] == 'basic': telegram_bot_sendtext(message_map_clicked)
+    logger(message_map_clicked)
     with open("./logs/new-map.log", "a", encoding='utf-8') as logger_file:
         logger_file.write(dateFormatted() + '\n')
         logger_file.close()

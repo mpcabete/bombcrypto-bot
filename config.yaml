@@ -160,10 +160,10 @@
   # Valor padrão : disable
   # Opções disponíveis:
   #   disable   = desabilitar função de telegram
-  #   onlylogin = envia apenas as informações sobre login/wallet
+  #   basic     = envia apenas as informações sobre login/wallet and newmap
   #   all       = envia tudo
   # 
   telegram:
     level: 'disable'
     token_api: 'your_bot_token'
-    chat_id: 'yout_chat_id'
+    chat_id: 'your_chat_id'

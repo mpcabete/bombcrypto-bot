@@ -70,8 +70,7 @@ def addRandomness(n, randomn_factor_size=None):
         randomn_factor_size = randomness_percentage * n
 
     random_factor = 2 * random() * randomn_factor_size
-    if random_factor > 5:
-        random_factor = 5
+    random_factor = min(random_factor, 5)
     without_average_random_factor = n - randomn_factor_size
     randomized_n = int(without_average_random_factor + random_factor)
     # logger('{} with randomness -> {}'.format(int(n), randomized_n))
@@ -255,27 +254,24 @@ def clickGreenBarButtons():
     logger('🆗 %d buttons detected' % len(buttons))
 
 
-    not_working_green_bars = []
-    for bar in green_bars:
-        if not isWorking(bar, buttons):
-            not_working_green_bars.append(bar)
-    if len(not_working_green_bars) > 0:
+    not_working_green_bars = [
+        bar for bar in green_bars if not isWorking(bar, buttons)
+    ]
+
+    if not_working_green_bars:
         logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
         logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
 
-    # se tiver botao com y maior que bar y-10 e menor que y+10
-    hero_clicks_cnt = 0
-    for (x, y, w, h) in not_working_green_bars:
+    for hero_clicks_cnt, (x, y, w, h) in enumerate(not_working_green_bars, start=1):
         # isWorking(y, buttons)
         moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        hero_clicks_cnt = hero_clicks_cnt + 1
         if hero_clicks_cnt > 20:
             logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
             return
-        #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
+            #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
 
 def clickFullBarButtons():
@@ -283,12 +279,11 @@ def clickFullBarButtons():
     full_bars = positions(images['full-stamina'], threshold=ct['default'])
     buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
 
-    not_working_full_bars = []
-    for bar in full_bars:
-        if not isWorking(bar, buttons):
-            not_working_full_bars.append(bar)
+    not_working_full_bars = [
+        bar for bar in full_bars if not isWorking(bar, buttons)
+    ]
 
-    if len(not_working_full_bars) > 0:
+    if not_working_full_bars:
         logger('👆 Clicking in %d heroes' % len(not_working_full_bars))
 
     for (x, y, w, h) in not_working_full_bars:
@@ -334,7 +329,7 @@ def login():
     if login_attempts > 3:
         message_login_attempts = '🔃 Too many login attempts, refreshing'
         logger(message_login_attempts)
-        if c['telegram']['level'] == 'onlylogin': telegram_bot_sendtext(message_login_attempts)
+        if c['telegram']['level'] == 'basic': telegram_bot_sendtext(message_login_attempts)
         login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
         return
@@ -342,7 +337,7 @@ def login():
     if clickBtn(images['connect-wallet'], timeout = 10):
         message_connect_wallet = '🎉 Connect wallet button detected, logging in!' 
         logger(message_connect_wallet)
-        if c['telegram']['level'] == 'onlylogin': telegram_bot_sendtext(message_connect_wallet)
+        if c['telegram']['level'] == 'basic': telegram_bot_sendtext(message_connect_wallet)
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
@@ -358,17 +353,10 @@ def login():
         return
         # click ok button
 
-    if not clickBtn(images['select-wallet-1-no-hover'], ):
-        if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
-            pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
-            # print('sleep in case there is no metamask text removed')
-            # time.sleep(20)
-    else:
+    if not clickBtn(images['select-wallet-1-no-hover'],) and clickBtn(
+        images['select-wallet-1-hover'], threshold=ct['select_wallet_buttons']
+    ):
         pass
-        # print('sleep in case there is no metamask text removed')
-        # time.sleep(20)
-
     if clickBtn(images['select-wallet-2'], timeout = 20):
         login_attempts = login_attempts + 1
         # print('sign button clicked')
@@ -392,7 +380,7 @@ def sendHeroesHome():
     heroes_positions = []
     for hero in home_heroes:
         hero_positions = positions(hero, threshold=ch['hero_threshold'])
-        if not len (hero_positions) == 0:
+        if len(hero_positions) != 0:
             #TODO maybe pick up match with most wheight instead of first
             hero_position = hero_positions[0]
             heroes_positions.append(hero_position)
