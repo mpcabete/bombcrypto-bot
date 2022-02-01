@@ -462,7 +462,6 @@ def updateWindow():
     logger('🔄 Refresh Page')
     print(platform.system())
     if platform.system() == 'Darwin':
-        print ('OSx')
         pyautogui.keyDown('command')
         pyautogui.keyDown('l')
         pyautogui.keyUp('command')
