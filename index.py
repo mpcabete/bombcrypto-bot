@@ -460,17 +460,13 @@ def refreshHeroes():
 
 def updateWindow():
     logger('🔄 Refresh Page')
-    print(platform.system())
     if platform.system() == 'Darwin':
         pyautogui.keyDown('command')
         pyautogui.keyDown('l')
         pyautogui.keyUp('command')
         pyautogui.keyUp('l')
     else:
-        pyautogui.keyDown('ctrl')
-        pyautogui.keyDown('l')
-        pyautogui.keyUp('ctrl')
-        pyautogui.keyUp('l')
+        pyautogui.hotkey('ctrl', 'l')
 
     time.sleep(1)
     pyautogui.write('https://app.bombcrypto.io/webgl/index.html')
