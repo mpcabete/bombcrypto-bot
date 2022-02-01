@@ -508,6 +508,7 @@ def main():
             sys.stdout.flush()
             last['update_screen'] = now
             updateWindow()
+            login()
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
