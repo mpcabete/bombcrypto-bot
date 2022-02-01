@@ -457,15 +457,29 @@ def refreshHeroes():
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
+
 def updateWindow():
     logger('🔄 Refresh Page')
-    pyautogui.hotkey('ctrl', 'l')
+    print(platform.system())
+    if platform.system() == 'Darwin':
+        print ('OSx')
+        pyautogui.keyDown('command')
+        pyautogui.keyDown('l')
+        pyautogui.keyUp('command')
+        pyautogui.keyUp('l')
+    else:
+        pyautogui.keyDown('ctrl')
+        pyautogui.keyDown('l')
+        pyautogui.keyUp('ctrl')
+        pyautogui.keyUp('l')
+
     time.sleep(1)
     pyautogui.write('https://app.bombcrypto.io/webgl/index.html')
     time.sleep(2)
     pyautogui.press('enter')
     logger(None, progress_indicator=True)
     time.sleep(20)
+
 
 def main():
     """Main execution setup and loop"""
