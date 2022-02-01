@@ -458,7 +458,6 @@ def refreshHeroes():
     goToGame()
 
 def updateWindow():
-    pyautogui.write('Hello world!')
     if platform.system() == 'Darwin':
         pyautogui.hotkey('command', 'shift', 'r')
     else:
