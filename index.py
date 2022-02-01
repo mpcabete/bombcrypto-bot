@@ -123,18 +123,23 @@ def loadHeroesToSendHome():
 
 def sendStashToDiscord():
 
+   if not c['discord_webhook_enabled']:
+        return
+
     if clickBtn(images['stash']):
-        time.sleep(2)
+        time.sleep(3)
 
         q = datetime.datetime.now()
         d = q.strftime("%d%m%Y%H%M")
         image_file = os.path.join('screenshots', d +'.png')
         pic = pyautogui.screenshot(image_file)
 
-        time.sleep(1)
-        webhook = discord.Webhook.from_url('<webhook url>', adapter=discord.RequestsWebhookAdapter())
+        webhook = discord.Webhook.from_url(c["discord_webhook_url"], adapter=discord.RequestsWebhookAdapter())
         webhook.send(file=discord.File(image_file))
-
+        os.remove(image_file)
+        
+        clickBtn(images['x'])
+        time.sleep(2)
         clickBtn(images['x'])
 
 
@@ -500,12 +505,18 @@ def main():
     "heroes" : 0,
     "new_map" : 0,
     "check_for_captcha" : 0,
-    "refresh_heroes" : 0
+    "refresh_heroes" : 0,
+    "refresh_page" : time.time()
     }
     # =========
 
     while True:
         now = time.time()
+
+        if now - last["refresh_page"] > t["check_for_refresh_page"] * 60:
+            print('page refreshed!')
+            last["refresh_page"] = now
+            pyautogui.hotkey('ctrl', 'f5')
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
