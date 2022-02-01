@@ -458,11 +458,12 @@ def refreshHeroes():
     goToGame()
 
 def updateWindow():
-    if platform.system() == 'Darwin':
-        pyautogui.hotkey('command', 'shift', 'r')
-    else:
-        pyautogui.hotkey('ctrl', 'shift', 'r')
     logger('🔄 Refresh Page')
+    pyautogui.hotkey('ctrl', 'l')
+    time.sleep(1)
+    pyautogui.write('https://app.bombcrypto.io/webgl/index.html')
+    time.sleep(2)
+    pyautogui.press('enter')
     logger(None, progress_indicator=True)
     time.sleep(20)
 
