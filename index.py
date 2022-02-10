@@ -350,6 +350,11 @@ def login():
     global login_attempts
     logger('😿 Checking if game has disconnected')
 
+    if clickBtn(images['ok'], timeout=5):
+        logger('ok button clicked')
+        pass
+    # time.sleep(15)
+
     if login_attempts > 3:
         logger('🔃 Too many login attempts, refreshing')
         login_attempts = 0
@@ -393,11 +398,6 @@ def login():
             # print('sucessfully login, treasure hunt btn clicked')
             login_attempts = 0
         # time.sleep(15)
-
-    if clickBtn(images['ok'], timeout=5):
-        pass
-        # time.sleep(15)
-        # print('ok button clicked')
 
 
 def sendHeroesHome():
@@ -557,7 +557,10 @@ def main():
                 window.activate()
                 window.resizeTo(1015, 823)
                 logger('Janela Atual: {0}'.format(window))
+                sys.stdout.flush()
+                login()
                 refreshHeroesPositions()
+                time.sleep(1)
 
         elif t["interactive"] == 0:
             for window in windows:
