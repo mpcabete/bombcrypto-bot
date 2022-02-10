@@ -9,21 +9,14 @@ time_intervals:
   #
   # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
   # Valor padrão (em minutos): 10
-  send_heroes_for_work: 1
+  send_heroes_for_work: 90
 
   # [en_US] Time interval for check if there are available heroes to work
   # Default value (in minutes): 10
   #
   # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
   # Valor padrão (em minutos): 10
-  interactive: 90
-
-  # [en_US] Time interval for check if there are available heroes to work
-  # Default value (in minutes): 10
-  #
-  # [pt_BR] Intervalo de tempo para verificar se há heróis disponíveis para trabalhar
-  # Valor padrão (em minutos): 10
-  send_all_heroes_for_work: 5
+  send_all_heroes_for_work: 90
 
   # [en_US] Time interval to update heroes position in the map,
   # Default value (in minutes): 3
@@ -165,3 +158,23 @@ select_heroes_mode: "all"
 # Valor padrão : False
 # Opções disponíveis: False ou True
 save_log_to_file: True
+
+window:
+  # [pt_BR] Opção para ajustar posição da janela
+  # Valor padrão : False
+  # Opções disponíveis: False ou True
+  auto_position: True
+
+  # [en_US]
+  # Default value: 10
+  #
+  # [pt_BR]
+  # Valor padrão: 10
+  left: 100
+
+  # [en_US]
+  # Default value: 10
+  #
+  # [pt_BR]
+  # Valor padrão: 10
+  top: 100

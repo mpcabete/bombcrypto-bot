@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+from account import Account
 from src.logger import logger, loggerMapClicked
 from cv2 import cv2
 from os import listdir
@@ -16,6 +18,7 @@ stream = open("config.yaml", 'r')
 c = yaml.safe_load(stream)
 ct = c['threshold']
 ch = c['home']
+cw = c['window']
 pause = c['time_intervals']['interval_between_moviments']
 pyautogui.PAUSE = pause
 
@@ -496,6 +499,7 @@ def main():
     hero_clicks = 0
     login_attempts = 0
     last_log_is_progress = False
+    accounts = []
 
     global images
     images = load_images()
@@ -511,96 +515,56 @@ def main():
     time.sleep(7)
     t = c['time_intervals']
 
-    last = {
-        "login": 0,
-        "heroes": 0,
-        "all_heroes": 0,
-        "new_map": 0,
-        "check_for_captcha": 0,
-        "refresh_heroes": 0,
-        "interactive": 0,
-    }
-
     title = 'Bombcrypto - Google Chrome'
 
     windows = pygetwindow.getWindowsWithTitle(title)
+    
+    
+    for window in windows:
+        accounts.append(Account(window))
     # =========
 
     while True:
 
-        now = time.time()
+        for account in accounts:
+            now = time.time()
+            account.window.activate()
 
-        if t["interactive"] != 0 and now - last["interactive"] > addRandomness(t['interactive'] * 60):
-            last["interactive"] = now
-            for window in windows:
-                window.activate()
-                window.resizeTo(1015, 823)
-                logger('Dentro do FOR: {0}'.format(window))
+            logger("\nJanela Atual: {0}".format(account.window))
 
-                if now - last["login"] > addRandomness(t['check_for_login'] * 60):
-                    sys.stdout.flush()
-                    last["login"] = 0
-                    login()
-
-                if now - last["all_heroes"] > addRandomness(t['send_all_heroes_for_work'] * 60):
-                    last["all_heroes"] = 0
-                    sendAllHeroes()
-
-                logger(None, progress_indicator=True)
-
+            if now - account.last["login"] > addRandomness(t['check_for_login'] * 60):
+                if cw['auto_position']:
+                    account.window.moveTo(cw['left'], cw['top'])
+                    account.window.resizeTo(1015, 823)
                 sys.stdout.flush()
-                time.sleep(1)
-
-        elif t["interactive"] != 0 and now - last["refresh_heroes"] > addRandomness(t['refresh_heroes_positions'] * 60):
-            last["refresh_heroes"] = now
-            for window in windows:
-                window.activate()
-                window.resizeTo(1015, 823)
-                logger('Janela Atual: {0}'.format(window))
-                sys.stdout.flush()
+                account.last["login"] = now
                 login()
+
+            if now - account.last["all_heroes"] > addRandomness(t['send_all_heroes_for_work'] * 60):
+                if cw['auto_position']:
+                    account.window.moveTo(cw['left'], cw['top'])
+                    account.window.resizeTo(1015, 823)
+                account.last["all_heroes"] = now
+                sendAllHeroes()
+            
+            if now - account.last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
+                if cw['auto_position']:
+                    account.window.moveTo(cw['left'], cw['top'])
+                    account.window.resizeTo(1015, 823)
+                account.last["refresh_heroes"] = now
                 refreshHeroesPositions()
-                time.sleep(1)
 
-        elif t["interactive"] == 0:
-            for window in windows:
-                window.activate()
-                window.resizeTo(1280, 960)
-                logger('Dentro do FOR: {0}'.format(window))
-                now = time.time()
+            # if now - account.last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+            #     if cw['auto_position']:
+            #         account.window.moveTo(cw['left'], cw['top'])
+            #         account.window.resizeTo(1015, 823)
+            #     account.last["heroes"] = now
+            #     refreshHeroes()
 
-                if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-                    last["check_for_captcha"] = now
+            sys.stdout.flush()
+            time.sleep(1)
 
-                if now - last["login"] > addRandomness(t['check_for_login'] * 60):
-                    sys.stdout.flush()
-                    last["login"] = now
-                    login()
-
-                if now - last["all_heroes"] > addRandomness(t['send_all_heroes_for_work'] * 60):
-                    last["all_heroes"] = now
-                    sendAllHeroes()
-
-                if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-                    last["heroes"] = now
-                    refreshHeroes()
-
-                if now - last["new_map"] > t['check_for_new_map_button']:
-                    last["new_map"] = now
-
-                    if clickBtn(images['new-map']):
-                        loggerMapClicked()
-
-                if now - last["refresh_heroes"] > addRandomness(t['refresh_heroes_positions'] * 60):
-                    last["refresh_heroes"] = now
-                    refreshHeroesPositions()
-
-                # clickBtn(teasureHunt)
-                logger(None, progress_indicator=True)
-
-                sys.stdout.flush()
-                time.sleep(1)
-
+        sys.stdout.flush()
         time.sleep(1)
 
 
