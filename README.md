@@ -186,6 +186,11 @@ Para resolver estes problemas existem duas possibilidades, a regulagem do
 parâmetro “threshold” no arquivo config.yaml ou a substituição da imagem de
 exemplo na pasta “targets” para uma tirada no seu próprio computador:
 
+### OBS
+
+Caso utilize várias contas, ao abrir todas as janelas, procure não deixar os botões visiveis, para não confundir o bot. Recomendo deixar uma janela em cima da outra ou
+pelo menos deixe em uma posição que quando uma janela estiver ativada, esconda boa parte dos botões. As janelas se ajustarão para uma ficar por cima da outra enquanto o bot estiver rodando.
+
 ### Threshold na config
 
 O parâmetro “threshold” regula o quanto o bot precisa estar confiante para
