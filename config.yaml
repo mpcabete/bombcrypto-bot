@@ -44,7 +44,7 @@ time_intervals:
   #
   # [pt_BR] Intervalo de tempo para verificar se existe solicitação de login
   # Valor padrão (em minutos): 5
-  check_for_login: 5
+  check_for_login: 30
 
   # [en_US] Time interval between moviments
   # Default value (in seconds): 1

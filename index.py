@@ -42,8 +42,8 @@ cat = """
 ========== 💰 Have I helped you in any way? All I ask is a tip! 🧾 ======
 ========== ✨ Faça sua boa ação de hoje, manda aquela gorjeta! 😊 =======
 =========================================================================
-======================== vvv BCOIN BUSD BNB vvv =========================
-============== 0xbd06182D8360FB7AC1B05e871e56c76372510dDf ===============
+======================== vvv BTC BUSD BNB vvv =========================
+============== 0x8a2ef3cb37f0bae398bc134dddf5e6f3a8f0bb36 ===============
 =========================================================================
 ===== https://www.paypal.com/donate?hosted_button_id=JVYSC6ZYCNQQQ ======
 =========================================================================
@@ -515,13 +515,14 @@ def main():
     time.sleep(7)
     t = c['time_intervals']
 
-    title = 'Bombcrypto - Google Chrome'
+    title = 'Bombcrypto - '
 
     windows = pygetwindow.getWindowsWithTitle(title)
     
     
     for window in windows:
-        accounts.append(Account(window))
+        index = windows.index(window)
+        accounts.append(Account(window, index))
     # =========
 
     while True:
@@ -529,9 +530,8 @@ def main():
         for account in accounts:
             now = time.time()
             account.window.activate()
-
-            logger("\nJanela Atual: {0}".format(account.window))
-
+            
+            logger("\n\n\033[1mInformações da janela {0}\033[0m".format(account.index))
             if now - account.last["login"] > addRandomness(t['check_for_login'] * 60):
                 if cw['auto_position']:
                     account.window.moveTo(cw['left'], cw['top'])

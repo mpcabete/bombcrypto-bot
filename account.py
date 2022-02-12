@@ -1,6 +1,7 @@
 class Account:
 
-    def __init__(self, window):
+    def __init__(self, window, index):
+        self.index = index
         self.window = window
         self.last = {
             "login": 0,
