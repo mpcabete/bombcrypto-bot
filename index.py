@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-    
+from asyncio import constants
 from src.logger import logger, loggerMapClicked
 from cv2 import cv2
 from os import listdir
@@ -134,7 +135,7 @@ def show(rectangles, img=None):
     cv2.waitKey(0)
 
 
-def clickBtn(img, timeout=3, threshold=ct['default']):
+def     clickBtn(img, timeout=3, threshold=ct['default']):
     """Search for img in the scree, if found moves the cursor over it and clicks.
     Parameters:
         img: The image that will be used as an template to find where to click.
@@ -147,7 +148,7 @@ def clickBtn(img, timeout=3, threshold=ct['default']):
     has_timed_out = False
     while (not has_timed_out):
         matches = positions(img, threshold=threshold)
-
+        print(matches)
         if (len(matches) == 0):
             has_timed_out = time.time() - start > timeout
             continue
@@ -339,13 +340,19 @@ def refreshHeroesPositions():
 def login():
     global login_attempts
     logger('😿 Checking if game has disconnected')
-
+    
     if login_attempts > 3:
         logger('🔃 Too many login attempts, refreshing')
         login_attempts = 0
         pyautogui.hotkey('ctrl', 'f5')
         return
 
+    if clickBtn(images['check-box'], timeout=10):
+        logger('✅ Click in check box!')
+
+    if clickBtn(images['accept'], timeout=10):
+        logger('😺 Click in accept!')
+    
     if clickBtn(images['connect-wallet'], timeout=10):
         logger('🎉 Connect wallet button detected, logging in!')
         login_attempts = login_attempts + 1
@@ -390,7 +397,7 @@ def login():
         # print('ok button clicked')
 
 
-def sendHeroesHome():
+def sendHeroesHome():   
     if not ch['enable']:
         return
     heroes_positions = []
