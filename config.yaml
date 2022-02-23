@@ -100,6 +100,13 @@ threshold:
   # Valor padrão: 0.9
   green_bar: 0.9
 
+  # [en_US]
+  # Default value: 0.9
+  #
+  # [pt_BR]
+  # Valor padrão: 0.9
+  button_connect_modal: 0.9
+  
 home:
   enable: False
   # If bot is sending the wrong hero home, make this number bigger.
