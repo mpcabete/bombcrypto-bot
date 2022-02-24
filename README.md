@@ -57,9 +57,14 @@ alguma forma.
 - Adicionada funcionalidade de mandar todos os heroes trabalhar ao click do botão verde "ALL"
 - Melhorias no código
 
-## Aviso:
+## Para o uso do multi-account alguns passos podem ser necessários:
+No Chrome talvez seja necessário seguir os seguintes passos para desabilitar a flag "Calculate window occlusion on Windows".
 
-#### Os desenvolvedores do jogo se pronunciaram e agora o uso de auto clickers e o uso de bots é oficialmente PROIBIDO. Não me responsabilizo por eventuais penalidades sofridas por quem usar o bot, use por sua própria conta e risco.
+1. No navegador Google Chrome acesse: about:flags
+2. Procure por **Temporarily unexpire M96 flags**, habilite e clique no botão azul "Relaunch"
+3. Entre novamente em about:flags
+4. Procure por **Calculate window occlusion on Windows**, desabilite e clique novamente no botão azul "Relaunch".
+5. Continue seguindo com os passos abaixo.
 
 # Instalação:
 
