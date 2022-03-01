@@ -340,10 +340,11 @@ def login():
     if clickBtn(images['connect-wallet'], timeout = 10):
         logger('🎉 Connect button detected, logging in!')
         login_attempts = login_attempts + 1
-        time.sleep(5)
-        if clickBtn(images['connect-wallet-login'], timeout = 10):
-            logger('🎉 Connect wallet button detected, logging in!')
-            # login_attempts = login_attempts + 1
+        # time.sleep(5)
+
+    if clickBtn(images['connect-wallet-login'], timeout = 10):
+        logger('🎉 Connect wallet button detected, logging in!')
+        # login_attempts = login_attempts + 1
 
     if clickBtn(images['select-wallet-2'], timeout=8):
         # sometimes the sign popup appears imediately
