@@ -31,7 +31,7 @@
     #
     # [pt_BR] Intervalo de tempo para verificar se precisa resolver o captcha.
     # Valor padrão (em minutos): 1
-    check_for_captcha: 30
+    check_for_captcha: 9999999999
 
     # [en_US] Time interval to check for login request
     # Default value (in minutes): 3

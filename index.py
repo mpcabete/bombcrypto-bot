@@ -332,7 +332,7 @@ def login():
     logger('😿 Checking if game has disconnected')
 
     if login_attempts > 3:
-        logger('🔃 Too many login attempts, refreshing')
+        logger('🔃 Too many login attempts, refreshing LOGIN')
         login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
         return
@@ -493,6 +493,7 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
+            logger('🔃 Check for captcha, refreshing...')
             pyautogui.hotkey('ctrl','f5')
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
