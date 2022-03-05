@@ -66,20 +66,22 @@ def addRandomness(n, randomn_factor_size=None):
         int: n with randomness
     """
 
-    if randomn_factor_size is None:
-        randomness_percentage = 0.1
-        randomn_factor_size = randomness_percentage * n
+    return int(n)
 
-    random_factor = 2 * random() * randomn_factor_size
-    if random_factor > 5:
-        random_factor = 5
-    without_average_random_factor = n - randomn_factor_size
-    randomized_n = int(without_average_random_factor + random_factor)
-    # logger('{} with randomness -> {}'.format(int(n), randomized_n))
-    return int(randomized_n)
+    # if randomn_factor_size is None:
+    #     randomness_percentage = 0.1
+    #     randomn_factor_size = randomness_percentage * n
+
+    # random_factor = 2 * random() * randomn_factor_size
+    # if random_factor > 5:
+    #     random_factor = 5
+    # without_average_random_factor = n - randomn_factor_size
+    # randomized_n = int(without_average_random_factor + random_factor)
+    # # logger('{} with randomness -> {}'.format(int(n), randomized_n))
+    # return int(randomized_n)
 
 def moveToWithRandomness(x,y,t):
-    pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10),t+random()/2)
+    pyautogui.moveTo(addRandomness(x,10),addRandomness(y,10))
 
 
 def remove_suffix(input_string, suffix):
@@ -220,9 +222,14 @@ def clickButtons():
         global hero_clicks
         hero_clicks = hero_clicks + 1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
+        if int(c['limit_heros_at_time']) > 0 and hero_clicks == int(c['limit_heros_at_time']):
+            logger('Sent all heros to work')
+            return -1
+
         if hero_clicks > 20:
             logger('too many hero clicks, try to increase the go_to_work_btn threshold')
-            return
+            return -1
+
     return len(buttons)
 
 def isHome(hero, buttons):
@@ -255,7 +262,6 @@ def clickGreenBarButtons():
     buttons = positions(images['go-work'], threshold=ct['go_to_work_btn'])
     logger('🆗 %d buttons detected' % len(buttons))
 
-
     not_working_green_bars = []
     for bar in green_bars:
         if not isWorking(bar, buttons):
@@ -264,18 +270,20 @@ def clickGreenBarButtons():
         logger('🆗 %d buttons with green bar detected' % len(not_working_green_bars))
         logger('👆 Clicking in %d heroes' % len(not_working_green_bars))
 
-    # se tiver botao com y maior que bar y-10 e menor que y+10
-    hero_clicks_cnt = 0
     for (x, y, w, h) in not_working_green_bars:
         # isWorking(y, buttons)
         moveToWithRandomness(x+offset+(w/2),y+(h/2),1)
         pyautogui.click()
         global hero_clicks
         hero_clicks = hero_clicks + 1
-        hero_clicks_cnt = hero_clicks_cnt + 1
-        if hero_clicks_cnt > 20:
+
+        if int(c['limit_heros_at_time']) > 0 and hero_clicks == int(c['limit_heros_at_time']):
+            logger('⚒️ Sent all heros to work')
+            return -1
+
+        if hero_clicks > 20:
             logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
-            return
+            return -1
         #cv2.rectangle(sct_img, (x, y) , (x + w, y + h), (0,255,255),2)
     return len(not_working_green_bars)
 
@@ -298,6 +306,14 @@ def clickFullBarButtons():
         global hero_clicks
         hero_clicks = hero_clicks + 1
 
+        if int(c['limit_heros_at_time']) > 0 and hero_clicks == int(c['limit_heros_at_time']):
+            logger('⚒️ Sent all heros to work')
+            return -1
+
+        if hero_clicks > 20:
+            logger('⚠️ Too many hero clicks, try to increase the go_to_work_btn threshold')
+            return -1
+
     return len(not_working_full_bars)
 
 def goToHeroes():
@@ -310,12 +326,25 @@ def goToHeroes():
     clickBtn(images['hero-icon'])
     time.sleep(randint(1,3))
 
+def goToHeroesInGame():
+    if clickBtn(images['arrow-ingame-menu-expand']):
+        global login_attempts
+        login_attempts = 0
+
+    #TODO tirar o sleep quando colocar o pulling
+    time.sleep(1)
+    result = clickBtn(images['hero-icon-ingame'])
+    time.sleep(randint(1,3))
+    
+    return result
+
 def goToGame():
     # in case of server overload popup
     clickBtn(images['x'])
     # time.sleep(3)
     clickBtn(images['x'])
 
+    clickBtn(images['arrow-ingame-menu-collapse'])
     clickBtn(images['treasure-hunt-icon'])
 
 def refreshHeroesPositions():
@@ -338,6 +367,12 @@ def login():
         return
 
     if clickBtn(images['connect-wallet'], timeout = 10):
+        logger('🎉 Connect wallet button detected, logging in!')
+        login_attempts = login_attempts + 1
+        #TODO mto ele da erro e poco o botao n abre
+        # time.sleep(10)
+
+    if clickBtn(images['connect-wallet-2'], timeout = 10):
         logger('🎉 Connect wallet button detected, logging in!')
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
@@ -422,7 +457,11 @@ def sendHeroesHome():
 def refreshHeroes():
     logger('🏢 Search for heroes to work')
 
-    goToHeroes()
+    global hero_clicks
+    hero_clicks = 0
+
+    if goToHeroesInGame() == False:
+        goToHeroes()
 
     if c['select_heroes_mode'] == "full":
         logger('⚒️ Sending heroes with full stamina bar to work', 'green')
@@ -434,7 +473,7 @@ def refreshHeroes():
     buttonsClicked = 1
     empty_scrolls_attempts = c['scroll_attemps']
 
-    while(empty_scrolls_attempts >0):
+    while(empty_scrolls_attempts > 0):
         if c['select_heroes_mode'] == 'full':
             buttonsClicked = clickFullBarButtons()
         elif c['select_heroes_mode'] == 'green':
@@ -446,8 +485,13 @@ def refreshHeroes():
 
         if buttonsClicked == 0:
             empty_scrolls_attempts = empty_scrolls_attempts - 1
-        scroll()
-        time.sleep(2)
+        elif buttonsClicked < 0:
+            empty_scrolls_attempts = 0
+        
+        if empty_scrolls_attempts > 0:
+            scroll()
+            time.sleep(1)
+            
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
@@ -480,16 +524,12 @@ def main():
     "login" : 0,
     "heroes" : 0,
     "new_map" : 0,
-    "check_for_captcha" : 0,
     "refresh_heroes" : 0
     }
     # =========
 
     while True:
         now = time.time()
-
-        if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
-            last["check_for_captcha"] = now
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
