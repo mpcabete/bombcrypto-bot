@@ -491,7 +491,7 @@ def refreshHeroes():
         if empty_scrolls_attempts > 0:
             scroll()
             time.sleep(1)
-            
+
     logger('💪 {} heroes sent to work'.format(hero_clicks))
     goToGame()
 
@@ -531,14 +531,14 @@ def main():
     while True:
         now = time.time()
 
-        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
-            last["heroes"] = now
-            refreshHeroes()
-
         if now - last["login"] > addRandomness(t['check_for_login'] * 60):
             sys.stdout.flush()
             last["login"] = now
             login()
+
+        if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
+            last["heroes"] = now
+            refreshHeroes()
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
@@ -553,24 +553,9 @@ def main():
 
         #clickBtn(teasureHunt)
         logger(None, progress_indicator=True)
-
         sys.stdout.flush()
-
         time.sleep(1)
 
 
-
 if __name__ == '__main__':
-
-
-
     main()
-
-
-#cv2.imshow('img',sct_img)
-#cv2.waitKey()
-
-# colocar o botao em pt
-# soh resetar posiçoes se n tiver clickado em newmap em x segundos
-
-
