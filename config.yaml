@@ -138,7 +138,7 @@
   # [pt_BR] Opção para limitar quantos heróis serão postos para trabalhar a cada verifição
   # Valor padrão : False
   # 0 para ilimitado
-  limit_heros_at_time: 4
+  limit_heros_at_time: 0
 
 
   # [en_US] Option for save logs to a file (logs.txt)
