@@ -20,18 +20,11 @@
     refresh_heroes_positions: 3
     
     # [en_US] Time interval to check for new maps
-    # Default value (in minutes): 5 
+    # Default value (in seconds): 5 
     #
     # [pt_BR] Intervalo de tempo para verificar por novos mapas
     # Valor padrão (em segundos): 5
     check_for_new_map_button: 5
-    
-    # [en_US] Time interval to check for captcha.
-    # Default value (in minutes): 1
-    #
-    # [pt_BR] Intervalo de tempo para verificar se precisa resolver o captcha.
-    # Valor padrão (em minutos): 1
-    check_for_captcha: 1
 
     # [en_US] Time interval to check for login request
     # Default value (in minutes): 3
@@ -137,6 +130,16 @@
   # green = seleciona os heróis com a barra de stamina verde (metade ou cheia)
   # full  = seleciona somente os heróis com a barra de stamina cheia
   select_heroes_mode: "green"
+
+  # [en_US] Option to limit how many heroes are sent to work at each verification time
+  # Default value: 0
+  # 0 for unlimited
+  #
+  # [pt_BR] Opção para limitar quantos heróis serão postos para trabalhar a cada verifição
+  # Valor padrão : False
+  # 0 para ilimitado
+  limit_heros_at_time: 0
+
 
   # [en_US] Option for save logs to a file (logs.txt)
   # Default value: False
