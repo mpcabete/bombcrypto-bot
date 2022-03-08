@@ -331,17 +331,21 @@ def login():
     global login_attempts
     logger('😿 Checking if game has disconnected')
 
-    if login_attempts > 3:
+    if login_attempts > 4:
         logger('🔃 Too many login attempts, refreshing')
         login_attempts = 0
         pyautogui.hotkey('ctrl','f5')
         return
 
     if clickBtn(images['connect-wallet'], timeout = 10):
-        logger('🎉 Connect wallet button detected, logging in!')
+        logger('🟧 Connect wallet button detected, logging in!')
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
+
+    if clickBtn(images['button-connect-modal'], timeout = 10):
+        logger('👤 Connect button detected in modal login, logging in!')
+        login_attempts = login_attempts + 1
 
     if clickBtn(images['select-wallet-2'], timeout=8):
         # sometimes the sign popup appears imediately
