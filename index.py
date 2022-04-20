@@ -354,14 +354,9 @@ def login():
         return
         # click ok button
 
-    if not clickBtn(images['select-wallet-1-no-hover'], ):
-        if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
-            pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
-            # print('sleep in case there is no metamask text removed')
-            # time.sleep(20)
-    else:
+    if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
         pass
+        # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
         # print('sleep in case there is no metamask text removed')
         # time.sleep(20)
 
