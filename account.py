@@ -11,4 +11,5 @@ class Account:
             "check_for_captcha": 0,
             "refresh_heroes": 0,
             "interactive": 0,
+            "test_white_screen": 0,
         }

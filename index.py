@@ -348,6 +348,12 @@ def refreshHeroesPositions():
     # time.sleep(3)
     clickBtn(images['treasure-hunt-icon'])
 
+def refreshPage(account):
+    logger('⬜ Checking white screen')
+    if clickBtn(images['bug_white_screen']):
+        pyautogui.hotkey('ctrl', 'f5')
+        for key in account.last:
+            account.last[key] = 0
 
 def login():
     global login_attempts
@@ -538,10 +544,14 @@ def main():
             account.window.activate()
             
             logger("\n\n\033[1mInformações da janela {0}\033[0m".format(account.index))
+            
+            if now - account.last["test_white_screen"] > addRandomness(t['test_white_screen'] * 60):
+                refreshPage(account)
+            
             if now - account.last["login"] > addRandomness(t['check_for_login'] * 60):
                 if cw['auto_position']:
                     account.window.moveTo(cw['left'], cw['top'])
-                    account.window.resizeTo(1015, 823)
+                    account.window.resizeTo(cw['width'], cw['heigh'])
                 sys.stdout.flush()
                 account.last["login"] = now
                 login()
@@ -549,14 +559,14 @@ def main():
             if now - account.last["all_heroes"] > addRandomness(t['send_all_heroes_for_work'] * 60):
                 if cw['auto_position']:
                     account.window.moveTo(cw['left'], cw['top'])
-                    account.window.resizeTo(1015, 823)
+                    account.window.resizeTo(cw['width'], cw['heigh'])
                 account.last["all_heroes"] = now
                 sendAllHeroes()
             
             if now - account.last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
                 if cw['auto_position']:
                     account.window.moveTo(cw['left'], cw['top'])
-                    account.window.resizeTo(1015, 823)
+                    account.window.resizeTo(cw['width'], cw['heigh'])
                 account.last["refresh_heroes"] = now
                 refreshHeroesPositions()
 

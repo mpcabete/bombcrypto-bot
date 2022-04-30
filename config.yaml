@@ -42,7 +42,7 @@ time_intervals:
   # [en_US] Time interval to check for login request
   # Default value (in minutes): 3
   #
-  # [pt_BR] Intervalo de tempo para verificar se existe solicitação de login
+  # [pt_BR] Intervalo de tempo para verificar se a pagina está bugada.
   # Valor padrão (em minutos): 5
   check_for_login: 30
 
@@ -52,6 +52,13 @@ time_intervals:
   # [pt_BR] Intervalo de tempo entre movimentos
   # Valor padrão (em segundos): 1
   interval_between_moviments: 1
+
+  # [en_US] Time interval between moviments
+  # Default value (in seconds): 1
+  #
+  # [pt_BR] Intervalo de tempo entre movimentos
+  # Valor padrão (em segundos): 1
+  test_white_screen: 60
 
 # [en_US] How confident the bot needs to be to click the buttons (values from 0 to 1. 0 is the minimum value, 1 is the maximum value)
 #
@@ -106,7 +113,7 @@ threshold:
   # [pt_BR]
   # Valor padrão: 0.9
   button_connect_modal: 0.9
-  
+
 home:
   enable: False
   # If bot is sending the wrong hero home, make this number bigger.
@@ -177,7 +184,7 @@ window:
   #
   # [pt_BR]
   # Valor padrão: 10
-  left: 100
+  left: 10
 
   # [en_US]
   # Default value: 10
@@ -185,3 +192,17 @@ window:
   # [pt_BR]
   # Valor padrão: 10
   top: 100
+
+  # [en_US]
+  # Default value: 850
+  #
+  # [pt_BR]
+  # Valor padrão: 850
+  heigh: 850
+
+  # [en_US]
+  # Default value: 1095
+  #
+  # [pt_BR]
+  # Valor padrão: 1095
+  width: 1095
