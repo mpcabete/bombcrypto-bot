@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-    
+# -*- coding: utf-8 -*-
 from src.logger import logger, loggerMapClicked
 from cv2 import cv2
 from os import listdir
@@ -254,8 +254,8 @@ def isWorking(bar, buttons):
     return True
 
 def clickGreenBarButtons():
-    # ele clicka nos q tao trabaiano mas axo q n importa
-    offset = 140
+    # as vezes clica nos que já estao trabalhando
+    offset = 150
 
     green_bars = positions(images['green-bar'], threshold=ct['green_bar'])
     logger('🟩 %d green bars detected' % len(green_bars))
@@ -335,7 +335,7 @@ def goToHeroesInGame():
     time.sleep(1)
     result = clickBtn(images['hero-icon-ingame'])
     time.sleep(randint(1,3))
-    
+
     return result
 
 def goToGame():
@@ -392,7 +392,7 @@ def login():
     if not clickBtn(images['select-wallet-1-no-hover'], ):
         if clickBtn(images['select-wallet-1-hover'], threshold = ct['select_wallet_buttons'] ):
             pass
-            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo 
+            # o ideal era que ele alternasse entre checar cada um dos 2 por um tempo
             # print('sleep in case there is no metamask text removed')
             # time.sleep(20)
     else:
@@ -487,7 +487,7 @@ def refreshHeroes():
             empty_scrolls_attempts = empty_scrolls_attempts - 1
         elif buttonsClicked < 0:
             empty_scrolls_attempts = 0
-        
+
         if empty_scrolls_attempts > 0:
             scroll()
             time.sleep(1)
